@@ -251,22 +251,22 @@
 
     <!-- Application Script Logic -->
     <script>
-        let totalDays = parseInt(localStorage.getItem("timeline_total_days")) || 31;
+        let totalDays = parseInt(localStorage.getItem("timeline_total_days")) || 24;
         let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4;
         
         // Initial Tasks Data matching the NEW provided Excel screenshot
         const initialTasks = [
-            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 13, status: "In Progress" },
+            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 13, status: "Pending" },
             { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 11, endDay: 15, status: "Pending" },
-            { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "In Progress" },
-            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 8, endDay: 8, status: "Pending" },
+            { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "Pending" },
+            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 7, endDay: 8, status: "Pending" },
             { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 9, endDay: 11, status: "Pending" },
             { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 10, endDay: 12, status: "Pending" },
-            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 11, endDay: 15, status: "Pending", exclude: [12, 13] },
-            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 18, status: "Pending" },
-            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 18, endDay: 18, status: "Pending" },
-            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 21, status: "Pending", exclude: [18, 19, 20] },
-            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 21, endDay: 24, status: "Pending" }
+            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 11, endDay: 16, status: "Pending", exclude: [12, 13] },
+            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 19, status: "Pending" },
+            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 19, endDay: 19, status: "Pending" },
+            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 18, endDay: 22, status: "Pending", exclude: [19, 20, 21] },
+            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 21, endDay: 24, status: "Pending", exclude: [22] }
         ];
 
         let tasks = JSON.parse(localStorage.getItem("timeline_tasks")) || initialTasks;
