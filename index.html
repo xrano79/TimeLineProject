@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline Proyek Interaktif - September</title>
+    <title>Dashboard Modern - Timeline Proyek September</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -11,12 +11,12 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
+                        neon: {
+                            cyan: '#06b6d4',
+                            blue: '#3b82f6',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            amber: '#f59e0b'
                         }
                     }
                 }
@@ -27,43 +27,66 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* Custom Styles untuk Tabel dan Timeline */
+        /* Modern Glassmorphism Custom Styling */
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(15, 30, 45, 1) 0%, rgba(8, 15, 25, 1) 90%);
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom Table Styling */
         table {
             border-collapse: separate;
             border-spacing: 0;
             width: 100%;
         }
+        
         th, td {
-            border-bottom: 1px solid #e5e7eb;
-            border-right: 1px solid #e5e7eb;
-            padding: 6px 10px;
-            font-size: 0.85rem;
-        }
-        th:first-child, td:first-child {
-            border-left: 1px solid #e5e7eb;
-        }
-        thead tr:first-child th {
-            border-top: 1px solid #e5e7eb;
-        }
-        
-        .timeline-cell {
-            padding: 0 !important;
-            min-width: 34px;
-            max-width: 34px;
-            height: 38px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-        }
-        
-        .timeline-cell:hover {
-            background-color: #f3f4f6;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            border-right: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 8px 12px;
+            font-size: 0.82rem;
         }
 
-        /* Indicator Line untuk "We are here" */
+        th:first-child, td:first-child {
+            border-left: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        thead tr:first-child th {
+            border-top: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .timeline-cell {
+            padding: 0 !important;
+            min-width: 36px;
+            max-width: 36px;
+            height: 42px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-cell:hover {
+            background-color: rgba(56, 189, 248, 0.08);
+        }
+
+        /* Indicator Line "We are here" */
         .col-current {
             position: relative;
         }
+
         .col-current::before {
             content: '';
             position: absolute;
@@ -71,36 +94,41 @@
             bottom: 0; 
             left: -1px; 
             right: -1px;
-            border-left: 2.5px dashed #2563eb;
-            border-right: 2.5px dashed #2563eb;
+            border-left: 2px dashed #06b6d4;
+            border-right: 2px dashed #06b6d4;
             pointer-events: none;
-            z-index: 10;
-            background-color: rgba(37, 99, 235, 0.04);
+            z-index: 20;
+            background-color: rgba(6, 182, 212, 0.12);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
         }
+
         .col-current-top::before {
-            border-top: 2.5px dashed #2563eb;
+            border-top: 2px dashed #06b6d4;
             top: 0;
         }
+
         .col-current-bottom::before {
-            border-bottom: 2.5px dashed #2563eb;
+            border-bottom: 2px dashed #06b6d4;
             bottom: 0;
         }
-        
+
         .we-are-here-badge {
             position: absolute;
             top: -28px;
             left: 50%;
             transform: translateX(-50%);
-            background: #2563eb;
-            color: white;
-            font-weight: 600;
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: #0f172a;
+            font-weight: 800;
             padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.68rem;
+            border-radius: 6px;
+            font-size: 0.65rem;
             white-space: nowrap;
-            z-index: 25;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            z-index: 30;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
+            letter-spacing: 0.5px;
         }
+
         .we-are-here-badge::after {
             content: '';
             position: absolute;
@@ -109,135 +137,196 @@
             transform: translateX(-50%);
             border-width: 4px 4px 0 4px;
             border-style: solid;
-            border-color: #2563eb transparent transparent transparent;
+            border-color: #3b82f6 transparent transparent transparent;
+        }
+
+        /* Gantt Neon Bars */
+        .bar-not-started {
+            background: rgba(100, 116, 139, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            box-shadow: 0 0 8px rgba(100, 116, 139, 0.3);
+        }
+
+        .bar-in-progress {
+            background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
+            border: 1px solid rgba(165, 243, 252, 0.6);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.6);
+        }
+
+        .bar-finish {
+            background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%);
+            border: 1px solid rgba(167, 243, 208, 0.6);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
         }
 
         /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
+            height: 10px;
+            width: 10px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 6px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            border: 2px solid rgba(15, 23, 42, 0.8);
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(56, 189, 248, 0.6);
+        }
+
+        /* Glow animation for active simulation badge */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
+        }
+        .glow-active {
+            animation: pulse-glow 2s infinite;
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen p-3 md:p-6 font-sans text-slate-800 antialiased">
+<body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
 
-    <div class="max-w-[1600px] mx-auto space-y-5">
+    <!-- Decorative Glow Accents in Background -->
+    <div class="fixed -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-[1650px] mx-auto space-y-5 relative z-10">
         
-        <!-- Header Banner -->
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                    <i data-lucide="calendar-range" class="w-7 h-7"></i>
+        <!-- Top Dashboard Header Banner -->
+        <div class="glass-panel p-5 rounded-2xl flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+            <div class="flex items-center gap-4">
+                <div class="p-3.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-lg">
+                    <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Timeline & Review Proyek</h1>
-                    <p class="text-xs md:text-sm text-slate-500 flex items-center gap-2 mt-0.5">
-                        <span>Bulan: <strong>September</strong></span>
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                        <span id="taskCounterText">Total Tasks: 11</span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-400">
+                        Dashboard Modern - Timeline Proyek September
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-400 flex items-center gap-3 mt-1">
+                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> Bulan: <strong class="text-slate-200">September</strong></span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span id="taskCounterText" class="text-slate-300 font-medium">Total Tasks: 11</span>
                     </p>
                 </div>
             </div>
 
-            <!-- Action Controls -->
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="openAddTaskModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    <span>Tambah Task</span>
-                </button>
-                <button onclick="exportJSON()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs md:text-sm font-medium transition flex items-center gap-1.5">
-                    <i data-lucide="download" class="w-4 h-4"></i>
-                    <span>Ekspor JSON</span>
-                </button>
-                <label class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1.5">
-                    <i data-lucide="upload" class="w-4 h-4"></i>
-                    <span>Impor JSON</span>
-                    <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
-                </label>
-                <button onclick="confirmResetData()" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs md:text-sm font-medium transition flex items-center gap-1.5">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    <span>Reset Data</span>
-                </button>
+            <!-- Top Dashboard Stats & Controls -->
+            <div class="flex flex-wrap items-center gap-3">
+                
+                <!-- Stat Gauge Widget -->
+                <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3 border border-teal-500/20">
+                    <div class="relative w-11 h-11 flex items-center justify-center">
+                        <svg class="w-11 h-11 transform -rotate-90">
+                            <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-slate-800" fill="transparent" />
+                            <circle id="progressCircle" cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-cyan-400 transition-all duration-500" stroke-dasharray="113" stroke-dashoffset="30" fill="transparent" />
+                        </svg>
+                        <span id="completionPercent" class="absolute text-[10px] font-bold text-cyan-300">72%</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Progress Completion</p>
+                        <p id="completionLabel" class="text-xs font-bold text-slate-200">8 dari 11 Selesai</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="openAddTaskModal()" class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                        <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
+                        <span>Tambah Task</span>
+                    </button>
+                    <button onclick="exportJSON()" class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-slate-700">
+                        <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Ekspor</span>
+                    </button>
+                    <label class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1.5 border border-slate-700">
+                        <i data-lucide="upload" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Impor</span>
+                        <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
+                    </label>
+                    <button onclick="confirmResetData()" class="px-3.5 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Interactive Control Bar & Legend -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <!-- Day Simulation Slider -->
-            <div class="md:col-span-6 lg:col-span-5 bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                <div class="flex justify-between items-center mb-2">
-                    <label for="daySlider" class="font-semibold text-slate-700 text-xs md:text-sm flex items-center gap-2">
-                        <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
-                        Simulasi Hari "We are here":
+        <!-- Middle Section: Interactive Slider & Legend Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            
+            <!-- Day Simulation Card -->
+            <div class="lg:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-cyan-400">
+                <div class="flex justify-between items-center mb-3">
+                    <label for="daySlider" class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
+                        Simulasi "We are here":
                     </label>
-                    <span id="dayDisplay" class="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-full font-bold text-xs">Hari 4</span>
+                    <span id="dayDisplay" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-extrabold text-xs glow-active">Hari 4</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs text-slate-400 font-medium">1</span>
-                    <input type="range" id="daySlider" min="1" max="24" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                    <span class="text-xs text-slate-400 font-medium">24</span>
+                    <span class="text-xs text-slate-500 font-bold">HARI 1</span>
+                    <input type="range" id="daySlider" min="1" max="24" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
+                    <span class="text-xs text-slate-500 font-bold">HARI 24</span>
                 </div>
             </div>
 
-            <!-- Legend Status Cards -->
-            <div class="md:col-span-6 lg:col-span-7 bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-around gap-3">
-                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
-                    <span class="w-3.5 h-3.5 bg-slate-400 rounded-sm shadow-sm"></span>
+            <!-- Legend Status Card -->
+            <div class="lg:col-span-7 glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-around gap-3">
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-slate-600 rounded-md border border-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.4)]"></span>
                     <div class="text-xs">
-                        <p class="font-semibold text-slate-700">Not Started</p>
+                        <p class="font-bold text-slate-200">Not Started</p>
                         <p class="text-[10px] text-slate-400">Belum dimulai</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
-                    <span class="w-3.5 h-3.5 bg-amber-500 rounded-sm shadow-sm"></span>
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-md shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
                     <div class="text-xs">
-                        <p class="font-semibold text-slate-700">In Progress</p>
-                        <p class="text-[10px] text-slate-400">Sedang berjalan</p>
+                        <p class="font-bold text-cyan-300">In Progress</p>
+                        <p class="text-[10px] text-slate-400">Sedang berlangsung</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
-                    <span class="w-3.5 h-3.5 bg-emerald-500 rounded-sm shadow-sm"></span>
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-md shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
                     <div class="text-xs">
-                        <p class="font-semibold text-slate-700">Finish</p>
+                        <p class="font-bold text-emerald-300">Finish</p>
                         <p class="text-[10px] text-slate-400">Telah selesai</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Timeline Table Container -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-3 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between text-xs text-slate-500">
-                <span class="flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5 text-slate-400"></i> Tip: Anda dapat mengedit durasi/tanggal langsung di tabel atau klik tombol pensil.</span>
-                <span class="hidden sm:inline">September (1 - 24 Hari)</span>
+        <!-- Timeline Gantt Table Container -->
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Klik langsung angka di kolom <strong>Start/End/Durasi</strong> atau klik sel timeline untuk memperbarui jadwal.</span>
+                <span class="font-semibold text-cyan-400">September (1 - 24)</span>
             </div>
             
             <div class="overflow-x-auto custom-scrollbar">
-                <table id="timelineTable" class="w-full text-slate-700 select-none">
-                    <!-- Dynamic Table Content rendered by JavaScript -->
+                <table id="timelineTable" class="w-full text-slate-200 select-none">
+                    <!-- Dynamic Table Content -->
                 </table>
             </div>
         </div>
 
     </div>
 
-    <!-- Modal Add/Edit Task -->
-    <div id="taskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg p-6 m-4 transform scale-95 transition-transform duration-200" id="taskModalContainer">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Edit Task</h3>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600 transition p-1">
+    <!-- Glassmorphic Modal Task Detail Editor -->
+    <div id="taskModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-lg p-6 m-4 transform scale-95 transition-all duration-300 border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]" id="taskModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-cyan-400 rounded-full"></div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-slate-100">Task Detail Editor</h3>
+                </div>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-cyan-400 transition p-1 rounded-lg hover:bg-slate-800">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -246,57 +335,57 @@
                 <input type="hidden" id="taskId">
                 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Deskripsi Pekerjaan / Task</label>
-                    <input type="text" id="inputDesc" required placeholder="Contoh: Installation CCTV" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Description</label>
+                    <input type="text" id="inputDesc" required placeholder="Nama / Deskripsi Task" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Penanggung Jawab (PIC)</label>
-                    <input type="text" id="inputPic" required placeholder="Contoh: OT, IT Local dan Vendor" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">PIC (Penanggung Jawab)</label>
+                    <input type="text" id="inputPic" required placeholder="PIC / Tim Terkait" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Mulai (Hari)</label>
-                        <input type="number" id="inputStart" min="1" max="24" required oninput="syncFormValues('start')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Start Day</label>
+                        <input type="number" id="inputStart" min="1" max="24" required oninput="syncFormValues('start')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Selesai (Hari)</label>
-                        <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">End Day</label>
+                        <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Durasi (Hari)</label>
-                        <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Duration (Days)</label>
+                        <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
                     </div>
                 </div>
 
-                <div class="pt-4 flex justify-end gap-2 border-t border-slate-100 mt-6">
-                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-medium transition">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition">Simpan Perubahan</button>
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(6,182,212,0.5)]">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Custom Confirmation Modal -->
-    <div id="confirmModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-sm p-6 m-4 text-center">
-            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+    <!-- Custom Glass Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-sm p-6 m-4 text-center border border-rose-500/30">
+            <div class="w-12 h-12 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <i data-lucide="alert-triangle" class="w-6 h-6"></i>
             </div>
-            <h3 id="confirmTitle" class="text-base font-bold text-slate-800 mb-1">Konfirmasi Hapus</h3>
-            <p id="confirmMessage" class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin menghapus item ini?</p>
+            <h3 id="confirmTitle" class="text-base font-bold text-slate-100 mb-1">Konfirmasi</h3>
+            <p id="confirmMessage" class="text-xs text-slate-400 mb-6">Apakah Anda yakin ingin melakukan tindakan ini?</p>
             
             <div class="flex justify-center gap-3">
-                <button id="confirmCancelBtn" class="w-full py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-lg text-xs font-semibold transition">Batal</button>
-                <button id="confirmOkBtn" class="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold transition">Ya, Lanjutkan</button>
+                <button id="confirmCancelBtn" class="w-full py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                <button id="confirmOkBtn" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-[0_0_12px_rgba(225,29,72,0.5)]">Ya, Lanjutkan</button>
             </div>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 text-white rounded-xl shadow-xl text-xs font-medium">
-        <i id="toastIcon" data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
+        <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
         <span id="toastMsg">Pesan Toast</span>
     </div>
 
@@ -316,25 +405,22 @@
             { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23 },
         ];
 
-        // Status State Application
         let tasks = [];
-        const yellowDays = [5, 12, 19]; // Hari Sabtu (Kuning)
-        const redDays = [6, 13, 20];    // Hari Minggu (Merah)
+        const yellowDays = [5, 12, 19]; // Sabtu (Kuning)
+        const redDays = [6, 13, 20];    // Minggu (Merah)
 
-        // Penentuan Hari Ini / Default Day
         const today = new Date();
         let currentDay = today.getDate();
         if (currentDay > 24) currentDay = 24;
-        if (currentDay < 1) currentDay = 4; // default hari 4 jika di luar range
+        if (currentDay < 1) currentDay = 4;
 
         // DOM Elements
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
         const dayDisplay = document.getElementById('dayDisplay');
 
-        // Load Data dari LocalStorage atau Gunakan Default
         function loadData() {
-            const saved = localStorage.getItem('project_timeline_tasks');
+            const saved = localStorage.getItem('project_timeline_tasks_v2');
             if (saved) {
                 try {
                     tasks = JSON.parse(saved);
@@ -346,68 +432,82 @@
             }
         }
 
-        // Save Data ke LocalStorage
         function saveData() {
-            localStorage.setItem('project_timeline_tasks', JSON.stringify(tasks));
-            updateCounter();
+            localStorage.setItem('project_timeline_tasks_v2', JSON.stringify(tasks));
+            updateStats();
         }
 
-        function updateCounter() {
-            const el = document.getElementById('taskCounterText');
-            if (el) el.textContent = `Total Tasks: ${tasks.length}`;
+        function updateStats() {
+            const elCounter = document.getElementById('taskCounterText');
+            if (elCounter) elCounter.textContent = `Total Tasks: ${tasks.length}`;
+
+            // Calculate Completion %
+            const activeDay = parseInt(slider.value) || currentDay;
+            const completedCount = tasks.filter(t => activeDay > t.end).length;
+            const percentage = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+            const circle = document.getElementById('progressCircle');
+            const pctText = document.getElementById('completionPercent');
+            const labelText = document.getElementById('completionLabel');
+
+            if (circle) {
+                // Circle circumference ~ 113
+                const offset = 113 - (113 * percentage) / 100;
+                circle.style.strokeDashoffset = offset;
+            }
+            if (pctText) pctText.textContent = `${percentage}%`;
+            if (labelText) labelText.textContent = `${completedCount} dari ${tasks.length} Selesai`;
         }
 
-        // Fungsi Utama Render Tabel Timeline
         function renderTable(activeDay) {
             table.innerHTML = '';
-            dayDisplay.textContent = `Hari ${activeDay}`;
+            dayDisplay.textContent = `HARI ${activeDay}`;
+            updateStats();
 
-            // --- THEAD (Kepala Tabel) ---
+            // --- THEAD ---
             const thead = document.createElement('thead');
             
-            // Header Row 1
             let tr1 = `
-                <tr class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider">
-                    <th rowspan="2" class="w-10 text-center bg-slate-100/90 z-20">No</th>
-                    <th rowspan="2" class="min-w-[200px] text-left bg-slate-100/90 z-20">Description</th>
-                    <th rowspan="2" class="min-w-[170px] text-left bg-slate-100/90 z-20">PIC</th>
-                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">Start</th>
-                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">End</th>
-                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">Durasi</th>
-                    <th rowspan="2" class="w-20 text-center bg-slate-100/90 z-20">Aksi</th>
-                    <th colspan="24" class="text-center bg-slate-200/70 text-slate-800 py-2">September</th>
+                <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
+                    <th rowspan="2" class="w-10 text-center bg-slate-900/95 border-b border-slate-800">No</th>
+                    <th rowspan="2" class="min-w-[210px] text-left bg-slate-900/95 border-b border-slate-800 text-cyan-300">TASK NAME</th>
+                    <th rowspan="2" class="min-w-[170px] text-left bg-slate-900/95 border-b border-slate-800">PIC</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">Start</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">End</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800 text-cyan-400">Durasi</th>
+                    <th rowspan="2" class="w-20 text-center bg-slate-900/95 border-b border-slate-800">Aksi</th>
+                    <th colspan="24" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest">HARI (SEPTEMBER)</th>
                 </tr>
             `;
             thead.innerHTML += tr1;
 
-            // Header Row 2 (Tanggal 1-24)
-            let tr2 = '<tr class="text-xs font-bold">';
+            let tr2 = '<tr class="text-[11px] font-bold text-slate-400 bg-slate-900/90">';
             for(let i = 1; i <= 24; i++) {
-                let bgClass = 'bg-white text-slate-700';
+                let bgClass = 'bg-slate-900/60 text-slate-300';
                 
                 if (yellowDays.includes(i)) {
-                    bgClass = 'bg-amber-300 text-amber-900';
+                    bgClass = 'bg-amber-500/20 text-amber-300 border-b border-amber-500/30';
                 } else if (redDays.includes(i)) {
-                    bgClass = 'bg-rose-500 text-white';
+                    bgClass = 'bg-rose-500/20 text-rose-300 border-b border-rose-500/30';
                 }
 
                 let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
-                let badge = (i === activeDay) ? `<div class="we-are-here-badge">We are here</div>` : '';
+                let badge = (i === activeDay) ? `<div class="we-are-here-badge">HARI ${i}</div>` : '';
 
-                tr2 += `<th class="text-center ${bgClass} ${currentClass} border-b border-slate-200 relative">${badge}${i}</th>`;
+                tr2 += `<th class="text-center ${bgClass} ${currentClass} relative">${badge}${i}</th>`;
             }
             tr2 += '</tr>';
             thead.innerHTML += tr2;
             table.appendChild(thead);
 
-            // --- TBODY (Isi Tabel) ---
+            // --- TBODY ---
             const tbody = document.createElement('tbody');
             
             if (tasks.length === 0) {
                 const emptyTr = document.createElement('tr');
                 emptyTr.innerHTML = `
-                    <td colspan="31" class="text-center py-8 text-slate-400 text-sm">
-                        Belum ada tugas. Klik tombol <strong>+ Tambah Task</strong> untuk menambah.
+                    <td colspan="31" class="text-center py-10 text-slate-500 text-xs">
+                        Belum ada task. Klik tombol <strong>+ Tambah Task</strong> di atas.
                     </td>
                 `;
                 tbody.appendChild(emptyTr);
@@ -415,53 +515,57 @@
                 tasks.forEach((task, index) => {
                     let isLastRow = index === tasks.length - 1;
                     let tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50/80 transition-colors";
+                    tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60";
                     
                     const duration = (task.end - task.start) + 1;
 
-                    // Logika Warna Status Tugas
-                    let statusColorClass = '';
+                    let statusClass = '';
+                    let statusLabel = '';
                     if (activeDay < task.start) {
-                        statusColorClass = 'bg-slate-400 shadow-sm'; // Not Started
+                        statusClass = 'bar-not-started';
+                        statusLabel = 'Not Started';
                     } else if (activeDay > task.end) {
-                        statusColorClass = 'bg-emerald-500 shadow-sm'; // Finish
+                        statusClass = 'bar-finish';
+                        statusLabel = 'Finish';
                     } else {
-                        statusColorClass = 'bg-amber-500 shadow-sm'; // In Progress
+                        statusClass = 'bar-in-progress';
+                        statusLabel = 'In Progress';
                     }
 
-                    // Kolom Data & Quick Editable Inputs
                     tr.innerHTML = `
-                        <td class="text-center bg-white text-slate-500 font-medium">${index + 1}</td>
-                        <td class="bg-white font-medium text-slate-800">${escapeHtml(task.desc)}</td>
-                        <td class="bg-white text-slate-600">${escapeHtml(task.pic)}</td>
-                        <td class="bg-white text-center">
+                        <td class="text-center font-mono text-slate-500 text-xs">${index + 1}</td>
+                        <td class="font-semibold text-slate-100 flex items-center justify-between gap-2 py-2.5">
+                            <span>${escapeHtml(task.desc)}</span>
+                        </td>
+                        <td class="text-slate-400 text-xs">${escapeHtml(task.pic)}</td>
+                        <td class="text-center">
                             <input type="number" min="1" max="24" value="${task.start}" 
                                 onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
-                                class="w-12 text-center py-0.5 border border-slate-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
-                        <td class="bg-white text-center">
+                        <td class="text-center">
                             <input type="number" min="1" max="24" value="${task.end}" 
                                 onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
-                                class="w-12 text-center py-0.5 border border-slate-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
-                        <td class="bg-white text-center">
+                        <td class="text-center">
                             <input type="number" min="1" max="24" value="${duration}" 
                                 onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
-                                class="w-12 text-center py-0.5 font-bold text-blue-600 bg-blue-50/50 border border-blue-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                                class="w-11 text-center py-0.5 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
-                        <td class="bg-white text-center whitespace-nowrap">
+                        <td class="text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
-                                <button onclick="openEditTaskModal(${task.id})" title="Edit Detail" class="p-1 hover:bg-slate-100 text-slate-600 hover:text-blue-600 rounded transition">
-                                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                                <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </button>
-                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus Task" class="p-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded transition">
+                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus Task" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded transition">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
                         </td>
                     `;
 
-                    // Kolom Timeline Days (1-24)
+                    // Timeline Days
                     for(let i = 1; i <= 24; i++) {
                         let isActive = i >= task.start && i <= task.end;
                         let currentClass = (i === activeDay) ? 'col-current' : '';
@@ -469,19 +573,21 @@
                             currentClass += ' col-current-bottom';
                         }
 
-                        let barRounded = '';
+                        let barRounded = 'rounded-md';
                         if (i === task.start && i === task.end) {
-                            barRounded = 'rounded-md';
+                            barRounded = 'rounded-lg';
                         } else if (i === task.start) {
-                            barRounded = 'rounded-l-md';
+                            barRounded = 'rounded-l-lg';
                         } else if (i === task.end) {
-                            barRounded = 'rounded-r-md';
+                            barRounded = 'rounded-r-lg';
                         }
 
+                        let textInBar = (i === task.start) ? `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>` : '';
+
                         tr.innerHTML += `
-                            <td class="timeline-cell ${currentClass} bg-white text-center align-middle" 
-                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk ubah rentang tanggal">
-                                ${isActive ? `<div class="w-full h-6 ${statusColorClass} ${barRounded} transition-all"></div>` : ''}
+                            <td class="timeline-cell ${currentClass} text-center align-middle" 
+                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk atur rentang hari">
+                                ${isActive ? `<div class="w-full h-7 ${statusClass} ${barRounded} flex items-center justify-center text-slate-950 overflow-hidden transition-all">${textInBar}</div>` : ''}
                             </td>
                         `;
                     }
@@ -493,7 +599,6 @@
             lucide.createIcons();
         }
 
-        // Form & Inline Event Handlers
         function inlineUpdateTask(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
@@ -504,15 +609,11 @@
             if (field === 'start') {
                 val = Math.max(1, Math.min(24, val));
                 task.start = val;
-                if (task.end < task.start) {
-                    task.end = task.start;
-                }
+                if (task.end < task.start) task.end = task.start;
             } else if (field === 'end') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = val;
-                if (task.start > task.end) {
-                    task.start = task.end;
-                }
+                if (task.start > task.end) task.start = task.end;
             } else if (field === 'duration') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = Math.min(24, task.start + val - 1);
@@ -523,21 +624,15 @@
             showToast('Jadwal berhasil diperbarui!');
         }
 
-        // Klik pada cell tabel untuk memperbarui Start/End dengan cepat
         function handleCellClick(taskId, day) {
             const task = tasks.find(t => t.id === taskId);
             if (!task) return;
 
-            // Jika klik di sebelah kiri start, jadikan start baru
             if (day < task.start) {
                 task.start = day;
-            } 
-            // Jika klik di sebelah kanan end, jadikan end baru
-            else if (day > task.end) {
+            } else if (day > task.end) {
                 task.end = day;
-            } 
-            // Jika klik di dalam baris, dekatkan ke batas terdekat
-            else {
+            } else {
                 if (Math.abs(day - task.start) <= Math.abs(day - task.end)) {
                     task.start = day;
                 } else {
@@ -547,10 +642,9 @@
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast(`Task "${task.desc}" diperbarui ke Hari ${task.start} - ${task.end}`);
+            showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
         }
 
-        // Synchronize modal input values (Start, End, Duration)
         function syncFormValues(changedField) {
             const startInput = document.getElementById('inputStart');
             const endInput = document.getElementById('inputEnd');
@@ -575,7 +669,6 @@
             durationInput.value = Math.max(1, Math.min(24, duration));
         }
 
-        // Modal Operations
         function openAddTaskModal() {
             document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
             document.getElementById('taskId').value = '';
@@ -584,7 +677,6 @@
             document.getElementById('inputStart').value = 1;
             document.getElementById('inputEnd').value = 5;
             document.getElementById('inputDuration').value = 5;
-            
             showModal('taskModal');
         }
 
@@ -592,14 +684,13 @@
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
-            document.getElementById('modalTitle').textContent = 'Edit Task';
+            document.getElementById('modalTitle').textContent = 'Edit Task Detail';
             document.getElementById('taskId').value = task.id;
             document.getElementById('inputDesc').value = task.desc;
             document.getElementById('inputPic').value = task.pic;
             document.getElementById('inputStart').value = task.start;
             document.getElementById('inputEnd').value = task.end;
             document.getElementById('inputDuration').value = (task.end - task.start) + 1;
-
             showModal('taskModal');
         }
 
@@ -614,7 +705,6 @@
             if (!desc || !pic) return;
 
             if (id) {
-                // Edit existing
                 const task = tasks.find(t => t.id === parseInt(id));
                 if (task) {
                     task.desc = desc;
@@ -623,53 +713,37 @@
                     task.end = end;
                 }
             } else {
-                // Add new
                 const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({
-                    id: newId,
-                    desc: desc,
-                    pic: pic,
-                    start: start,
-                    end: end
-                });
+                tasks.push({ id: newId, desc, pic, start, end });
             }
 
             saveData();
             renderTable(parseInt(slider.value));
             closeTaskModal();
-            showToast(id ? 'Perubahan berhasil disimpan!' : 'Tugas baru berhasil ditambahkan!');
+            showToast(id ? 'Perubahan berhasil disimpan!' : 'Task baru ditambahkan!');
         }
 
         function confirmDeleteTask(id) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
-            showConfirm(
-                'Hapus Task',
-                `Apakah Anda yakin ingin menghapus "${task.desc}"?`,
-                () => {
-                    tasks = tasks.filter(t => t.id !== id);
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast('Task berhasil dihapus');
-                }
-            );
+            showConfirm('Hapus Task', `Yakin ingin menghapus "${task.desc}"?`, () => {
+                tasks = tasks.filter(t => t.id !== id);
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Task berhasil dihapus');
+            });
         }
 
         function confirmResetData() {
-            showConfirm(
-                'Reset Data Default',
-                'Semua revisi perubahan akan dikembalikan ke data awal. Lanjutkan?',
-                () => {
-                    tasks = [...defaultTasks];
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast('Data berhasil di-reset ke awal');
-                }
-            );
+            showConfirm('Reset Data Default', 'Semua perubahan revisi akan dikembalikan ke data awal. Lanjutkan?', () => {
+                tasks = [...defaultTasks];
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Data berhasil di-reset ke awal');
+            });
         }
 
-        // Ekspor / Impor JSON
         function exportJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
             const downloadAnchor = document.createElement('a');
@@ -678,7 +752,7 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast('File JSON berhasil diunduh');
+            showToast('File JSON berhasil diekspor');
         }
 
         function importJSON(event) {
@@ -702,10 +776,9 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Reset input file
+            event.target.value = '';
         }
 
-        // Utility Helpers Modal & Toast
         function showModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.remove('hidden');
@@ -721,9 +794,7 @@
             const container = document.getElementById('taskModalContainer');
             modal.classList.add('opacity-0');
             if (container) container.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
+            setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
         function showConfirm(title, message, onOk) {
@@ -754,7 +825,7 @@
             const toastIcon = document.getElementById('toastIcon');
 
             toastMsg.textContent = msg;
-            toastIcon.className = isError ? 'w-4 h-4 text-rose-400' : 'w-4 h-4 text-emerald-400';
+            toastIcon.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
             
             toast.classList.remove('translate-y-20', 'opacity-0');
             
@@ -771,18 +842,16 @@
                 .replace(/"/g, '&quot;');
         }
 
-        // Initial setup
+        // Init
         loadData();
         slider.value = currentDay;
         renderTable(currentDay);
 
-        // Slider listener
         slider.addEventListener('input', function(e) {
             const selectedDay = parseInt(e.target.value);
             renderTable(selectedDay);
         });
 
-        // Initialize Lucide Icons
         lucide.createIcons();
     </script>
 </body>
