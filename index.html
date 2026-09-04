@@ -3,107 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline Proyek - September</title>
+    <title>Timeline Proyek Interaktif - September</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Custom Styles untuk Tabel dan Timeline */
         table {
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             width: 100%;
         }
         th, td {
-            border: 1px solid #1f2937; /* Warna border gelap menyerupai gambar */
-            padding: 6px 12px;
-            font-size: 0.875rem;
+            border-bottom: 1px solid #e5e7eb;
+            border-right: 1px solid #e5e7eb;
+            padding: 6px 10px;
+            font-size: 0.85rem;
         }
-        .timeline-cell {
-            padding: 0 !important;
-            min-width: 35px;
-            height: 30px;
+        th:first-child, td:first-child {
+            border-left: 1px solid #e5e7eb;
+        }
+        thead tr:first-child th {
+            border-top: 1px solid #e5e7eb;
         }
         
-        /* Styles untuk indikator "We are here" */
+        .timeline-cell {
+            padding: 0 !important;
+            min-width: 34px;
+            max-width: 34px;
+            height: 38px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        
+        .timeline-cell:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Indicator Line untuk "We are here" */
         .col-current {
             position: relative;
         }
         .col-current::before {
             content: '';
             position: absolute;
-            top: -1px; 
-            bottom: -1px; 
-            left: -2px; 
-            right: -2px;
-            border-left: 2px dashed #2563eb; /* Biru dashed */
-            border-right: 2px dashed #2563eb;
-            pointer-events: none; /* Agar klik tetap tembus ke bawah */
+            top: 0; 
+            bottom: 0; 
+            left: -1px; 
+            right: -1px;
+            border-left: 2.5px dashed #2563eb;
+            border-right: 2.5px dashed #2563eb;
+            pointer-events: none;
             z-index: 10;
+            background-color: rgba(37, 99, 235, 0.04);
         }
         .col-current-top::before {
-            border-top: 2px dashed #2563eb;
-            top: -2px;
+            border-top: 2.5px dashed #2563eb;
+            top: 0;
         }
         .col-current-bottom::before {
-            border-bottom: 2px dashed #2563eb;
-            bottom: -2px;
+            border-bottom: 2.5px dashed #2563eb;
+            bottom: 0;
         }
         
         .we-are-here-badge {
             position: absolute;
-            top: -32px;
+            top: -28px;
             left: 50%;
             transform: translateX(-50%);
-            background: white;
-            border: 1px solid #6b7280;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
             padding: 2px 8px;
-            font-size: 0.75rem;
-            color: #111827;
+            border-radius: 4px;
+            font-size: 0.68rem;
             white-space: nowrap;
-            z-index: 20;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 25;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+        .we-are-here-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 4px 4px 0 4px;
+            border-style: solid;
+            border-color: #2563eb transparent transparent transparent;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 </head>
-<body class="bg-gray-50 p-4 md:p-8 font-sans text-gray-800">
+<body class="bg-slate-100 min-h-screen p-3 md:p-6 font-sans text-slate-800 antialiased">
 
-    <div class="max-w-[1400px] mx-auto bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-200">
+    <div class="max-w-[1600px] mx-auto space-y-5">
         
-        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Timeline Proyek</h1>
-                <p class="text-gray-500 text-sm">Bulan: September</p>
+        <!-- Header Banner -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                    <i data-lucide="calendar-range" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Timeline & Review Proyek</h1>
+                    <p class="text-xs md:text-sm text-slate-500 flex items-center gap-2 mt-0.5">
+                        <span>Bulan: <strong>September</strong></span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                        <span id="taskCounterText">Total Tasks: 11</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openAddTaskModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs md:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Tambah Task</span>
+                </button>
+                <button onclick="exportJSON()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Ekspor JSON</span>
+                </button>
+                <label class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1.5">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    <span>Impor JSON</span>
+                    <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
+                </label>
+                <button onclick="confirmResetData()" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Reset Data</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Interactive Control Bar & Legend -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <!-- Day Simulation Slider -->
+            <div class="md:col-span-6 lg:col-span-5 bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <label for="daySlider" class="font-semibold text-slate-700 text-xs md:text-sm flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
+                        Simulasi Hari "We are here":
+                    </label>
+                    <span id="dayDisplay" class="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-full font-bold text-xs">Hari 4</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400 font-medium">1</span>
+                    <input type="range" id="daySlider" min="1" max="24" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                    <span class="text-xs text-slate-400 font-medium">24</span>
+                </div>
+            </div>
+
+            <!-- Legend Status Cards -->
+            <div class="md:col-span-6 lg:col-span-7 bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-around gap-3">
+                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+                    <span class="w-3.5 h-3.5 bg-slate-400 rounded-sm shadow-sm"></span>
+                    <div class="text-xs">
+                        <p class="font-semibold text-slate-700">Not Started</p>
+                        <p class="text-[10px] text-slate-400">Belum dimulai</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+                    <span class="w-3.5 h-3.5 bg-amber-500 rounded-sm shadow-sm"></span>
+                    <div class="text-xs">
+                        <p class="font-semibold text-slate-700">In Progress</p>
+                        <p class="text-[10px] text-slate-400">Sedang berjalan</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+                    <span class="w-3.5 h-3.5 bg-emerald-500 rounded-sm shadow-sm"></span>
+                    <div class="text-xs">
+                        <p class="font-semibold text-slate-700">Finish</p>
+                        <p class="text-[10px] text-slate-400">Telah selesai</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Timeline Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-3 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                <span class="flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5 text-slate-400"></i> Tip: Anda dapat mengedit durasi/tanggal langsung di tabel atau klik tombol pensil.</span>
+                <span class="hidden sm:inline">September (1 - 24 Hari)</span>
             </div>
             
-            <!-- Kontrol Interaktif (Live) -->
-            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-center gap-4">
-                <label for="daySlider" class="font-semibold text-blue-900 text-sm">Simulasi "We are here":</label>
-                <input type="range" id="daySlider" min="1" max="24" class="w-32 md:w-48 cursor-pointer">
-                <span id="dayDisplay" class="font-bold text-blue-700 min-w-[70px]">Hari 4</span>
+            <div class="overflow-x-auto custom-scrollbar">
+                <table id="timelineTable" class="w-full text-slate-700 select-none">
+                    <!-- Dynamic Table Content rendered by JavaScript -->
+                </table>
             </div>
         </div>
 
-        <!-- Legend Status -->
-        <div class="mb-4 flex flex-wrap gap-4 text-sm font-semibold text-gray-700">
-            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-gray-400 rounded-sm"></span> Not Started</div>
-            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-orange-500 rounded-sm"></span> In Progress</div>
-            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded-sm"></span> Finish</div>
-        </div>
+    </div>
 
-        <!-- Wadah Tabel (Responsive scroll) -->
-        <div class="overflow-x-auto pb-4">
-            <table id="timelineTable" class="w-full text-sm min-w-[1000px]">
-                <!-- Konten tabel akan di-render oleh JavaScript -->
-            </table>
+    <!-- Modal Add/Edit Task -->
+    <div id="taskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg p-6 m-4 transform scale-95 transition-transform duration-200" id="taskModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Edit Task</h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600 transition p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="taskForm" onsubmit="handleTaskFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="taskId">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Deskripsi Pekerjaan / Task</label>
+                    <input type="text" id="inputDesc" required placeholder="Contoh: Installation CCTV" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Penanggung Jawab (PIC)</label>
+                    <input type="text" id="inputPic" required placeholder="Contoh: OT, IT Local dan Vendor" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Mulai (Hari)</label>
+                        <input type="number" id="inputStart" min="1" max="24" required oninput="syncFormValues('start')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Selesai (Hari)</label>
+                        <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Durasi (Hari)</label>
+                        <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-2 border-t border-slate-100 mt-6">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-medium transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition">Simpan Perubahan</button>
+                </div>
+            </form>
         </div>
-        
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-sm p-6 m-4 text-center">
+            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 id="confirmTitle" class="text-base font-bold text-slate-800 mb-1">Konfirmasi Hapus</h3>
+            <p id="confirmMessage" class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin menghapus item ini?</p>
+            
+            <div class="flex justify-center gap-3">
+                <button id="confirmCancelBtn" class="w-full py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-lg text-xs font-semibold transition">Batal</button>
+                <button id="confirmOkBtn" class="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold transition">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 text-white rounded-xl shadow-xl text-xs font-medium">
+        <i id="toastIcon" data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toastMsg">Pesan Toast</span>
     </div>
 
     <script>
-        // Data tugas diekstrak dari gambar
-        const tasks = [
-            { id: 1, desc: 'Installation', pic: 'OT,IT Local dan Vendor', start: 1, end: 13 },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT,IT Local dan Vendor', start: 11, end: 15 },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT,IT Local dan Vendor', start: 4, end: 5 },
+        // Data Default Tugas Awal
+        const defaultTasks = [
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5 },
             { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10 },
             { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11 },
             { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12 },
@@ -114,118 +316,474 @@
             { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23 },
         ];
 
-        // Hari khusus dalam September (sesuai warna di gambar)
-        const yellowDays = [5, 12, 19]; // Mungkin hari Sabtu
-        const redDays = [6, 13, 20];    // Mungkin hari Minggu
+        // Status State Application
+        let tasks = [];
+        const yellowDays = [5, 12, 19]; // Hari Sabtu (Kuning)
+        const redDays = [6, 13, 20];    // Hari Minggu (Merah)
 
-        // Menentukan hari "Saat ini" secara otomatis berdasarkan kalender asli
+        // Penentuan Hari Ini / Default Day
         const today = new Date();
         let currentDay = today.getDate();
-        
-        // Membatasi maksimal hari di angka 24 sesuai tabel, dan minimal 1
         if (currentDay > 24) currentDay = 24;
-        if (currentDay < 1) currentDay = 1;
+        if (currentDay < 1) currentDay = 4; // default hari 4 jika di luar range
 
-        // Elemen DOM
+        // DOM Elements
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
         const dayDisplay = document.getElementById('dayDisplay');
 
-        // Set nilai awal slider
-        slider.value = currentDay;
+        // Load Data dari LocalStorage atau Gunakan Default
+        function loadData() {
+            const saved = localStorage.getItem('project_timeline_tasks');
+            if (saved) {
+                try {
+                    tasks = JSON.parse(saved);
+                } catch (e) {
+                    tasks = [...defaultTasks];
+                }
+            } else {
+                tasks = [...defaultTasks];
+            }
+        }
 
-        // Fungsi utama untuk menggambar tabel
+        // Save Data ke LocalStorage
+        function saveData() {
+            localStorage.setItem('project_timeline_tasks', JSON.stringify(tasks));
+            updateCounter();
+        }
+
+        function updateCounter() {
+            const el = document.getElementById('taskCounterText');
+            if (el) el.textContent = `Total Tasks: ${tasks.length}`;
+        }
+
+        // Fungsi Utama Render Tabel Timeline
         function renderTable(activeDay) {
-            table.innerHTML = ''; // Bersihkan tabel
+            table.innerHTML = '';
             dayDisplay.textContent = `Hari ${activeDay}`;
 
-            // --- THEAD (Bagian Kepala Tabel) ---
+            // --- THEAD (Kepala Tabel) ---
             const thead = document.createElement('thead');
             
-            // Baris 1: Judul Kolom & Bulan
+            // Header Row 1
             let tr1 = `
-                <tr>
-                    <th rowspan="2" class="w-10 text-center bg-gray-100">No</th>
-                    <th rowspan="2" class="w-64 text-center bg-gray-100">Description</th>
-                    <th rowspan="2" class="w-48 text-center bg-gray-100">PIC</th>
-                    <th colspan="24" class="text-center font-bold bg-white">September</th>
+                <tr class="bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider">
+                    <th rowspan="2" class="w-10 text-center bg-slate-100/90 z-20">No</th>
+                    <th rowspan="2" class="min-w-[200px] text-left bg-slate-100/90 z-20">Description</th>
+                    <th rowspan="2" class="min-w-[170px] text-left bg-slate-100/90 z-20">PIC</th>
+                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">Start</th>
+                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">End</th>
+                    <th rowspan="2" class="w-16 text-center bg-slate-100/90 z-20">Durasi</th>
+                    <th rowspan="2" class="w-20 text-center bg-slate-100/90 z-20">Aksi</th>
+                    <th colspan="24" class="text-center bg-slate-200/70 text-slate-800 py-2">September</th>
                 </tr>
             `;
             thead.innerHTML += tr1;
 
-            // Baris 2: Angka Tanggal
-            let tr2 = '<tr>';
+            // Header Row 2 (Tanggal 1-24)
+            let tr2 = '<tr class="text-xs font-bold">';
             for(let i = 1; i <= 24; i++) {
-                let bgClass = 'bg-white';
-                let textClass = 'text-gray-800 font-bold';
+                let bgClass = 'bg-white text-slate-700';
                 
                 if (yellowDays.includes(i)) {
-                    bgClass = 'bg-yellow-300';
+                    bgClass = 'bg-amber-300 text-amber-900';
                 } else if (redDays.includes(i)) {
-                    bgClass = 'bg-red-600';
-                    textClass = 'text-white font-bold';
+                    bgClass = 'bg-rose-500 text-white';
                 }
 
                 let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
                 let badge = (i === activeDay) ? `<div class="we-are-here-badge">We are here</div>` : '';
 
-                tr2 += `<th class="text-center w-10 ${bgClass} ${textClass} ${currentClass}">${badge}${i}</th>`;
+                tr2 += `<th class="text-center ${bgClass} ${currentClass} border-b border-slate-200 relative">${badge}${i}</th>`;
             }
             tr2 += '</tr>';
             thead.innerHTML += tr2;
             table.appendChild(thead);
 
-            // --- TBODY (Bagian Isi Tabel) ---
+            // --- TBODY (Isi Tabel) ---
             const tbody = document.createElement('tbody');
-            tasks.forEach((task, index) => {
-                let isLastRow = index === tasks.length - 1;
-                let tr = document.createElement('tr');
-                
-                // Logika Warna Status Tugas berdasarkan indikator hari
-                let statusColorClass = '';
-                if (activeDay < task.start) {
-                    statusColorClass = 'bg-gray-400'; // Not Started (Abu-abu)
-                } else if (activeDay > task.end) {
-                    statusColorClass = 'bg-green-500'; // Finish (Hijau)
-                } else {
-                    statusColorClass = 'bg-orange-500'; // In Progress (Oranye)
-                }
-
-                // Kolom Info
-                tr.innerHTML += `
-                    <td class="text-center bg-white">${task.id}</td>
-                    <td class="bg-white whitespace-nowrap">${task.desc}</td>
-                    <td class="bg-white whitespace-nowrap">${task.pic}</td>
+            
+            if (tasks.length === 0) {
+                const emptyTr = document.createElement('tr');
+                emptyTr.innerHTML = `
+                    <td colspan="31" class="text-center py-8 text-slate-400 text-sm">
+                        Belum ada tugas. Klik tombol <strong>+ Tambah Task</strong> untuk menambah.
+                    </td>
                 `;
+                tbody.appendChild(emptyTr);
+            } else {
+                tasks.forEach((task, index) => {
+                    let isLastRow = index === tasks.length - 1;
+                    let tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50/80 transition-colors";
+                    
+                    const duration = (task.end - task.start) + 1;
 
-                // Kolom Timeline (Hari 1-24)
-                for(let i = 1; i <= 24; i++) {
-                    let isActive = i >= task.start && i <= task.end;
-                    let currentClass = (i === activeDay) ? 'col-current' : '';
-                    if (i === activeDay && isLastRow) {
-                        currentClass += ' col-current-bottom';
+                    // Logika Warna Status Tugas
+                    let statusColorClass = '';
+                    if (activeDay < task.start) {
+                        statusColorClass = 'bg-slate-400 shadow-sm'; // Not Started
+                    } else if (activeDay > task.end) {
+                        statusColorClass = 'bg-emerald-500 shadow-sm'; // Finish
+                    } else {
+                        statusColorClass = 'bg-amber-500 shadow-sm'; // In Progress
                     }
 
-                    tr.innerHTML += `
-                        <td class="timeline-cell ${currentClass} bg-white">
-                            ${isActive ? `<div class="w-full h-full ${statusColorClass}"></div>` : ''}
+                    // Kolom Data & Quick Editable Inputs
+                    tr.innerHTML = `
+                        <td class="text-center bg-white text-slate-500 font-medium">${index + 1}</td>
+                        <td class="bg-white font-medium text-slate-800">${escapeHtml(task.desc)}</td>
+                        <td class="bg-white text-slate-600">${escapeHtml(task.pic)}</td>
+                        <td class="bg-white text-center">
+                            <input type="number" min="1" max="24" value="${task.start}" 
+                                onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
+                                class="w-12 text-center py-0.5 border border-slate-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                        </td>
+                        <td class="bg-white text-center">
+                            <input type="number" min="1" max="24" value="${task.end}" 
+                                onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
+                                class="w-12 text-center py-0.5 border border-slate-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                        </td>
+                        <td class="bg-white text-center">
+                            <input type="number" min="1" max="24" value="${duration}" 
+                                onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
+                                class="w-12 text-center py-0.5 font-bold text-blue-600 bg-blue-50/50 border border-blue-200 rounded focus:border-blue-500 focus:outline-none text-xs">
+                        </td>
+                        <td class="bg-white text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
+                                <button onclick="openEditTaskModal(${task.id})" title="Edit Detail" class="p-1 hover:bg-slate-100 text-slate-600 hover:text-blue-600 rounded transition">
+                                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus Task" class="p-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded transition">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     `;
-                }
-                tbody.appendChild(tr);
-            });
+
+                    // Kolom Timeline Days (1-24)
+                    for(let i = 1; i <= 24; i++) {
+                        let isActive = i >= task.start && i <= task.end;
+                        let currentClass = (i === activeDay) ? 'col-current' : '';
+                        if (i === activeDay && isLastRow) {
+                            currentClass += ' col-current-bottom';
+                        }
+
+                        let barRounded = '';
+                        if (i === task.start && i === task.end) {
+                            barRounded = 'rounded-md';
+                        } else if (i === task.start) {
+                            barRounded = 'rounded-l-md';
+                        } else if (i === task.end) {
+                            barRounded = 'rounded-r-md';
+                        }
+
+                        tr.innerHTML += `
+                            <td class="timeline-cell ${currentClass} bg-white text-center align-middle" 
+                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk ubah rentang tanggal">
+                                ${isActive ? `<div class="w-full h-6 ${statusColorClass} ${barRounded} transition-all"></div>` : ''}
+                            </td>
+                        `;
+                    }
+                    tbody.appendChild(tr);
+                });
+            }
+            
             table.appendChild(tbody);
+            lucide.createIcons();
         }
 
-        // Render awal
+        // Form & Inline Event Handlers
+        function inlineUpdateTask(id, field, value) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            let val = parseInt(value);
+            if (isNaN(val)) return;
+
+            if (field === 'start') {
+                val = Math.max(1, Math.min(24, val));
+                task.start = val;
+                if (task.end < task.start) {
+                    task.end = task.start;
+                }
+            } else if (field === 'end') {
+                val = Math.max(1, Math.min(24, val));
+                task.end = val;
+                if (task.start > task.end) {
+                    task.start = task.end;
+                }
+            } else if (field === 'duration') {
+                val = Math.max(1, Math.min(24, val));
+                task.end = Math.min(24, task.start + val - 1);
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast('Jadwal berhasil diperbarui!');
+        }
+
+        // Klik pada cell tabel untuk memperbarui Start/End dengan cepat
+        function handleCellClick(taskId, day) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            // Jika klik di sebelah kiri start, jadikan start baru
+            if (day < task.start) {
+                task.start = day;
+            } 
+            // Jika klik di sebelah kanan end, jadikan end baru
+            else if (day > task.end) {
+                task.end = day;
+            } 
+            // Jika klik di dalam baris, dekatkan ke batas terdekat
+            else {
+                if (Math.abs(day - task.start) <= Math.abs(day - task.end)) {
+                    task.start = day;
+                } else {
+                    task.end = day;
+                }
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast(`Task "${task.desc}" diperbarui ke Hari ${task.start} - ${task.end}`);
+        }
+
+        // Synchronize modal input values (Start, End, Duration)
+        function syncFormValues(changedField) {
+            const startInput = document.getElementById('inputStart');
+            const endInput = document.getElementById('inputEnd');
+            const durationInput = document.getElementById('inputDuration');
+
+            let start = parseInt(startInput.value) || 1;
+            let end = parseInt(endInput.value) || 1;
+            let duration = parseInt(durationInput.value) || 1;
+
+            if (changedField === 'start') {
+                if (end < start) end = start;
+                duration = (end - start) + 1;
+            } else if (changedField === 'end') {
+                if (start > end) start = end;
+                duration = (end - start) + 1;
+            } else if (changedField === 'duration') {
+                end = Math.min(24, start + duration - 1);
+            }
+
+            startInput.value = Math.max(1, Math.min(24, start));
+            endInput.value = Math.max(1, Math.min(24, end));
+            durationInput.value = Math.max(1, Math.min(24, duration));
+        }
+
+        // Modal Operations
+        function openAddTaskModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
+            document.getElementById('taskId').value = '';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPic').value = '';
+            document.getElementById('inputStart').value = 1;
+            document.getElementById('inputEnd').value = 5;
+            document.getElementById('inputDuration').value = 5;
+            
+            showModal('taskModal');
+        }
+
+        function openEditTaskModal(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Task';
+            document.getElementById('taskId').value = task.id;
+            document.getElementById('inputDesc').value = task.desc;
+            document.getElementById('inputPic').value = task.pic;
+            document.getElementById('inputStart').value = task.start;
+            document.getElementById('inputEnd').value = task.end;
+            document.getElementById('inputDuration').value = (task.end - task.start) + 1;
+
+            showModal('taskModal');
+        }
+
+        function handleTaskFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('taskId').value;
+            const desc = document.getElementById('inputDesc').value.trim();
+            const pic = document.getElementById('inputPic').value.trim();
+            const start = parseInt(document.getElementById('inputStart').value);
+            const end = parseInt(document.getElementById('inputEnd').value);
+
+            if (!desc || !pic) return;
+
+            if (id) {
+                // Edit existing
+                const task = tasks.find(t => t.id === parseInt(id));
+                if (task) {
+                    task.desc = desc;
+                    task.pic = pic;
+                    task.start = start;
+                    task.end = end;
+                }
+            } else {
+                // Add new
+                const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                tasks.push({
+                    id: newId,
+                    desc: desc,
+                    pic: pic,
+                    start: start,
+                    end: end
+                });
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            closeTaskModal();
+            showToast(id ? 'Perubahan berhasil disimpan!' : 'Tugas baru berhasil ditambahkan!');
+        }
+
+        function confirmDeleteTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            showConfirm(
+                'Hapus Task',
+                `Apakah Anda yakin ingin menghapus "${task.desc}"?`,
+                () => {
+                    tasks = tasks.filter(t => t.id !== id);
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast('Task berhasil dihapus');
+                }
+            );
+        }
+
+        function confirmResetData() {
+            showConfirm(
+                'Reset Data Default',
+                'Semua revisi perubahan akan dikembalikan ke data awal. Lanjutkan?',
+                () => {
+                    tasks = [...defaultTasks];
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast('Data berhasil di-reset ke awal');
+                }
+            );
+        }
+
+        // Ekspor / Impor JSON
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Timeline_Proyek_September_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('File JSON berhasil diunduh');
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        tasks = imported;
+                        saveData();
+                        renderTable(parseInt(slider.value));
+                        showToast('Data berhasil diimpor!');
+                    } else {
+                        showToast('Format JSON tidak valid!', true);
+                    }
+                } catch (err) {
+                    showToast('Gagal membaca file JSON!', true);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Reset input file
+        }
+
+        // Utility Helpers Modal & Toast
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                const container = modal.querySelector('div');
+                if (container) container.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeTaskModal() {
+            const modal = document.getElementById('taskModal');
+            const container = document.getElementById('taskModalContainer');
+            modal.classList.add('opacity-0');
+            if (container) container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function showConfirm(title, message, onOk) {
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            const closeConfirm = () => {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            };
+
+            okBtn.onclick = () => {
+                closeConfirm();
+                onOk();
+            };
+
+            cancelBtn.onclick = closeConfirm;
+            showModal('confirmModal');
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = msg;
+            toastIcon.className = isError ? 'w-4 h-4 text-rose-400' : 'w-4 h-4 text-emerald-400';
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Initial setup
+        loadData();
+        slider.value = currentDay;
         renderTable(currentDay);
 
-        // Event listener untuk Slider interaktif
+        // Slider listener
         slider.addEventListener('input', function(e) {
             const selectedDay = parseInt(e.target.value);
             renderTable(selectedDay);
         });
 
+        // Initialize Lucide Icons
+        lucide.createIcons();
     </script>
 </body>
 </html>
