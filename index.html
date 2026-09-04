@@ -14,10 +14,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .gantt-grid {
-            display: grid;
-            grid-template-columns: 280px repeat(20, minmax(40px, 1fr));
-        }
         .we-are-here-line {
             position: absolute;
             top: 0;
@@ -62,6 +58,13 @@
             
             <!-- Quick Actions -->
             <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
+                    <label for="totalDaysInput" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
+                        <i class="fa-regular fa-calendar-days text-blue-600"></i> Total Hari:
+                    </label>
+                    <input type="number" id="totalDaysInput" onchange="updateTotalDays(this.value)" class="bg-white text-xs font-bold py-1 px-2 rounded border border-slate-300 text-blue-700 w-16 focus:outline-none focus:ring-2 focus:ring-blue-500" min="1">
+                </div>
+
                 <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
                     <label for="currentDaySelect" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
                         <i class="fa-solid fa-location-dot text-blue-600"></i> We are here:
@@ -162,7 +165,7 @@
                 <!-- Gantt Header -->
                 <div class="min-w-[1000px]">
                     <!-- Top Month Banner -->
-                    <div class="grid grid-cols-[280px_1fr] border-b border-slate-200">
+                    <div id="ganttTopBanner" class="grid border-b border-slate-200">
                         <div class="p-3 bg-slate-100 font-bold text-xs text-slate-700 border-r border-slate-200 flex items-center justify-between">
                             <span>BUTIRAN TUGASAN</span>
                             <span class="text-[10px] text-slate-500 uppercase">PIC</span>
@@ -172,25 +175,9 @@
                         </div>
                     </div>
 
-                    <!-- Days Header -->
-                    <div class="grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] border-b border-slate-300 text-xs font-semibold text-center bg-slate-50">
-                        <div class="p-2 text-left px-4 text-slate-500 text-[11px] border-r border-slate-200 flex items-center justify-between">
-                            <span>No & Description</span>
-                        </div>
-                        <!-- Days 1 to 20 -->
-                        <!-- Custom Day Colors: 5, 12, 19 Yellow | 6, 13, 20 Red -->
-                        <script>
-                            const highlightYellow = [5, 12, 19];
-                            const highlightRed = [6, 13, 20];
-                            for(let d=1; d<=20; d++) {
-                                let bgClass = "bg-white text-slate-700";
-                                if(highlightYellow.includes(d)) bgClass = "bg-yellow-300 text-slate-900 font-bold";
-                                if(highlightRed.includes(d)) bgClass = "bg-red-500 text-white font-bold";
-                                document.write(`<div id="day-header-${d}" class="p-2 border-r border-slate-200 ${bgClass} flex flex-col justify-center items-center relative">
-                                    <span>${d}</span>
-                                </div>`);
-                            }
-                        </script>
+                    <!-- Days Header (Dynamic) -->
+                    <div id="ganttHeaderDays" class="grid border-b border-slate-300 text-xs font-semibold text-center bg-slate-50">
+                        <!-- Dynamic Header Inject Here -->
                     </div>
 
                     <!-- Timeline Rows Body -->
@@ -229,12 +216,12 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Mula (1-20)</label>
-                        <input type="number" id="taskStart" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Mula</label>
+                        <input type="number" id="taskStart" min="1" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Tamat (1-20)</label>
-                        <input type="number" id="taskEnd" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Tamat</label>
+                        <input type="number" id="taskEnd" min="1" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                 </div>
 
@@ -264,34 +251,50 @@
 
     <!-- Application Script Logic -->
     <script>
-        // Initial Tasks Data matching the provided Excel screenshot
+        let totalDays = parseInt(localStorage.getItem("timeline_total_days")) || 31;
+        let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4;
+        
+        // Initial Tasks Data matching the NEW provided Excel screenshot
         const initialTasks = [
-            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 12, status: "In Progress" },
-            { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 10, endDay: 15, status: "Pending" },
+            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 13, status: "In Progress" },
+            { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 11, endDay: 15, status: "Pending" },
             { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "In Progress" },
-            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 7, endDay: 8, status: "Pending" },
-            { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 8, endDay: 10, status: "Pending" },
-            { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 9, endDay: 11, status: "Pending" },
-            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 9, endDay: 14, status: "Pending", splitExtra: [14] }, // Special case for Day 14 block in image
-            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 15, endDay: 16, status: "Pending" },
-            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 16, status: "Pending" },
-            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 17, status: "Pending" },
-            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 18, status: "Pending" }
+            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 8, endDay: 8, status: "Pending" },
+            { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 9, endDay: 11, status: "Pending" },
+            { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 10, endDay: 12, status: "Pending" },
+            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 11, endDay: 15, status: "Pending", exclude: [12, 13] },
+            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 18, status: "Pending" },
+            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 18, endDay: 18, status: "Pending" },
+            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 21, status: "Pending", exclude: [18, 19, 20] },
+            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 21, endDay: 24, status: "Pending" }
         ];
 
         let tasks = JSON.parse(localStorage.getItem("timeline_tasks")) || initialTasks;
-        let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4; // Default day 4 as in "We are here" box
 
-        // Initialize Options for 'We are here' select
-        function initCurrentDaySelect() {
+        function initSettings() {
+            document.getElementById("totalDaysInput").value = totalDays;
+            
             const select = document.getElementById("currentDaySelect");
             select.innerHTML = "";
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= totalDays; i++) {
                 const opt = document.createElement("option");
                 opt.value = i;
                 opt.textContent = `Hari ${i}`;
                 if (i === currentDay) opt.selected = true;
                 select.appendChild(opt);
+            }
+        }
+
+        function updateTotalDays(days) {
+            totalDays = parseInt(days) || 31;
+            localStorage.setItem("timeline_total_days", totalDays);
+            
+            // Adjust current day if it exceeds new total days
+            if(currentDay > totalDays) {
+                updateCurrentDay(totalDays);
+            } else {
+                initSettings();
+                renderTimeline();
             }
         }
 
@@ -301,7 +304,6 @@
             renderTimeline();
         }
 
-        // Render Status Stats
         function updateStats() {
             document.getElementById("statTotal").textContent = tasks.length;
             document.getElementById("statInProgress").textContent = tasks.filter(t => t.status === "In Progress").length;
@@ -311,11 +313,35 @@
             document.getElementById("statPIC").textContent = uniquePics.size;
         }
 
-        // Render Gantt Chart Table
         function renderTimeline() {
             const container = document.getElementById("ganttRows");
+            const headerContainer = document.getElementById("ganttHeaderDays");
+            const topBanner = document.getElementById("ganttTopBanner");
+            
             const searchVal = document.getElementById("searchInput").value.toLowerCase();
             const picVal = document.getElementById("picFilter").value;
+
+            // Update Grids based on dynamic totalDays
+            const gridTemplate = `280px repeat(${totalDays}, minmax(36px, 1fr))`;
+            topBanner.style.gridTemplateColumns = `280px 1fr`;
+            headerContainer.style.gridTemplateColumns = gridTemplate;
+
+            // Render Header Days
+            let headerHTML = `<div class="p-2 text-left px-4 text-slate-500 text-[11px] border-r border-slate-200 flex items-center justify-between">
+                                <span>No & Description</span>
+                            </div>`;
+            const highlightYellow = [5, 12, 19, 26];
+            const highlightRed = [6, 13, 20, 27];
+            
+            for(let d=1; d<=totalDays; d++) {
+                let bgClass = "bg-white text-slate-700";
+                if(highlightYellow.includes(d)) bgClass = "bg-yellow-300 text-slate-900 font-bold";
+                if(highlightRed.includes(d)) bgClass = "bg-red-500 text-white font-bold";
+                headerHTML += `<div class="p-2 border-r border-slate-200 ${bgClass} flex flex-col justify-center items-center relative">
+                                  <span>${d}</span>
+                               </div>`;
+            }
+            headerContainer.innerHTML = headerHTML;
 
             // Filter tasks
             const filtered = tasks.filter(task => {
@@ -338,16 +364,18 @@
 
             filtered.forEach((task, index) => {
                 const row = document.createElement("div");
-                row.className = "grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] items-center hover:bg-slate-50/80 transition group";
+                row.className = "items-center hover:bg-slate-50/80 transition group";
+                row.style.display = "grid";
+                row.style.gridTemplateColumns = gridTemplate;
 
-                // Left column: Description & PIC
+                // Left column
                 let statusBadge = "";
                 if(task.status === "Completed") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Selesai"></span>`;
                 else if(task.status === "In Progress") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Dalam Proses"></span>`;
                 else statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-slate-300" title="Belum Mula"></span>`;
 
                 let leftColHTML = `
-                    <div class="p-2.5 px-4 border-r border-slate-200 flex items-center justify-between gap-2 overflow-hidden bg-white group-hover:bg-slate-50/80">
+                    <div class="p-2.5 px-4 border-r border-slate-200 flex items-center justify-between gap-2 overflow-hidden bg-white group-hover:bg-slate-50/80 h-full">
                         <div class="flex items-center gap-2 overflow-hidden">
                             ${statusBadge}
                             <span class="font-bold text-slate-400 w-5 text-right flex-shrink-0">${task.no || index + 1}</span>
@@ -367,18 +395,15 @@
                     </div>
                 `;
 
-                // 20 Day cells
+                // Days columns loop
                 let daysCellsHTML = "";
-                for (let d = 1; d <= 20; d++) {
+                for (let d = 1; d <= totalDays; d++) {
                     const isWeAreHere = (d === currentDay);
                     let cellBg = "";
                     
-                    // Highlight logic matching Excel:
-                    // Task range active check
                     let isActive = false;
                     if (d >= task.startDay && d <= task.endDay) {
-                        // Exception logic for Task 7 in image (it spans 9-11 and 14)
-                        if(task.no === 7 && d > 11 && d < 14) {
+                        if (task.exclude && task.exclude.includes(d)) {
                             isActive = false;
                         } else {
                             isActive = true;
@@ -386,10 +411,7 @@
                     }
 
                     let dayStyle = "border-r border-slate-200 relative min-h-[42px] flex items-center justify-center p-0.5";
-                    
-                    if (isWeAreHere) {
-                        dayStyle += " bg-blue-50/40"; // Light highlight for active day column
-                    }
+                    if (isWeAreHere) dayStyle += " bg-blue-50/40"; 
 
                     if (isActive) {
                         let barColor = "bg-amber-400 text-amber-950 shadow-sm";
@@ -399,7 +421,6 @@
                         </div>`;
                     }
 
-                    // Active "We Are Here" dashed highlight box on active day column
                     let borderHighlight = "";
                     if (isWeAreHere) {
                         borderHighlight = `<div class="absolute inset-y-0 inset-x-0.5 border-2 border-dashed border-blue-600 pointer-events-none z-10"></div>`;
@@ -420,7 +441,6 @@
             updateStats();
         }
 
-        // Toggle Task Status directly on timeline click
         function toggleTaskStatus(id) {
             const task = tasks.find(t => t.id === id);
             if (task) {
@@ -433,12 +453,10 @@
             }
         }
 
-        // Save Tasks to localStorage
         function saveTasksToStorage() {
             localStorage.setItem("timeline_tasks", JSON.stringify(tasks));
         }
 
-        // Modal Controls
         function openAddTaskModal() {
             document.getElementById("taskId").value = "";
             document.getElementById("taskForm").reset();
@@ -475,7 +493,6 @@
             const status = document.getElementById("taskStatus").value;
 
             if (id) {
-                // Edit existing
                 const task = tasks.find(t => t.id == id);
                 if (task) {
                     task.desc = desc;
@@ -485,7 +502,6 @@
                     task.status = status;
                 }
             } else {
-                // New Task
                 const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
                 const newNo = tasks.length + 1;
                 tasks.push({ id: newId, no: newNo, desc, pic, startDay, endDay, status });
@@ -499,16 +515,14 @@
         function deleteTask(id) {
             if (confirm("Adakah anda pasti mahu memadam tugasan ini?")) {
                 tasks = tasks.filter(t => t.id !== id);
-                // Re-index No
                 tasks.forEach((t, i) => t.no = i + 1);
                 saveTasksToStorage();
                 renderTimeline();
             }
         }
 
-        // Initialize App
         window.onload = function() {
-            initCurrentDaySelect();
+            initSettings();
             renderTimeline();
         };
     </script>
