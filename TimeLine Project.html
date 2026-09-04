@@ -3,514 +3,856 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Project Timeline - September</title>
-    <!-- Tailwind CSS -->
+    <title>Dashboard Modern - Timeline Proyek September</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            cyan: '#06b6d4',
+                            blue: '#3b82f6',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            amber: '#f59e0b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
+        /* Modern Glassmorphism Custom Styling */
         body {
-            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgba(15, 30, 45, 1) 0%, rgba(8, 15, 25, 1) 90%);
         }
-        .gantt-grid {
-            display: grid;
-            grid-template-columns: 280px repeat(20, minmax(40px, 1fr));
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-        .we-are-here-line {
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom Table Styling */
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        
+        th, td {
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            border-right: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 8px 12px;
+            font-size: 0.82rem;
+        }
+
+        th:first-child, td:first-child {
+            border-left: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        thead tr:first-child th {
+            border-top: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .timeline-cell {
+            padding: 0 !important;
+            min-width: 36px;
+            max-width: 36px;
+            height: 42px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-cell:hover {
+            background-color: rgba(56, 189, 248, 0.08);
+        }
+
+        /* Indicator Line "We are here" */
+        .col-current {
+            position: relative;
+        }
+
+        .col-current::before {
+            content: '';
             position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            border-left: 2px dashed #2563eb;
-            z-index: 20;
+            top: 0; 
+            bottom: 0; 
+            left: -1px; 
+            right: -1px;
+            border-left: 2px dashed #06b6d4;
+            border-right: 2px dashed #06b6d4;
             pointer-events: none;
+            z-index: 20;
+            background-color: rgba(6, 182, 212, 0.12);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
         }
+
+        .col-current-top::before {
+            border-top: 2px dashed #06b6d4;
+            top: 0;
+        }
+
+        .col-current-bottom::before {
+            border-bottom: 2px dashed #06b6d4;
+            bottom: 0;
+        }
+
+        .we-are-here-badge {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: #0f172a;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            white-space: nowrap;
+            z-index: 30;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        .we-are-here-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 4px 4px 0 4px;
+            border-style: solid;
+            border-color: #3b82f6 transparent transparent transparent;
+        }
+
+        /* Gantt Neon Bars */
+        .bar-not-started {
+            background: rgba(100, 116, 139, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            box-shadow: 0 0 8px rgba(100, 116, 139, 0.3);
+        }
+
+        .bar-in-progress {
+            background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
+            border: 1px solid rgba(165, 243, 252, 0.6);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.6);
+        }
+
+        .bar-finish {
+            background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%);
+            border: 1px solid rgba(167, 243, 208, 0.6);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
+            height: 10px;
+            width: 10px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 6px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            border: 2px solid rgba(15, 23, 42, 0.8);
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(56, 189, 248, 0.6);
+        }
+
+        /* Glow animation for active simulation badge */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
+        }
+        .glow-active {
+            animation: pulse-glow 2s infinite;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <div class="flex items-center gap-3">
-                    <span class="p-2 bg-blue-600 text-white rounded-lg shadow-sm">
-                        <i class="fa-solid fa-chart-gantt text-xl"></i>
-                    </span>
+    <!-- Decorative Glow Accents in Background -->
+    <div class="fixed -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-[1650px] mx-auto space-y-5 relative z-10">
+        
+        <!-- Top Dashboard Header Banner -->
+        <div class="glass-panel p-5 rounded-2xl flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+            <div class="flex items-center gap-4">
+                <div class="p-3.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-lg">
+                    <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-400">
+                        Dashboard Modern - Timeline Proyek September
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-400 flex items-center gap-3 mt-1">
+                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> Bulan: <strong class="text-slate-200">September</strong></span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span id="taskCounterText" class="text-slate-300 font-medium">Total Tasks: 11</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Top Dashboard Stats & Controls -->
+            <div class="flex flex-wrap items-center gap-3">
+                
+                <!-- Stat Gauge Widget -->
+                <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3 border border-teal-500/20">
+                    <div class="relative w-11 h-11 flex items-center justify-center">
+                        <svg class="w-11 h-11 transform -rotate-90">
+                            <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-slate-800" fill="transparent" />
+                            <circle id="progressCircle" cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-cyan-400 transition-all duration-500" stroke-dasharray="113" stroke-dashoffset="30" fill="transparent" />
+                        </svg>
+                        <span id="completionPercent" class="absolute text-[10px] font-bold text-cyan-300">72%</span>
+                    </div>
                     <div>
-                        <h1 class="text-xl font-bold text-slate-900">Project Implementation Timeline</h1>
-                        <p class="text-xs text-slate-500">September Live Tracker & Status Monitor</p>
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Progress Completion</p>
+                        <p id="completionLabel" class="text-xs font-bold text-slate-200">8 dari 11 Selesai</p>
                     </div>
                 </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="openAddTaskModal()" class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                        <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
+                        <span>Tambah Task</span>
+                    </button>
+                    <button onclick="exportJSON()" class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-slate-700">
+                        <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Ekspor</span>
+                    </button>
+                    <label class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1.5 border border-slate-700">
+                        <i data-lucide="upload" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Impor</span>
+                        <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
+                    </label>
+                    <button onclick="confirmResetData()" class="px-3.5 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Section: Interactive Slider & Legend Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            
+            <!-- Day Simulation Card -->
+            <div class="lg:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-cyan-400">
+                <div class="flex justify-between items-center mb-3">
+                    <label for="daySlider" class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
+                        Simulasi "We are here":
+                    </label>
+                    <span id="dayDisplay" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-extrabold text-xs glow-active">Hari 4</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-500 font-bold">HARI 1</span>
+                    <input type="range" id="daySlider" min="1" max="24" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
+                    <span class="text-xs text-slate-500 font-bold">HARI 24</span>
+                </div>
+            </div>
+
+            <!-- Legend Status Card -->
+            <div class="lg:col-span-7 glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-around gap-3">
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-slate-600 rounded-md border border-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.4)]"></span>
+                    <div class="text-xs">
+                        <p class="font-bold text-slate-200">Not Started</p>
+                        <p class="text-[10px] text-slate-400">Belum dimulai</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-md shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
+                    <div class="text-xs">
+                        <p class="font-bold text-cyan-300">In Progress</p>
+                        <p class="text-[10px] text-slate-400">Sedang berlangsung</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-md shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                    <div class="text-xs">
+                        <p class="font-bold text-emerald-300">Finish</p>
+                        <p class="text-[10px] text-slate-400">Telah selesai</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Gantt Table Container -->
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Klik langsung angka di kolom <strong>Start/End/Durasi</strong> atau klik sel timeline untuk memperbarui jadwal.</span>
+                <span class="font-semibold text-cyan-400">September (1 - 24)</span>
             </div>
             
-            <!-- Quick Actions -->
-            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-                    <label for="currentDaySelect" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
-                        <i class="fa-solid fa-location-dot text-blue-600"></i> We are here:
-                    </label>
-                    <select id="currentDaySelect" onchange="updateCurrentDay(this.value)" class="bg-white text-xs font-bold py-1 px-2 rounded border border-slate-300 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <!-- Options populated via JS -->
-                    </select>
-                </div>
-
-                <button onclick="openAddTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-plus"></i> Tambah Tugasan
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
-
-        <!-- Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
-                    <i class="fa-solid fa-list-check text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Jumlah Tugasan</p>
-                    <p id="statTotal" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
-                    <i class="fa-solid fa-spinner text-xl animate-spin-slow"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Dalam Proses</p>
-                    <p id="statInProgress" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-                    <i class="fa-solid fa-circle-check text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Selesai</p>
-                    <p id="statCompleted" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
-                    <i class="fa-solid fa-users text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">PIC Terlibat</p>
-                    <p id="statPIC" class="text-xl font-bold text-slate-800">0</p>
-                </div>
+            <div class="overflow-x-auto custom-scrollbar">
+                <table id="timelineTable" class="w-full text-slate-200 select-none">
+                    <!-- Dynamic Table Content -->
+                </table>
             </div>
         </div>
 
-        <!-- Filter & Search Controls -->
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <div class="relative flex-1 md:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="renderTimeline()" placeholder="Cari deskripsi..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+
+    <!-- Glassmorphic Modal Task Detail Editor -->
+    <div id="taskModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-lg p-6 m-4 transform scale-95 transition-all duration-300 border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]" id="taskModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-cyan-400 rounded-full"></div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-slate-100">Task Detail Editor</h3>
                 </div>
-
-                <select id="picFilter" onchange="renderTimeline()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
-                    <option value="ALL">Semua PIC</option>
-                    <option value="OT,IT Local dan Vendor">OT, IT Local & Vendor</option>
-                    <option value="AI TD , IT Local dan Vendor">AI TD, IT Local & Vendor</option>
-                    <option value="AI TD, OT & IT Local">AI TD, OT & IT Local</option>
-                    <option value="AI TD">AI TD</option>
-                </select>
-            </div>
-
-            <!-- Legends -->
-            <div class="flex items-center gap-4 text-xs font-medium text-slate-600 self-end md:self-auto flex-wrap">
-                <div class="flex items-center gap-1.5">
-                    <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
-                    <span>Tugasan / Highlight (Kuning)</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-                    <span>Hari Libur (Merah)</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-3.5 h-3.5 border-2 border-dashed border-blue-600 inline-block bg-blue-50"></span>
-                    <span>We Are Here</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gantt Chart Container -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-            <div class="overflow-x-auto custom-scrollbar relative" id="ganttScrollContainer">
-                
-                <!-- Gantt Header -->
-                <div class="min-w-[1000px]">
-                    <!-- Top Month Banner -->
-                    <div class="grid grid-cols-[280px_1fr] border-b border-slate-200">
-                        <div class="p-3 bg-slate-100 font-bold text-xs text-slate-700 border-r border-slate-200 flex items-center justify-between">
-                            <span>BUTIRAN TUGASAN</span>
-                            <span class="text-[10px] text-slate-500 uppercase">PIC</span>
-                        </div>
-                        <div class="bg-slate-100 font-bold text-xs text-center py-2 text-slate-800 tracking-wider uppercase border-b border-slate-200">
-                            SEPTEMBER
-                        </div>
-                    </div>
-
-                    <!-- Days Header -->
-                    <div class="grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] border-b border-slate-300 text-xs font-semibold text-center bg-slate-50">
-                        <div class="p-2 text-left px-4 text-slate-500 text-[11px] border-r border-slate-200 flex items-center justify-between">
-                            <span>No & Description</span>
-                        </div>
-                        <!-- Days 1 to 20 -->
-                        <!-- Custom Day Colors: 5, 12, 19 Yellow | 6, 13, 20 Red -->
-                        <script>
-                            const highlightYellow = [5, 12, 19];
-                            const highlightRed = [6, 13, 20];
-                            for(let d=1; d<=20; d++) {
-                                let bgClass = "bg-white text-slate-700";
-                                if(highlightYellow.includes(d)) bgClass = "bg-yellow-300 text-slate-900 font-bold";
-                                if(highlightRed.includes(d)) bgClass = "bg-red-500 text-white font-bold";
-                                document.write(`<div id="day-header-${d}" class="p-2 border-r border-slate-200 ${bgClass} flex flex-col justify-center items-center relative">
-                                    <span>${d}</span>
-                                </div>`);
-                            }
-                        </script>
-                    </div>
-
-                    <!-- Timeline Rows Body -->
-                    <div id="ganttRows" class="relative divide-y divide-slate-100 text-xs">
-                        <!-- Dynamic Rows Inject Here -->
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modal Form (Tambah / Edit Task) -->
-    <div id="taskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200 transform transition-all">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modalTitle" class="text-base font-bold text-slate-900">Tambah Tugasan Baru</h3>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600 transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-cyan-400 transition p-1 rounded-lg hover:bg-slate-800">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <form id="taskForm" onsubmit="saveTask(event)" class="space-y-4">
+            <form id="taskForm" onsubmit="handleTaskFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="taskId">
                 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Deskripsi Tugasan</label>
-                    <input type="text" id="taskDesc" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Description</label>
+                    <input type="text" id="inputDesc" required placeholder="Nama / Deskripsi Task" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">PIC (Person In Charge)</label>
-                    <input type="text" id="taskPic" required placeholder="e.g. OT, IT Local dan Vendor" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">PIC (Penanggung Jawab)</label>
+                    <input type="text" id="inputPic" required placeholder="PIC / Tim Terkait" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Mula (1-20)</label>
-                        <input type="number" id="taskStart" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Start Day</label>
+                        <input type="number" id="inputStart" min="1" max="24" required oninput="syncFormValues('start')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Tamat (1-20)</label>
-                        <input type="number" id="taskEnd" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">End Day</label>
+                        <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Duration (Days)</label>
+                        <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Status Tugasan</label>
-                    <select id="taskStatus" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
-                        <option value="Pending">Belum Mula</option>
-                        <option value="In Progress">Dalam Proses</option>
-                        <option value="Completed">Selesai</option>
-                    </select>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">Batal</button>
-                    <button type="submit" class="px-4 py-2 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition shadow-sm">Simpan</button>
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(6,182,212,0.5)]">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4">
-            Project Management Timeline &copy; September Live Tracker. Direct GitHub Pages Deployment Ready.
+    <!-- Custom Glass Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-sm p-6 m-4 text-center border border-rose-500/30">
+            <div class="w-12 h-12 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 id="confirmTitle" class="text-base font-bold text-slate-100 mb-1">Konfirmasi</h3>
+            <p id="confirmMessage" class="text-xs text-slate-400 mb-6">Apakah Anda yakin ingin melakukan tindakan ini?</p>
+            
+            <div class="flex justify-center gap-3">
+                <button id="confirmCancelBtn" class="w-full py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                <button id="confirmOkBtn" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-[0_0_12px_rgba(225,29,72,0.5)]">Ya, Lanjutkan</button>
+            </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- Application Script Logic -->
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
+        <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
+        <span id="toastMsg">Pesan Toast</span>
+    </div>
+
     <script>
-        // Initial Tasks Data matching the provided Excel screenshot
-        const initialTasks = [
-            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 12, status: "In Progress" },
-            { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 10, endDay: 15, status: "Pending" },
-            { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "In Progress" },
-            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 7, endDay: 8, status: "Pending" },
-            { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 8, endDay: 10, status: "Pending" },
-            { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 9, endDay: 11, status: "Pending" },
-            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 9, endDay: 14, status: "Pending", splitExtra: [14] }, // Special case for Day 14 block in image
-            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 15, endDay: 16, status: "Pending" },
-            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 16, status: "Pending" },
-            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 17, status: "Pending" },
-            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 18, status: "Pending" }
+        // Data Default Tugas Awal
+        const defaultTasks = [
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5 },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10 },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11 },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12 },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16 },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18 },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19 },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21 },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23 },
         ];
 
-        let tasks = JSON.parse(localStorage.getItem("timeline_tasks")) || initialTasks;
-        let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4; // Default day 4 as in "We are here" box
+        let tasks = [];
+        const yellowDays = [5, 12, 19]; // Sabtu (Kuning)
+        const redDays = [6, 13, 20];    // Minggu (Merah)
 
-        // Initialize Options for 'We are here' select
-        function initCurrentDaySelect() {
-            const select = document.getElementById("currentDaySelect");
-            select.innerHTML = "";
-            for (let i = 1; i <= 20; i++) {
-                const opt = document.createElement("option");
-                opt.value = i;
-                opt.textContent = `Hari ${i}`;
-                if (i === currentDay) opt.selected = true;
-                select.appendChild(opt);
-            }
-        }
+        const today = new Date();
+        let currentDay = today.getDate();
+        if (currentDay > 24) currentDay = 24;
+        if (currentDay < 1) currentDay = 4;
 
-        function updateCurrentDay(day) {
-            currentDay = parseInt(day);
-            localStorage.setItem("timeline_current_day", currentDay);
-            renderTimeline();
-        }
+        // DOM Elements
+        const table = document.getElementById('timelineTable');
+        const slider = document.getElementById('daySlider');
+        const dayDisplay = document.getElementById('dayDisplay');
 
-        // Render Status Stats
-        function updateStats() {
-            document.getElementById("statTotal").textContent = tasks.length;
-            document.getElementById("statInProgress").textContent = tasks.filter(t => t.status === "In Progress").length;
-            document.getElementById("statCompleted").textContent = tasks.filter(t => t.status === "Completed").length;
-            
-            const uniquePics = new Set(tasks.map(t => t.pic));
-            document.getElementById("statPIC").textContent = uniquePics.size;
-        }
-
-        // Render Gantt Chart Table
-        function renderTimeline() {
-            const container = document.getElementById("ganttRows");
-            const searchVal = document.getElementById("searchInput").value.toLowerCase();
-            const picVal = document.getElementById("picFilter").value;
-
-            // Filter tasks
-            const filtered = tasks.filter(task => {
-                const matchSearch = task.desc.toLowerCase().includes(searchVal) || task.pic.toLowerCase().includes(searchVal);
-                const matchPic = picVal === "ALL" || task.pic === picVal;
-                return matchSearch && matchPic;
-            });
-
-            container.innerHTML = "";
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="p-8 text-center text-slate-400">
-                        <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
-                        <p>Tiada tugasan ditemui.</p>
-                    </div>`;
-                updateStats();
-                return;
-            }
-
-            filtered.forEach((task, index) => {
-                const row = document.createElement("div");
-                row.className = "grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] items-center hover:bg-slate-50/80 transition group";
-
-                // Left column: Description & PIC
-                let statusBadge = "";
-                if(task.status === "Completed") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Selesai"></span>`;
-                else if(task.status === "In Progress") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Dalam Proses"></span>`;
-                else statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-slate-300" title="Belum Mula"></span>`;
-
-                let leftColHTML = `
-                    <div class="p-2.5 px-4 border-r border-slate-200 flex items-center justify-between gap-2 overflow-hidden bg-white group-hover:bg-slate-50/80">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            ${statusBadge}
-                            <span class="font-bold text-slate-400 w-5 text-right flex-shrink-0">${task.no || index + 1}</span>
-                            <div class="truncate">
-                                <div class="font-medium text-slate-800 truncate text-xs" title="${task.desc}">${task.desc}</div>
-                                <div class="text-[10px] text-slate-500 truncate" title="${task.pic}">${task.pic}</div>
-                            </div>
-                        </div>
-                        <div class="opacity-0 group-hover:opacity-100 transition flex items-center gap-1 flex-shrink-0">
-                            <button onclick="editTask(${task.id})" class="text-blue-600 hover:text-blue-800 p-1" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button onclick="deleteTask(${task.id})" class="text-red-500 hover:text-red-700 p-1" title="Padam">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                // 20 Day cells
-                let daysCellsHTML = "";
-                for (let d = 1; d <= 20; d++) {
-                    const isWeAreHere = (d === currentDay);
-                    let cellBg = "";
-                    
-                    // Highlight logic matching Excel:
-                    // Task range active check
-                    let isActive = false;
-                    if (d >= task.startDay && d <= task.endDay) {
-                        // Exception logic for Task 7 in image (it spans 9-11 and 14)
-                        if(task.no === 7 && d > 11 && d < 14) {
-                            isActive = false;
-                        } else {
-                            isActive = true;
-                        }
-                    }
-
-                    let dayStyle = "border-r border-slate-200 relative min-h-[42px] flex items-center justify-center p-0.5";
-                    
-                    if (isWeAreHere) {
-                        dayStyle += " bg-blue-50/40"; // Light highlight for active day column
-                    }
-
-                    if (isActive) {
-                        let barColor = "bg-amber-400 text-amber-950 shadow-sm";
-                        if(task.status === "Completed") barColor = "bg-emerald-500 text-white";
-
-                        cellBg = `<div class="w-full h-6 ${barColor} rounded-sm flex items-center justify-center text-[9px] font-bold transition transform hover:scale-105 cursor-pointer" onclick="toggleTaskStatus(${task.id})" title="Klik untuk tukar status">
-                        </div>`;
-                    }
-
-                    // Active "We Are Here" dashed highlight box on active day column
-                    let borderHighlight = "";
-                    if (isWeAreHere) {
-                        borderHighlight = `<div class="absolute inset-y-0 inset-x-0.5 border-2 border-dashed border-blue-600 pointer-events-none z-10"></div>`;
-                    }
-
-                    daysCellsHTML += `
-                        <div class="${dayStyle}">
-                            ${borderHighlight}
-                            ${cellBg}
-                        </div>
-                    `;
+        function loadData() {
+            const saved = localStorage.getItem('project_timeline_tasks_v2');
+            if (saved) {
+                try {
+                    tasks = JSON.parse(saved);
+                } catch (e) {
+                    tasks = [...defaultTasks];
                 }
+            } else {
+                tasks = [...defaultTasks];
+            }
+        }
 
-                row.innerHTML = leftColHTML + daysCellsHTML;
-                container.appendChild(row);
-            });
-
+        function saveData() {
+            localStorage.setItem('project_timeline_tasks_v2', JSON.stringify(tasks));
             updateStats();
         }
 
-        // Toggle Task Status directly on timeline click
-        function toggleTaskStatus(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                if (task.status === "Pending") task.status = "In Progress";
-                else if (task.status === "In Progress") task.status = "Completed";
-                else task.status = "Pending";
+        function updateStats() {
+            const elCounter = document.getElementById('taskCounterText');
+            if (elCounter) elCounter.textContent = `Total Tasks: ${tasks.length}`;
 
-                saveTasksToStorage();
-                renderTimeline();
+            // Calculate Completion %
+            const activeDay = parseInt(slider.value) || currentDay;
+            const completedCount = tasks.filter(t => activeDay > t.end).length;
+            const percentage = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+            const circle = document.getElementById('progressCircle');
+            const pctText = document.getElementById('completionPercent');
+            const labelText = document.getElementById('completionLabel');
+
+            if (circle) {
+                // Circle circumference ~ 113
+                const offset = 113 - (113 * percentage) / 100;
+                circle.style.strokeDashoffset = offset;
             }
+            if (pctText) pctText.textContent = `${percentage}%`;
+            if (labelText) labelText.textContent = `${completedCount} dari ${tasks.length} Selesai`;
         }
 
-        // Save Tasks to localStorage
-        function saveTasksToStorage() {
-            localStorage.setItem("timeline_tasks", JSON.stringify(tasks));
+        function renderTable(activeDay) {
+            table.innerHTML = '';
+            dayDisplay.textContent = `HARI ${activeDay}`;
+            updateStats();
+
+            // --- THEAD ---
+            const thead = document.createElement('thead');
+            
+            let tr1 = `
+                <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
+                    <th rowspan="2" class="w-10 text-center bg-slate-900/95 border-b border-slate-800">No</th>
+                    <th rowspan="2" class="min-w-[210px] text-left bg-slate-900/95 border-b border-slate-800 text-cyan-300">TASK NAME</th>
+                    <th rowspan="2" class="min-w-[170px] text-left bg-slate-900/95 border-b border-slate-800">PIC</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">Start</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">End</th>
+                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800 text-cyan-400">Durasi</th>
+                    <th rowspan="2" class="w-20 text-center bg-slate-900/95 border-b border-slate-800">Aksi</th>
+                    <th colspan="24" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest">HARI (SEPTEMBER)</th>
+                </tr>
+            `;
+            thead.innerHTML += tr1;
+
+            let tr2 = '<tr class="text-[11px] font-bold text-slate-400 bg-slate-900/90">';
+            for(let i = 1; i <= 24; i++) {
+                let bgClass = 'bg-slate-900/60 text-slate-300';
+                
+                if (yellowDays.includes(i)) {
+                    bgClass = 'bg-amber-500/20 text-amber-300 border-b border-amber-500/30';
+                } else if (redDays.includes(i)) {
+                    bgClass = 'bg-rose-500/20 text-rose-300 border-b border-rose-500/30';
+                }
+
+                let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
+                let badge = (i === activeDay) ? `<div class="we-are-here-badge">HARI ${i}</div>` : '';
+
+                tr2 += `<th class="text-center ${bgClass} ${currentClass} relative">${badge}${i}</th>`;
+            }
+            tr2 += '</tr>';
+            thead.innerHTML += tr2;
+            table.appendChild(thead);
+
+            // --- TBODY ---
+            const tbody = document.createElement('tbody');
+            
+            if (tasks.length === 0) {
+                const emptyTr = document.createElement('tr');
+                emptyTr.innerHTML = `
+                    <td colspan="31" class="text-center py-10 text-slate-500 text-xs">
+                        Belum ada task. Klik tombol <strong>+ Tambah Task</strong> di atas.
+                    </td>
+                `;
+                tbody.appendChild(emptyTr);
+            } else {
+                tasks.forEach((task, index) => {
+                    let isLastRow = index === tasks.length - 1;
+                    let tr = document.createElement('tr');
+                    tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60";
+                    
+                    const duration = (task.end - task.start) + 1;
+
+                    let statusClass = '';
+                    let statusLabel = '';
+                    if (activeDay < task.start) {
+                        statusClass = 'bar-not-started';
+                        statusLabel = 'Not Started';
+                    } else if (activeDay > task.end) {
+                        statusClass = 'bar-finish';
+                        statusLabel = 'Finish';
+                    } else {
+                        statusClass = 'bar-in-progress';
+                        statusLabel = 'In Progress';
+                    }
+
+                    tr.innerHTML = `
+                        <td class="text-center font-mono text-slate-500 text-xs">${index + 1}</td>
+                        <td class="font-semibold text-slate-100 flex items-center justify-between gap-2 py-2.5">
+                            <span>${escapeHtml(task.desc)}</span>
+                        </td>
+                        <td class="text-slate-400 text-xs">${escapeHtml(task.pic)}</td>
+                        <td class="text-center">
+                            <input type="number" min="1" max="24" value="${task.start}" 
+                                onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
+                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                        </td>
+                        <td class="text-center">
+                            <input type="number" min="1" max="24" value="${task.end}" 
+                                onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
+                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                        </td>
+                        <td class="text-center">
+                            <input type="number" min="1" max="24" value="${duration}" 
+                                onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
+                                class="w-11 text-center py-0.5 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                        </td>
+                        <td class="text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
+                                <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus Task" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded transition">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+
+                    // Timeline Days
+                    for(let i = 1; i <= 24; i++) {
+                        let isActive = i >= task.start && i <= task.end;
+                        let currentClass = (i === activeDay) ? 'col-current' : '';
+                        if (i === activeDay && isLastRow) {
+                            currentClass += ' col-current-bottom';
+                        }
+
+                        let barRounded = 'rounded-md';
+                        if (i === task.start && i === task.end) {
+                            barRounded = 'rounded-lg';
+                        } else if (i === task.start) {
+                            barRounded = 'rounded-l-lg';
+                        } else if (i === task.end) {
+                            barRounded = 'rounded-r-lg';
+                        }
+
+                        let textInBar = (i === task.start) ? `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>` : '';
+
+                        tr.innerHTML += `
+                            <td class="timeline-cell ${currentClass} text-center align-middle" 
+                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk atur rentang hari">
+                                ${isActive ? `<div class="w-full h-7 ${statusClass} ${barRounded} flex items-center justify-center text-slate-950 overflow-hidden transition-all">${textInBar}</div>` : ''}
+                            </td>
+                        `;
+                    }
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            table.appendChild(tbody);
+            lucide.createIcons();
         }
 
-        // Modal Controls
-        function openAddTaskModal() {
-            document.getElementById("taskId").value = "";
-            document.getElementById("taskForm").reset();
-            document.getElementById("modalTitle").textContent = "Tambah Tugasan Baru";
-            document.getElementById("taskModal").classList.remove("hidden");
-        }
-
-        function closeTaskModal() {
-            document.getElementById("taskModal").classList.add("hidden");
-        }
-
-        function editTask(id) {
+        function inlineUpdateTask(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
-            document.getElementById("taskId").value = task.id;
-            document.getElementById("taskDesc").value = task.desc;
-            document.getElementById("taskPic").value = task.pic;
-            document.getElementById("taskStart").value = task.startDay;
-            document.getElementById("taskEnd").value = task.endDay;
-            document.getElementById("taskStatus").value = task.status;
+            let val = parseInt(value);
+            if (isNaN(val)) return;
 
-            document.getElementById("modalTitle").textContent = "Kemaskini Tugasan";
-            document.getElementById("taskModal").classList.remove("hidden");
+            if (field === 'start') {
+                val = Math.max(1, Math.min(24, val));
+                task.start = val;
+                if (task.end < task.start) task.end = task.start;
+            } else if (field === 'end') {
+                val = Math.max(1, Math.min(24, val));
+                task.end = val;
+                if (task.start > task.end) task.start = task.end;
+            } else if (field === 'duration') {
+                val = Math.max(1, Math.min(24, val));
+                task.end = Math.min(24, task.start + val - 1);
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast('Jadwal berhasil diperbarui!');
         }
 
-        function saveTask(e) {
+        function handleCellClick(taskId, day) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            if (day < task.start) {
+                task.start = day;
+            } else if (day > task.end) {
+                task.end = day;
+            } else {
+                if (Math.abs(day - task.start) <= Math.abs(day - task.end)) {
+                    task.start = day;
+                } else {
+                    task.end = day;
+                }
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
+        }
+
+        function syncFormValues(changedField) {
+            const startInput = document.getElementById('inputStart');
+            const endInput = document.getElementById('inputEnd');
+            const durationInput = document.getElementById('inputDuration');
+
+            let start = parseInt(startInput.value) || 1;
+            let end = parseInt(endInput.value) || 1;
+            let duration = parseInt(durationInput.value) || 1;
+
+            if (changedField === 'start') {
+                if (end < start) end = start;
+                duration = (end - start) + 1;
+            } else if (changedField === 'end') {
+                if (start > end) start = end;
+                duration = (end - start) + 1;
+            } else if (changedField === 'duration') {
+                end = Math.min(24, start + duration - 1);
+            }
+
+            startInput.value = Math.max(1, Math.min(24, start));
+            endInput.value = Math.max(1, Math.min(24, end));
+            durationInput.value = Math.max(1, Math.min(24, duration));
+        }
+
+        function openAddTaskModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
+            document.getElementById('taskId').value = '';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPic').value = '';
+            document.getElementById('inputStart').value = 1;
+            document.getElementById('inputEnd').value = 5;
+            document.getElementById('inputDuration').value = 5;
+            showModal('taskModal');
+        }
+
+        function openEditTaskModal(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Task Detail';
+            document.getElementById('taskId').value = task.id;
+            document.getElementById('inputDesc').value = task.desc;
+            document.getElementById('inputPic').value = task.pic;
+            document.getElementById('inputStart').value = task.start;
+            document.getElementById('inputEnd').value = task.end;
+            document.getElementById('inputDuration').value = (task.end - task.start) + 1;
+            showModal('taskModal');
+        }
+
+        function handleTaskFormSubmit(e) {
             e.preventDefault();
-            const id = document.getElementById("taskId").value;
-            const desc = document.getElementById("taskDesc").value;
-            const pic = document.getElementById("taskPic").value;
-            const startDay = parseInt(document.getElementById("taskStart").value);
-            const endDay = parseInt(document.getElementById("taskEnd").value);
-            const status = document.getElementById("taskStatus").value;
+            const id = document.getElementById('taskId').value;
+            const desc = document.getElementById('inputDesc').value.trim();
+            const pic = document.getElementById('inputPic').value.trim();
+            const start = parseInt(document.getElementById('inputStart').value);
+            const end = parseInt(document.getElementById('inputEnd').value);
+
+            if (!desc || !pic) return;
 
             if (id) {
-                // Edit existing
-                const task = tasks.find(t => t.id == id);
+                const task = tasks.find(t => t.id === parseInt(id));
                 if (task) {
                     task.desc = desc;
                     task.pic = pic;
-                    task.startDay = startDay;
-                    task.endDay = endDay;
-                    task.status = status;
+                    task.start = start;
+                    task.end = end;
                 }
             } else {
-                // New Task
-                const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                const newNo = tasks.length + 1;
-                tasks.push({ id: newId, no: newNo, desc, pic, startDay, endDay, status });
+                const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                tasks.push({ id: newId, desc, pic, start, end });
             }
 
-            saveTasksToStorage();
-            renderTimeline();
+            saveData();
+            renderTable(parseInt(slider.value));
             closeTaskModal();
+            showToast(id ? 'Perubahan berhasil disimpan!' : 'Task baru ditambahkan!');
         }
 
-        function deleteTask(id) {
-            if (confirm("Adakah anda pasti mahu memadam tugasan ini?")) {
+        function confirmDeleteTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            showConfirm('Hapus Task', `Yakin ingin menghapus "${task.desc}"?`, () => {
                 tasks = tasks.filter(t => t.id !== id);
-                // Re-index No
-                tasks.forEach((t, i) => t.no = i + 1);
-                saveTasksToStorage();
-                renderTimeline();
-            }
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Task berhasil dihapus');
+            });
         }
 
-        // Initialize App
-        window.onload = function() {
-            initCurrentDaySelect();
-            renderTimeline();
-        };
+        function confirmResetData() {
+            showConfirm('Reset Data Default', 'Semua perubahan revisi akan dikembalikan ke data awal. Lanjutkan?', () => {
+                tasks = [...defaultTasks];
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Data berhasil di-reset ke awal');
+            });
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Timeline_Proyek_September_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('File JSON berhasil diekspor');
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        tasks = imported;
+                        saveData();
+                        renderTable(parseInt(slider.value));
+                        showToast('Data berhasil diimpor!');
+                    } else {
+                        showToast('Format JSON tidak valid!', true);
+                    }
+                } catch (err) {
+                    showToast('Gagal membaca file JSON!', true);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                const container = modal.querySelector('div');
+                if (container) container.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeTaskModal() {
+            const modal = document.getElementById('taskModal');
+            const container = document.getElementById('taskModalContainer');
+            modal.classList.add('opacity-0');
+            if (container) container.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function showConfirm(title, message, onOk) {
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            const closeConfirm = () => {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            };
+
+            okBtn.onclick = () => {
+                closeConfirm();
+                onOk();
+            };
+
+            cancelBtn.onclick = closeConfirm;
+            showModal('confirmModal');
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = msg;
+            toastIcon.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Init
+        loadData();
+        slider.value = currentDay;
+        renderTable(currentDay);
+
+        slider.addEventListener('input', function(e) {
+            const selectedDay = parseInt(e.target.value);
+            renderTable(selectedDay);
+        });
+
+        lucide.createIcons();
     </script>
 </body>
 </html>
