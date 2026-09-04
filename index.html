@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Project Timeline - September</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gantt-grid {
+            display: grid;
+            grid-template-columns: 280px repeat(20, minmax(40px, 1fr));
+        }
+        .we-are-here-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            border-left: 2px dashed #2563eb;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-blue-600 text-white rounded-lg shadow-sm">
+                        <i class="fa-solid fa-chart-gantt text-xl"></i>
+                    </span>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900">Project Implementation Timeline</h1>
+                        <p class="text-xs text-slate-500">September Live Tracker & Status Monitor</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
+                    <label for="currentDaySelect" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
+                        <i class="fa-solid fa-location-dot text-blue-600"></i> We are here:
+                    </label>
+                    <select id="currentDaySelect" onchange="updateCurrentDay(this.value)" class="bg-white text-xs font-bold py-1 px-2 rounded border border-slate-300 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <!-- Options populated via JS -->
+                    </select>
+                </div>
+
+                <button onclick="openAddTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-plus"></i> Tambah Tugasan
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
+                    <i class="fa-solid fa-list-check text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Jumlah Tugasan</p>
+                    <p id="statTotal" class="text-xl font-bold text-slate-800">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
+                    <i class="fa-solid fa-spinner text-xl animate-spin-slow"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Dalam Proses</p>
+                    <p id="statInProgress" class="text-xl font-bold text-slate-800">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                    <i class="fa-solid fa-circle-check text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">Selesai</p>
+                    <p id="statCompleted" class="text-xl font-bold text-slate-800">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
+                    <i class="fa-solid fa-users text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">PIC Terlibat</p>
+                    <p id="statPIC" class="text-xl font-bold text-slate-800">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div class="relative flex-1 md:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="searchInput" oninput="renderTimeline()" placeholder="Cari deskripsi..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <select id="picFilter" onchange="renderTimeline()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                    <option value="ALL">Semua PIC</option>
+                    <option value="OT,IT Local dan Vendor">OT, IT Local & Vendor</option>
+                    <option value="AI TD , IT Local dan Vendor">AI TD, IT Local & Vendor</option>
+                    <option value="AI TD, OT & IT Local">AI TD, OT & IT Local</option>
+                    <option value="AI TD">AI TD</option>
+                </select>
+            </div>
+
+            <!-- Legends -->
+            <div class="flex items-center gap-4 text-xs font-medium text-slate-600 self-end md:self-auto flex-wrap">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
+                    <span>Tugasan / Highlight (Kuning)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                    <span>Hari Libur (Merah)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3.5 h-3.5 border-2 border-dashed border-blue-600 inline-block bg-blue-50"></span>
+                    <span>We Are Here</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gantt Chart Container -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="overflow-x-auto custom-scrollbar relative" id="ganttScrollContainer">
+                
+                <!-- Gantt Header -->
+                <div class="min-w-[1000px]">
+                    <!-- Top Month Banner -->
+                    <div class="grid grid-cols-[280px_1fr] border-b border-slate-200">
+                        <div class="p-3 bg-slate-100 font-bold text-xs text-slate-700 border-r border-slate-200 flex items-center justify-between">
+                            <span>BUTIRAN TUGASAN</span>
+                            <span class="text-[10px] text-slate-500 uppercase">PIC</span>
+                        </div>
+                        <div class="bg-slate-100 font-bold text-xs text-center py-2 text-slate-800 tracking-wider uppercase border-b border-slate-200">
+                            SEPTEMBER
+                        </div>
+                    </div>
+
+                    <!-- Days Header -->
+                    <div class="grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] border-b border-slate-300 text-xs font-semibold text-center bg-slate-50">
+                        <div class="p-2 text-left px-4 text-slate-500 text-[11px] border-r border-slate-200 flex items-center justify-between">
+                            <span>No & Description</span>
+                        </div>
+                        <!-- Days 1 to 20 -->
+                        <!-- Custom Day Colors: 5, 12, 19 Yellow | 6, 13, 20 Red -->
+                        <script>
+                            const highlightYellow = [5, 12, 19];
+                            const highlightRed = [6, 13, 20];
+                            for(let d=1; d<=20; d++) {
+                                let bgClass = "bg-white text-slate-700";
+                                if(highlightYellow.includes(d)) bgClass = "bg-yellow-300 text-slate-900 font-bold";
+                                if(highlightRed.includes(d)) bgClass = "bg-red-500 text-white font-bold";
+                                document.write(`<div id="day-header-${d}" class="p-2 border-r border-slate-200 ${bgClass} flex flex-col justify-center items-center relative">
+                                    <span>${d}</span>
+                                </div>`);
+                            }
+                        </script>
+                    </div>
+
+                    <!-- Timeline Rows Body -->
+                    <div id="ganttRows" class="relative divide-y divide-slate-100 text-xs">
+                        <!-- Dynamic Rows Inject Here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Form (Tambah / Edit Task) -->
+    <div id="taskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200 transform transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-base font-bold text-slate-900">Tambah Tugasan Baru</h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="taskForm" onsubmit="saveTask(event)" class="space-y-4">
+                <input type="hidden" id="taskId">
+                
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Deskripsi Tugasan</label>
+                    <input type="text" id="taskDesc" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">PIC (Person In Charge)</label>
+                    <input type="text" id="taskPic" required placeholder="e.g. OT, IT Local dan Vendor" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Mula (1-20)</label>
+                        <input type="number" id="taskStart" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Hari Tamat (1-20)</label>
+                        <input type="number" id="taskEnd" min="1" max="20" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Status Tugasan</label>
+                    <select id="taskStatus" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                        <option value="Pending">Belum Mula</option>
+                        <option value="In Progress">Dalam Proses</option>
+                        <option value="Completed">Selesai</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition shadow-sm">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            Project Management Timeline &copy; September Live Tracker. Direct GitHub Pages Deployment Ready.
+        </div>
+    </footer>
+
+    <!-- Application Script Logic -->
+    <script>
+        // Initial Tasks Data matching the provided Excel screenshot
+        const initialTasks = [
+            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 12, status: "In Progress" },
+            { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 10, endDay: 15, status: "Pending" },
+            { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "In Progress" },
+            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 7, endDay: 8, status: "Pending" },
+            { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 8, endDay: 10, status: "Pending" },
+            { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 9, endDay: 11, status: "Pending" },
+            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 9, endDay: 14, status: "Pending", splitExtra: [14] }, // Special case for Day 14 block in image
+            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 15, endDay: 16, status: "Pending" },
+            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 16, status: "Pending" },
+            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 17, status: "Pending" },
+            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 17, endDay: 18, status: "Pending" }
+        ];
+
+        let tasks = JSON.parse(localStorage.getItem("timeline_tasks")) || initialTasks;
+        let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4; // Default day 4 as in "We are here" box
+
+        // Initialize Options for 'We are here' select
+        function initCurrentDaySelect() {
+            const select = document.getElementById("currentDaySelect");
+            select.innerHTML = "";
+            for (let i = 1; i <= 20; i++) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = `Hari ${i}`;
+                if (i === currentDay) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        function updateCurrentDay(day) {
+            currentDay = parseInt(day);
+            localStorage.setItem("timeline_current_day", currentDay);
+            renderTimeline();
+        }
+
+        // Render Status Stats
+        function updateStats() {
+            document.getElementById("statTotal").textContent = tasks.length;
+            document.getElementById("statInProgress").textContent = tasks.filter(t => t.status === "In Progress").length;
+            document.getElementById("statCompleted").textContent = tasks.filter(t => t.status === "Completed").length;
+            
+            const uniquePics = new Set(tasks.map(t => t.pic));
+            document.getElementById("statPIC").textContent = uniquePics.size;
+        }
+
+        // Render Gantt Chart Table
+        function renderTimeline() {
+            const container = document.getElementById("ganttRows");
+            const searchVal = document.getElementById("searchInput").value.toLowerCase();
+            const picVal = document.getElementById("picFilter").value;
+
+            // Filter tasks
+            const filtered = tasks.filter(task => {
+                const matchSearch = task.desc.toLowerCase().includes(searchVal) || task.pic.toLowerCase().includes(searchVal);
+                const matchPic = picVal === "ALL" || task.pic === picVal;
+                return matchSearch && matchPic;
+            });
+
+            container.innerHTML = "";
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center text-slate-400">
+                        <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
+                        <p>Tiada tugasan ditemui.</p>
+                    </div>`;
+                updateStats();
+                return;
+            }
+
+            filtered.forEach((task, index) => {
+                const row = document.createElement("div");
+                row.className = "grid grid-cols-[280px_repeat(20,minmax(36px,1fr))] items-center hover:bg-slate-50/80 transition group";
+
+                // Left column: Description & PIC
+                let statusBadge = "";
+                if(task.status === "Completed") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Selesai"></span>`;
+                else if(task.status === "In Progress") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Dalam Proses"></span>`;
+                else statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-slate-300" title="Belum Mula"></span>`;
+
+                let leftColHTML = `
+                    <div class="p-2.5 px-4 border-r border-slate-200 flex items-center justify-between gap-2 overflow-hidden bg-white group-hover:bg-slate-50/80">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            ${statusBadge}
+                            <span class="font-bold text-slate-400 w-5 text-right flex-shrink-0">${task.no || index + 1}</span>
+                            <div class="truncate">
+                                <div class="font-medium text-slate-800 truncate text-xs" title="${task.desc}">${task.desc}</div>
+                                <div class="text-[10px] text-slate-500 truncate" title="${task.pic}">${task.pic}</div>
+                            </div>
+                        </div>
+                        <div class="opacity-0 group-hover:opacity-100 transition flex items-center gap-1 flex-shrink-0">
+                            <button onclick="editTask(${task.id})" class="text-blue-600 hover:text-blue-800 p-1" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteTask(${task.id})" class="text-red-500 hover:text-red-700 p-1" title="Padam">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // 20 Day cells
+                let daysCellsHTML = "";
+                for (let d = 1; d <= 20; d++) {
+                    const isWeAreHere = (d === currentDay);
+                    let cellBg = "";
+                    
+                    // Highlight logic matching Excel:
+                    // Task range active check
+                    let isActive = false;
+                    if (d >= task.startDay && d <= task.endDay) {
+                        // Exception logic for Task 7 in image (it spans 9-11 and 14)
+                        if(task.no === 7 && d > 11 && d < 14) {
+                            isActive = false;
+                        } else {
+                            isActive = true;
+                        }
+                    }
+
+                    let dayStyle = "border-r border-slate-200 relative min-h-[42px] flex items-center justify-center p-0.5";
+                    
+                    if (isWeAreHere) {
+                        dayStyle += " bg-blue-50/40"; // Light highlight for active day column
+                    }
+
+                    if (isActive) {
+                        let barColor = "bg-amber-400 text-amber-950 shadow-sm";
+                        if(task.status === "Completed") barColor = "bg-emerald-500 text-white";
+
+                        cellBg = `<div class="w-full h-6 ${barColor} rounded-sm flex items-center justify-center text-[9px] font-bold transition transform hover:scale-105 cursor-pointer" onclick="toggleTaskStatus(${task.id})" title="Klik untuk tukar status">
+                        </div>`;
+                    }
+
+                    // Active "We Are Here" dashed highlight box on active day column
+                    let borderHighlight = "";
+                    if (isWeAreHere) {
+                        borderHighlight = `<div class="absolute inset-y-0 inset-x-0.5 border-2 border-dashed border-blue-600 pointer-events-none z-10"></div>`;
+                    }
+
+                    daysCellsHTML += `
+                        <div class="${dayStyle}">
+                            ${borderHighlight}
+                            ${cellBg}
+                        </div>
+                    `;
+                }
+
+                row.innerHTML = leftColHTML + daysCellsHTML;
+                container.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        // Toggle Task Status directly on timeline click
+        function toggleTaskStatus(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                if (task.status === "Pending") task.status = "In Progress";
+                else if (task.status === "In Progress") task.status = "Completed";
+                else task.status = "Pending";
+
+                saveTasksToStorage();
+                renderTimeline();
+            }
+        }
+
+        // Save Tasks to localStorage
+        function saveTasksToStorage() {
+            localStorage.setItem("timeline_tasks", JSON.stringify(tasks));
+        }
+
+        // Modal Controls
+        function openAddTaskModal() {
+            document.getElementById("taskId").value = "";
+            document.getElementById("taskForm").reset();
+            document.getElementById("modalTitle").textContent = "Tambah Tugasan Baru";
+            document.getElementById("taskModal").classList.remove("hidden");
+        }
+
+        function closeTaskModal() {
+            document.getElementById("taskModal").classList.add("hidden");
+        }
+
+        function editTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            document.getElementById("taskId").value = task.id;
+            document.getElementById("taskDesc").value = task.desc;
+            document.getElementById("taskPic").value = task.pic;
+            document.getElementById("taskStart").value = task.startDay;
+            document.getElementById("taskEnd").value = task.endDay;
+            document.getElementById("taskStatus").value = task.status;
+
+            document.getElementById("modalTitle").textContent = "Kemaskini Tugasan";
+            document.getElementById("taskModal").classList.remove("hidden");
+        }
+
+        function saveTask(e) {
+            e.preventDefault();
+            const id = document.getElementById("taskId").value;
+            const desc = document.getElementById("taskDesc").value;
+            const pic = document.getElementById("taskPic").value;
+            const startDay = parseInt(document.getElementById("taskStart").value);
+            const endDay = parseInt(document.getElementById("taskEnd").value);
+            const status = document.getElementById("taskStatus").value;
+
+            if (id) {
+                // Edit existing
+                const task = tasks.find(t => t.id == id);
+                if (task) {
+                    task.desc = desc;
+                    task.pic = pic;
+                    task.startDay = startDay;
+                    task.endDay = endDay;
+                    task.status = status;
+                }
+            } else {
+                // New Task
+                const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                const newNo = tasks.length + 1;
+                tasks.push({ id: newId, no: newNo, desc, pic, startDay, endDay, status });
+            }
+
+            saveTasksToStorage();
+            renderTimeline();
+            closeTaskModal();
+        }
+
+        function deleteTask(id) {
+            if (confirm("Adakah anda pasti mahu memadam tugasan ini?")) {
+                tasks = tasks.filter(t => t.id !== id);
+                // Re-index No
+                tasks.forEach((t, i) => t.no = i + 1);
+                saveTasksToStorage();
+                renderTimeline();
+            }
+        }
+
+        // Initialize App
+        window.onload = function() {
+            initCurrentDaySelect();
+            renderTimeline();
+        };
+    </script>
+</body>
+</html>
