@@ -3,460 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Project Timeline - September</title>
-    <!-- Tailwind CSS -->
+    <title>Timeline Proyek - September</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* Custom Styles untuk Tabel dan Timeline */
+        table {
+            border-collapse: collapse;
+            width: 100%;
         }
-        .we-are-here-line {
+        th, td {
+            border: 1px solid #1f2937; /* Warna border gelap menyerupai gambar */
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+        .timeline-cell {
+            padding: 0 !important;
+            min-width: 35px;
+            height: 30px;
+        }
+        
+        /* Styles untuk indikator "We are here" */
+        .col-current {
+            position: relative;
+        }
+        .col-current::before {
+            content: '';
             position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            border-left: 2px dashed #2563eb;
+            top: -1px; 
+            bottom: -1px; 
+            left: -2px; 
+            right: -2px;
+            border-left: 2px dashed #2563eb; /* Biru dashed */
+            border-right: 2px dashed #2563eb;
+            pointer-events: none; /* Agar klik tetap tembus ke bawah */
+            z-index: 10;
+        }
+        .col-current-top::before {
+            border-top: 2px dashed #2563eb;
+            top: -2px;
+        }
+        .col-current-bottom::before {
+            border-bottom: 2px dashed #2563eb;
+            bottom: -2px;
+        }
+        
+        .we-are-here-badge {
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 1px solid #6b7280;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            color: #111827;
+            white-space: nowrap;
             z-index: 20;
-            pointer-events: none;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-gray-50 p-4 md:p-8 font-sans text-gray-800">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="max-w-[1400px] mx-auto bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-200">
+        
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <div class="flex items-center gap-3">
-                    <span class="p-2 bg-blue-600 text-white rounded-lg shadow-sm">
-                        <i class="fa-solid fa-chart-gantt text-xl"></i>
-                    </span>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-900">Project Implementation Timeline</h1>
-                        <p class="text-xs text-slate-500">September Live Tracker & Status Monitor</p>
-                    </div>
-                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Timeline Proyek</h1>
+                <p class="text-gray-500 text-sm">Bulan: September</p>
             </div>
             
-            <!-- Quick Actions -->
-            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-                    <label for="totalDaysInput" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
-                        <i class="fa-regular fa-calendar-days text-blue-600"></i> Total Hari:
-                    </label>
-                    <input type="number" id="totalDaysInput" onchange="updateTotalDays(this.value)" class="bg-white text-xs font-bold py-1 px-2 rounded border border-slate-300 text-blue-700 w-16 focus:outline-none focus:ring-2 focus:ring-blue-500" min="1">
-                </div>
-
-                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-                    <label for="currentDaySelect" class="text-xs font-semibold px-2 text-slate-600 flex items-center gap-1">
-                        <i class="fa-solid fa-location-dot text-blue-600"></i> We are here:
-                    </label>
-                    <select id="currentDaySelect" onchange="updateCurrentDay(this.value)" class="bg-white text-xs font-bold py-1 px-2 rounded border border-slate-300 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <!-- Options populated via JS -->
-                    </select>
-                </div>
-
-                <button onclick="openAddTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-plus"></i> Tambah Tugasan
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
-
-        <!-- Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
-                    <i class="fa-solid fa-list-check text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Jumlah Tugasan</p>
-                    <p id="statTotal" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
-                    <i class="fa-solid fa-spinner text-xl animate-spin-slow"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Dalam Proses</p>
-                    <p id="statInProgress" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-                    <i class="fa-solid fa-circle-check text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">Selesai</p>
-                    <p id="statCompleted" class="text-xl font-bold text-slate-800">0</p>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
-                    <i class="fa-solid fa-users text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-slate-500 font-medium">PIC Terlibat</p>
-                    <p id="statPIC" class="text-xl font-bold text-slate-800">0</p>
-                </div>
+            <!-- Kontrol Interaktif (Live) -->
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-center gap-4">
+                <label for="daySlider" class="font-semibold text-blue-900 text-sm">Simulasi "We are here":</label>
+                <input type="range" id="daySlider" min="1" max="24" class="w-32 md:w-48 cursor-pointer">
+                <span id="dayDisplay" class="font-bold text-blue-700 min-w-[70px]">Hari 4</span>
             </div>
         </div>
 
-        <!-- Filter & Search Controls -->
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <div class="relative flex-1 md:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="renderTimeline()" placeholder="Cari deskripsi..." class="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                </div>
-
-                <select id="picFilter" onchange="renderTimeline()" class="text-xs rounded-lg border border-slate-300 py-1.5 px-3 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
-                    <option value="ALL">Semua PIC</option>
-                    <option value="OT,IT Local dan Vendor">OT, IT Local & Vendor</option>
-                    <option value="AI TD , IT Local dan Vendor">AI TD, IT Local & Vendor</option>
-                    <option value="AI TD, OT & IT Local">AI TD, OT & IT Local</option>
-                    <option value="AI TD">AI TD</option>
-                </select>
-            </div>
-
-            <!-- Legends -->
-        <div class="flex items-center gap-4 text-xs font-medium text-slate-600 self-end md:self-auto flex-wrap">
-            <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-slate-300 inline-block"></span>
-                <span>Belum Mula (Kelabu)</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
-                <span>Dalam Proses (Kuning)</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
-                <span>Selesai (Hijau)</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-                <span>Hari Libur (Merah - Kosong)</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <span class="w-3.5 h-3.5 border-2 border-dashed border-blue-600 inline-block bg-blue-50"></span>
-                <span>We Are Here</span>
-            </div>
+        <!-- Legend Status -->
+        <div class="mb-4 flex flex-wrap gap-4 text-sm font-semibold text-gray-700">
+            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-gray-400 rounded-sm"></span> Not Started</div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-orange-500 rounded-sm"></span> In Progress</div>
+            <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded-sm"></span> Finish</div>
         </div>
+
+        <!-- Wadah Tabel (Responsive scroll) -->
+        <div class="overflow-x-auto pb-4">
+            <table id="timelineTable" class="w-full text-sm min-w-[1000px]">
+                <!-- Konten tabel akan di-render oleh JavaScript -->
+            </table>
+        </div>
+        
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4">
-            Project Management Timeline &copy; September Live Tracker. Direct GitHub Pages Deployment Ready.
-        </div>
-    </footer>
-
-    <!-- Application Script Logic -->
     <script>
-        let totalDays = parseInt(localStorage.getItem("timeline_total_days")) || 24;
-        let currentDay = parseInt(localStorage.getItem("timeline_current_day")) || 4;
-        
-        // Initial Tasks Data matching the NEW provided Excel screenshot
-        const initialTasks = [
-            { id: 1, no: 1, desc: "Installation", pic: "OT,IT Local dan Vendor", startDay: 1, endDay: 13, status: "Pending" },
-            { id: 2, no: 2, desc: "Hardware Commisioning Partial", pic: "OT,IT Local dan Vendor", startDay: 11, endDay: 15, status: "Pending" },
-            { id: 3, no: 3, desc: "Activation 1 CCTV for Sample", pic: "OT,IT Local dan Vendor", startDay: 4, endDay: 5, status: "Pending" },
-            { id: 4, no: 4, desc: "Adjust Pointing CCTV", pic: "AI TD , IT Local dan Vendor", startDay: 7, endDay: 8, status: "Pending" },
-            { id: 5, no: 5, desc: "Collection Data", pic: "AI TD, OT & IT Local", startDay: 9, endDay: 11, status: "Pending" },
-            { id: 6, no: 6, desc: "Labeling & Training", pic: "AI TD", startDay: 10, endDay: 12, status: "Pending" },
-            { id: 7, no: 7, desc: "Build Dashboard & Controll Center", pic: "AI TD", startDay: 11, endDay: 16, status: "Pending", exclude: [12, 13] },
-            { id: 8, no: 8, desc: "Integration / Final Testing", pic: "AI TD, OT & IT Local", startDay: 16, endDay: 19, status: "Pending" },
-            { id: 9, no: 9, desc: "Approval Go Live", pic: "AI TD, OT & IT Local", startDay: 19, endDay: 19, status: "Pending" },
-            { id: 10, no: 10, desc: "Go Live", pic: "AI TD, OT & IT Local", startDay: 18, endDay: 22, status: "Pending", exclude: [19, 20, 21] },
-            { id: 11, no: 11, desc: "Support Go Live", pic: "AI TD, OT & IT Local", startDay: 21, endDay: 24, status: "Pending", exclude: [22] }
+        // Data tugas diekstrak dari gambar
+        const tasks = [
+            { id: 1, desc: 'Installation', pic: 'OT,IT Local dan Vendor', start: 1, end: 13 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT,IT Local dan Vendor', start: 11, end: 15 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT,IT Local dan Vendor', start: 4, end: 5 },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10 },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11 },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12 },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16 },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18 },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19 },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21 },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23 },
         ];
 
-        let tasks = JSON.parse(localStorage.getItem("timeline_tasks")) || initialTasks;
+        // Hari khusus dalam September (sesuai warna di gambar)
+        const yellowDays = [5, 12, 19]; // Mungkin hari Sabtu
+        const redDays = [6, 13, 20];    // Mungkin hari Minggu
 
-        function initSettings() {
-            document.getElementById("totalDaysInput").value = totalDays;
+        // Menentukan hari "Saat ini" secara otomatis berdasarkan kalender asli
+        const today = new Date();
+        let currentDay = today.getDate();
+        
+        // Membatasi maksimal hari di angka 24 sesuai tabel, dan minimal 1
+        if (currentDay > 24) currentDay = 24;
+        if (currentDay < 1) currentDay = 1;
+
+        // Elemen DOM
+        const table = document.getElementById('timelineTable');
+        const slider = document.getElementById('daySlider');
+        const dayDisplay = document.getElementById('dayDisplay');
+
+        // Set nilai awal slider
+        slider.value = currentDay;
+
+        // Fungsi utama untuk menggambar tabel
+        function renderTable(activeDay) {
+            table.innerHTML = ''; // Bersihkan tabel
+            dayDisplay.textContent = `Hari ${activeDay}`;
+
+            // --- THEAD (Bagian Kepala Tabel) ---
+            const thead = document.createElement('thead');
             
-            const select = document.getElementById("currentDaySelect");
-            select.innerHTML = "";
-            for (let i = 1; i <= totalDays; i++) {
-                const opt = document.createElement("option");
-                opt.value = i;
-                opt.textContent = `Hari ${i}`;
-                if (i === currentDay) opt.selected = true;
-                select.appendChild(opt);
+            // Baris 1: Judul Kolom & Bulan
+            let tr1 = `
+                <tr>
+                    <th rowspan="2" class="w-10 text-center bg-gray-100">No</th>
+                    <th rowspan="2" class="w-64 text-center bg-gray-100">Description</th>
+                    <th rowspan="2" class="w-48 text-center bg-gray-100">PIC</th>
+                    <th colspan="24" class="text-center font-bold bg-white">September</th>
+                </tr>
+            `;
+            thead.innerHTML += tr1;
+
+            // Baris 2: Angka Tanggal
+            let tr2 = '<tr>';
+            for(let i = 1; i <= 24; i++) {
+                let bgClass = 'bg-white';
+                let textClass = 'text-gray-800 font-bold';
+                
+                if (yellowDays.includes(i)) {
+                    bgClass = 'bg-yellow-300';
+                } else if (redDays.includes(i)) {
+                    bgClass = 'bg-red-600';
+                    textClass = 'text-white font-bold';
+                }
+
+                let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
+                let badge = (i === activeDay) ? `<div class="we-are-here-badge">We are here</div>` : '';
+
+                tr2 += `<th class="text-center w-10 ${bgClass} ${textClass} ${currentClass}">${badge}${i}</th>`;
             }
-        }
+            tr2 += '</tr>';
+            thead.innerHTML += tr2;
+            table.appendChild(thead);
 
-        function updateTotalDays(days) {
-            totalDays = parseInt(days) || 31;
-            localStorage.setItem("timeline_total_days", totalDays);
-            
-            // Adjust current day if it exceeds new total days
-            if(currentDay > totalDays) {
-                updateCurrentDay(totalDays);
-            } else {
-                initSettings();
-                renderTimeline();
-            }
-        }
+            // --- TBODY (Bagian Isi Tabel) ---
+            const tbody = document.createElement('tbody');
+            tasks.forEach((task, index) => {
+                let isLastRow = index === tasks.length - 1;
+                let tr = document.createElement('tr');
+                
+                // Logika Warna Status Tugas berdasarkan indikator hari
+                let statusColorClass = '';
+                if (activeDay < task.start) {
+                    statusColorClass = 'bg-gray-400'; // Not Started (Abu-abu)
+                } else if (activeDay > task.end) {
+                    statusColorClass = 'bg-green-500'; // Finish (Hijau)
+                } else {
+                    statusColorClass = 'bg-orange-500'; // In Progress (Oranye)
+                }
 
-        function updateCurrentDay(day) {
-            currentDay = parseInt(day);
-            localStorage.setItem("timeline_current_day", currentDay);
-            renderTimeline();
-        }
-
-        function updateStats() {
-            document.getElementById("statTotal").textContent = tasks.length;
-            document.getElementById("statInProgress").textContent = tasks.filter(t => t.status === "In Progress").length;
-            document.getElementById("statCompleted").textContent = tasks.filter(t => t.status === "Completed").length;
-            
-            const uniquePics = new Set(tasks.map(t => t.pic));
-            document.getElementById("statPIC").textContent = uniquePics.size;
-        }
-
-        function renderTimeline() {
-            const container = document.getElementById("ganttRows");
-            const headerContainer = document.getElementById("ganttHeaderDays");
-            const topBanner = document.getElementById("ganttTopBanner");
-            
-            const searchVal = document.getElementById("searchInput").value.toLowerCase();
-            const picVal = document.getElementById("picFilter").value;
-
-            // Update Grids based on dynamic totalDays
-            const gridTemplate = `280px repeat(${totalDays}, minmax(36px, 1fr))`;
-            topBanner.style.gridTemplateColumns = `280px 1fr`;
-            headerContainer.style.gridTemplateColumns = gridTemplate;
-
-            // Render Header Days
-            let headerHTML = `<div class="p-2 text-left px-4 text-slate-500 text-[11px] border-r border-slate-200 flex items-center justify-between">
-                                <span>No & Description</span>
-                            </div>`;
-            const highlightYellow = [5, 12, 19, 26];
-            const highlightRed = [6, 13, 20, 27];
-            
-            for(let d=1; d<=totalDays; d++) {
-                let bgClass = "bg-white text-slate-700";
-                if(highlightYellow.includes(d)) bgClass = "bg-yellow-300 text-slate-900 font-bold";
-                if(highlightRed.includes(d)) bgClass = "bg-red-500 text-white font-bold";
-                headerHTML += `<div class="p-2 border-r border-slate-200 ${bgClass} flex flex-col justify-center items-center relative">
-                                  <span>${d}</span>
-                               </div>`;
-            }
-            headerContainer.innerHTML = headerHTML;
-
-            // Filter tasks
-            const filtered = tasks.filter(task => {
-                const matchSearch = task.desc.toLowerCase().includes(searchVal) || task.pic.toLowerCase().includes(searchVal);
-                const matchPic = picVal === "ALL" || task.pic === picVal;
-                return matchSearch && matchPic;
-            });
-
-            container.innerHTML = "";
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="p-8 text-center text-slate-400">
-                        <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
-                        <p>Tiada tugasan ditemui.</p>
-                    </div>`;
-                updateStats();
-                return;
-            }
-
-            filtered.forEach((task, index) => {
-                const row = document.createElement("div");
-                row.className = "items-center hover:bg-slate-50/80 transition group";
-                row.style.display = "grid";
-                row.style.gridTemplateColumns = gridTemplate;
-
-                // Left column
-                let statusBadge = "";
-                if(task.status === "Completed") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-500" title="Selesai"></span>`;
-                else if(task.status === "In Progress") statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Dalam Proses"></span>`;
-                else statusBadge = `<span class="inline-block w-2 h-2 rounded-full bg-slate-300" title="Belum Mula"></span>`;
-
-                let leftColHTML = `
-                    <div class="p-2.5 px-4 border-r border-slate-200 flex items-center justify-between gap-2 overflow-hidden bg-white group-hover:bg-slate-50/80 h-full">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            ${statusBadge}
-                            <span class="font-bold text-slate-400 w-5 text-right flex-shrink-0">${task.no || index + 1}</span>
-                            <div class="truncate">
-                                <div class="font-medium text-slate-800 truncate text-xs" title="${task.desc}">${task.desc}</div>
-                                <div class="text-[10px] text-slate-500 truncate" title="${task.pic}">${task.pic}</div>
-                            </div>
-                        </div>
-                        <div class="opacity-0 group-hover:opacity-100 transition flex items-center gap-1 flex-shrink-0">
-                            <button onclick="editTask(${task.id})" class="text-blue-600 hover:text-blue-800 p-1" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button onclick="deleteTask(${task.id})" class="text-red-500 hover:text-red-700 p-1" title="Padam">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
+                // Kolom Info
+                tr.innerHTML += `
+                    <td class="text-center bg-white">${task.id}</td>
+                    <td class="bg-white whitespace-nowrap">${task.desc}</td>
+                    <td class="bg-white whitespace-nowrap">${task.pic}</td>
                 `;
 
-                // Days columns loop
-                let daysCellsHTML = "";
-                for (let d = 1; d <= totalDays; d++) {
-                    const isWeAreHere = (d === currentDay);
-                    const isHoliday = highlightRed.includes(d); // Hari merah (libur)
-                    let cellBg = "";
-                    
-                    let isActive = false;
-                    // Jika hari tersebut adalah hari libur (merah), paksa dikosongkan (tidak aktif bar tugas)
-                    if (!isHoliday && d >= task.startDay && d <= task.endDay) {
-                        if (task.exclude && task.exclude.includes(d)) {
-                            isActive = false;
-                        } else {
-                            isActive = true;
-                        }
+                // Kolom Timeline (Hari 1-24)
+                for(let i = 1; i <= 24; i++) {
+                    let isActive = i >= task.start && i <= task.end;
+                    let currentClass = (i === activeDay) ? 'col-current' : '';
+                    if (i === activeDay && isLastRow) {
+                        currentClass += ' col-current-bottom';
                     }
 
-                    let dayStyle = "border-r border-slate-200 relative min-h-[42px] flex items-center justify-center p-0.5";
-                    if (isWeArHere) dayStyle += " bg-blue-50/40"; 
-                    if (isHoliday) dayStyle += " bg-red-50/30";
-
-                    if (isActive) {
-                        // Pembeda warna berdasarkan status tugas
-                        let barColor = "bg-slate-300 text-slate-700 shadow-sm"; // Pending / Belum Mula
-                        if (task.status === "In Progress") {
-                            barColor = "bg-amber-400 text-amber-950 shadow-sm animate-pulse"; // Dalam Proses
-                        } else if (task.status === "Completed") {
-                            barColor = "bg-emerald-500 text-white shadow-sm"; // Selesai
-                        }
-
-                        cellBg = `<div class="w-full h-6 ${barColor} rounded-sm flex items-center justify-center text-[9px] font-bold transition transform hover:scale-105 cursor-pointer" onclick="toggleTaskStatus(${task.id})" title="Status: ${task.status}. Klik untuk tukar status">
-                        </div>`;
-                    }
-
-                    let borderHighlight = "";
-                    if (isWeAreHere) {
-                        borderHighlight = `<div class="absolute inset-y-0 inset-x-0.5 border-2 border-dashed border-blue-600 pointer-events-none z-10"></div>`;
-                    }
-
-                    daysCellsHTML += `
-                        <div class="${dayStyle}">
-                            ${borderHighlight}
-                            ${cellBg}
-                        </div>
+                    tr.innerHTML += `
+                        <td class="timeline-cell ${currentClass} bg-white">
+                            ${isActive ? `<div class="w-full h-full ${statusColorClass}"></div>` : ''}
+                        </td>
                     `;
                 }
-
-                row.innerHTML = leftColHTML + daysCellsHTML;
-                container.appendChild(row);
+                tbody.appendChild(tr);
             });
-
-            updateStats();
+            table.appendChild(tbody);
         }
 
-        function toggleTaskStatus(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                if (task.status === "Pending") task.status = "In Progress";
-                else if (task.status === "In Progress") task.status = "Completed";
-                else task.status = "Pending";
+        // Render awal
+        renderTable(currentDay);
 
-                saveTasksToStorage();
-                renderTimeline();
-            }
-        }
+        // Event listener untuk Slider interaktif
+        slider.addEventListener('input', function(e) {
+            const selectedDay = parseInt(e.target.value);
+            renderTable(selectedDay);
+        });
 
-        function saveTasksToStorage() {
-            localStorage.setItem("timeline_tasks", JSON.stringify(tasks));
-        }
-
-        function openAddTaskModal() {
-            document.getElementById("taskId").value = "";
-            document.getElementById("taskForm").reset();
-            document.getElementById("modalTitle").textContent = "Tambah Tugasan Baru";
-            document.getElementById("taskModal").classList.remove("hidden");
-        }
-
-        function closeTaskModal() {
-            document.getElementById("taskModal").classList.add("hidden");
-        }
-
-        function editTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-
-            document.getElementById("taskId").value = task.id;
-            document.getElementById("taskDesc").value = task.desc;
-            document.getElementById("taskPic").value = task.pic;
-            document.getElementById("taskStart").value = task.startDay;
-            document.getElementById("taskEnd").value = task.endDay;
-            document.getElementById("taskStatus").value = task.status;
-
-            document.getElementById("modalTitle").textContent = "Kemaskini Tugasan";
-            document.getElementById("taskModal").classList.remove("hidden");
-        }
-
-        function saveTask(e) {
-            e.preventDefault();
-            const id = document.getElementById("taskId").value;
-            const desc = document.getElementById("taskDesc").value;
-            const pic = document.getElementById("taskPic").value;
-            const startDay = parseInt(document.getElementById("taskStart").value);
-            const endDay = parseInt(document.getElementById("taskEnd").value);
-            const status = document.getElementById("taskStatus").value;
-
-            if (id) {
-                const task = tasks.find(t => t.id == id);
-                if (task) {
-                    task.desc = desc;
-                    task.pic = pic;
-                    task.startDay = startDay;
-                    task.endDay = endDay;
-                    task.status = status;
-                }
-            } else {
-                const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                const newNo = tasks.length + 1;
-                tasks.push({ id: newId, no: newNo, desc, pic, startDay, endDay, status });
-            }
-
-            saveTasksToStorage();
-            renderTimeline();
-            closeTaskModal();
-        }
-
-        function deleteTask(id) {
-            if (confirm("Adakah anda pasti mahu memadam tugasan ini?")) {
-                tasks = tasks.filter(t => t.id !== id);
-                tasks.forEach((t, i) => t.no = i + 1);
-                saveTasksToStorage();
-                renderTimeline();
-            }
-        }
-
-        window.onload = function() {
-            initSettings();
-            renderTimeline();
-        };
     </script>
 </body>
 </html>
