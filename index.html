@@ -406,17 +406,17 @@
     <script>
         // Data Default Tugas Awal (Termasuk Original Deadline)
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, originalEnd: 13 },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, originalEnd: 15 },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, originalEnd: 5 },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, originalEnd: 10 },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, originalEnd: 11 },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, originalEnd: 12 },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, originalEnd: 16 },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, originalEnd: 18 },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, originalEnd: 19 },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, originalEnd: 21 },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, originalEnd: 23 },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0 },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0 },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0 },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0 },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0 },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0 },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0 },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0 },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0 },
         ];
 
         let tasks = [];
@@ -434,20 +434,29 @@
         const dayDisplay = document.getElementById('dayDisplay');
 
         function loadData() {
-            const saved = localStorage.getItem('project_timeline_tasks_v2');
+            const saved = localStorage.getItem('project_timeline_tasks_v3');
             if (saved) {
                 try {
                     tasks = JSON.parse(saved);
+                    // Mapping untuk kompatibilitas data lama jika ada
+                    tasks = tasks.map(t => {
+                        if (t.originalEnd !== undefined) {
+                            let ext = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
+                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext };
+                        }
+                        if (t.extend === undefined) t.extend = 0;
+                        return t;
+                    });
                 } catch (e) {
-                    tasks = [...defaultTasks];
+                    tasks = JSON.parse(JSON.stringify(defaultTasks));
                 }
             } else {
-                tasks = [...defaultTasks];
+                tasks = JSON.parse(JSON.stringify(defaultTasks));
             }
         }
 
         function saveData() {
-            localStorage.setItem('project_timeline_tasks_v2', JSON.stringify(tasks));
+            localStorage.setItem('project_timeline_tasks_v3', JSON.stringify(tasks));
             updateStats();
         }
 
@@ -457,7 +466,7 @@
 
             // Calculate Completion %
             const activeDay = parseInt(slider.value) || currentDay;
-            const completedCount = tasks.filter(t => activeDay > t.end).length;
+            const completedCount = tasks.filter(t => activeDay > (t.end + (t.extend || 0))).length;
             const percentage = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
             const circle = document.getElementById('progressCircle');
@@ -532,19 +541,8 @@
                     tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60";
                     
                     const duration = (task.end - task.start) + 1;
-
-                    let statusClass = '';
-                    let statusLabel = '';
-                    if (activeDay < task.start) {
-                        statusClass = 'bar-not-started';
-                        statusLabel = 'Not Started';
-                    } else if (activeDay > task.end) {
-                        statusClass = 'bar-finish';
-                        statusLabel = 'Finish';
-                    } else {
-                        statusClass = 'bar-in-progress';
-                        statusLabel = 'In Progress';
-                    }
+                    const extend = task.extend || 0;
+                    const actualEnd = task.end + extend;
 
                     tr.innerHTML = `
                         <td class="text-center font-mono text-slate-500 text-xs">${index + 1}</td>
@@ -558,9 +556,12 @@
                                 class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
                         <td class="text-center">
-                            <input type="number" min="1" max="24" value="${task.end}" 
-                                onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
-                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                            <div class="flex items-center justify-center gap-0.5">
+                                <input type="number" min="1" max="24" value="${task.end}" 
+                                    onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
+                                    class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                ${extend > 0 ? `<span class="text-[10px] text-orange-400 font-bold" title="Extended sampai hari ${actualEnd}">+${extend}</span>` : ''}
+                            </div>
                         </td>
                         <td class="text-center">
                             <input type="number" min="1" max="24" value="${duration}" 
@@ -569,7 +570,11 @@
                         </td>
                         <td class="text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
-                                <button onclick="extendTask(${task.id})" title="Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-500 hover:text-orange-400 rounded transition">
+                                ${extend > 0 ? `
+                                <button onclick="extendTask(${task.id}, -1)" title="Kurangi Waktu Tambahan (-1 Hari)" class="p-1 hover:bg-rose-500/20 text-orange-400 hover:text-rose-400 rounded transition">
+                                    <i data-lucide="minus-circle" class="w-3.5 h-3.5"></i>
+                                </button>` : ''}
+                                <button onclick="extendTask(${task.id}, 1)" title="Tambah Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-500 hover:text-orange-400 rounded transition">
                                     <i data-lucide="timer" class="w-3.5 h-3.5"></i>
                                 </button>
                                 <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
@@ -584,14 +589,25 @@
 
                     // Timeline Days
                     for(let i = 1; i <= 24; i++) {
-                        let isActive = i >= task.start && i <= task.end;
-                        let isExtendedCell = task.originalEnd && i > task.originalEnd && i <= task.end;
+                        let isPlanned = i >= task.start && i <= task.end;
+                        let isExtended = extend > 0 && i > task.end && i <= actualEnd;
+                        let isActive = isPlanned || isExtended;
                         
-                        let cellStatusClass = statusClass;
-                        let cellStatusLabel = statusLabel;
+                        let cellStatusClass = '';
+                        let cellStatusLabel = '';
 
-                        // Jika hari ini berada di rentang waktu tambahan (melebihi deadline awal)
-                        if (isExtendedCell) {
+                        if (isPlanned) {
+                            if (activeDay < task.start) {
+                                cellStatusClass = 'bar-not-started';
+                                cellStatusLabel = 'Not Started';
+                            } else if (activeDay > actualEnd) {
+                                cellStatusClass = 'bar-finish';
+                                cellStatusLabel = 'Finish';
+                            } else {
+                                cellStatusClass = 'bar-in-progress';
+                                cellStatusLabel = 'In Progress';
+                            }
+                        } else if (isExtended) {
                             cellStatusClass = 'bar-extended';
                             cellStatusLabel = 'Extended';
                         }
@@ -601,20 +617,18 @@
                             currentClass += ' col-current-bottom';
                         }
 
-                        let barRounded = 'rounded-md';
-                        if (i === task.start && i === task.end) {
-                            barRounded = 'rounded-lg';
-                        } else if (i === task.start) {
-                            barRounded = 'rounded-l-lg';
-                        } else if (i === task.end) {
-                            barRounded = 'rounded-r-lg';
+                        let barRounded = '';
+                        if (isActive) {
+                            if (i === task.start && i === actualEnd) barRounded = 'rounded-md';
+                            else if (i === task.start) barRounded = 'rounded-l-lg';
+                            else if (i === actualEnd) barRounded = 'rounded-r-lg';
                         }
 
                         // Label teks di dalam bar
                         let textInBar = '';
                         if (i === task.start) {
-                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>`;
-                        } else if (isExtendedCell && i === task.originalEnd + 1) {
+                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${cellStatusLabel}</span>`;
+                        } else if (isExtended && i === task.end + 1) {
                             textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight text-slate-950 truncate">+Ext</span>`;
                         }
 
@@ -644,28 +658,28 @@
                 val = Math.max(1, Math.min(24, val));
                 task.start = val;
                 if (task.end < task.start) task.end = task.start;
-                if (!task.originalEnd || task.originalEnd < task.start) task.originalEnd = task.end;
             } else if (field === 'end') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = val;
                 if (task.start > task.end) task.start = task.end;
-                if (!task.originalEnd) task.originalEnd = task.end;
             } else if (field === 'duration') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = Math.min(24, task.start + val - 1);
-                if (!task.originalEnd) task.originalEnd = task.end;
+            }
+            
+            // Batasi agar total hari tidak melebihi batas 24
+            if (task.end + (task.extend || 0) > 24) {
+                task.extend = Math.max(0, 24 - task.end);
             }
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast('Jadwal berhasil diperbarui!');
+            showToast('Jadwal awal berhasil diperbarui!');
         }
 
         function handleCellClick(taskId, day) {
             const task = tasks.find(t => t.id === taskId);
             if (!task) return;
-
-            if (!task.originalEnd) task.originalEnd = task.end;
 
             if (day < task.start) {
                 task.start = day;
@@ -678,29 +692,39 @@
                     task.end = day;
                 }
             }
+            
+            // Batasi agar total hari tidak melebihi batas 24
+            if (task.end + (task.extend || 0) > 24) {
+                task.extend = Math.max(0, 24 - task.end);
+            }
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
+            showToast(`Task "${task.desc}" jadwal awal diatur ke Hari ${task.start} - ${task.end}`);
         }
 
-        function extendTask(id) {
+        function extendTask(id, amount = 1) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
-            // Kunci deadline asli jika belum ada
-            if (!task.originalEnd) {
-                task.originalEnd = task.end;
-            }
+            if (task.extend === undefined) task.extend = 0;
 
-            if (task.end < 24) {
-                task.end += 1;
-                saveData();
-                renderTable(parseInt(slider.value));
-                const extraDays = task.end - task.originalEnd;
-                showToast(`Waktu tambahan (+${extraDays} Hari dari Deadline Hari ${task.originalEnd}) berhasil ditambahkan!`);
+            if (amount > 0) {
+                if (task.end + task.extend < 24) {
+                    task.extend += amount;
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast(`Waktu tambahan (+${task.extend} Hari dari jadwal awal) berhasil ditambahkan!`);
+                } else {
+                    showToast('Tidak dapat menambah waktu, sudah mencapai batas maksimal (Hari 24).', true);
+                }
             } else {
-                showToast('Tidak dapat menambah waktu, sudah mencapai batas maksimal (Hari 24).', true);
+                if (task.extend > 0) {
+                    task.extend += amount;
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast(`Waktu tambahan dikurangi menjadi +${task.extend} Hari.`);
+                }
             }
         }
 
@@ -770,10 +794,14 @@
                     task.pic = pic;
                     task.start = start;
                     task.end = end;
+                    
+                    if (task.end + (task.extend || 0) > 24) {
+                        task.extend = Math.max(0, 24 - task.end);
+                    }
                 }
             } else {
                 const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({ id: newId, desc, pic, start, end });
+                tasks.push({ id: newId, desc, pic, start, end, extend: 0 });
             }
 
             saveData();
@@ -796,7 +824,7 @@
 
         function confirmResetData() {
             showConfirm('Reset Data Default', 'Semua perubahan revisi akan dikembalikan ke data awal. Lanjutkan?', () => {
-                tasks = [...defaultTasks];
+                tasks = JSON.parse(JSON.stringify(defaultTasks));
                 saveData();
                 renderTable(parseInt(slider.value));
                 showToast('Data berhasil di-reset ke awal');
