@@ -159,6 +159,13 @@
             box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
         }
 
+        /* Gantt Bar untuk Waktu Tambahan (Extended / Overdue Extension) */
+        .bar-extended {
+            background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
+            border: 1px solid rgba(253, 186, 116, 0.8);
+            box-shadow: 0 0 14px rgba(249, 115, 22, 0.7);
+        }
+
         /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
             height: 10px;
@@ -299,6 +306,13 @@
                         <p class="text-[10px] text-slate-400">Telah selesai</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
+                    <span class="w-3.5 h-3.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-md shadow-[0_0_10px_rgba(249,115,22,0.8)]"></span>
+                    <div class="text-xs">
+                        <p class="font-bold text-orange-400">Extended</p>
+                        <p class="text-[10px] text-slate-400">Waktu Tambahan Deadline</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -390,19 +404,19 @@
     </div>
 
     <script>
-        // Data Default Tugas Awal
+        // Data Default Tugas Awal (Termasuk Original Deadline)
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13 },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15 },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5 },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10 },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11 },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12 },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16 },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18 },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19 },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21 },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23 },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, originalEnd: 13 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, originalEnd: 15 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, originalEnd: 5 },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, originalEnd: 10 },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, originalEnd: 11 },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, originalEnd: 12 },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, originalEnd: 16 },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, originalEnd: 18 },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, originalEnd: 19 },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, originalEnd: 21 },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, originalEnd: 23 },
         ];
 
         let tasks = [];
@@ -571,6 +585,17 @@
                     // Timeline Days
                     for(let i = 1; i <= 24; i++) {
                         let isActive = i >= task.start && i <= task.end;
+                        let isExtendedCell = task.originalEnd && i > task.originalEnd && i <= task.end;
+                        
+                        let cellStatusClass = statusClass;
+                        let cellStatusLabel = statusLabel;
+
+                        // Jika hari ini berada di rentang waktu tambahan (melebihi deadline awal)
+                        if (isExtendedCell) {
+                            cellStatusClass = 'bar-extended';
+                            cellStatusLabel = 'Extended';
+                        }
+
                         let currentClass = (i === activeDay) ? 'col-current' : '';
                         if (i === activeDay && isLastRow) {
                             currentClass += ' col-current-bottom';
@@ -585,12 +610,18 @@
                             barRounded = 'rounded-r-lg';
                         }
 
-                        let textInBar = (i === task.start) ? `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>` : '';
+                        // Label teks di dalam bar
+                        let textInBar = '';
+                        if (i === task.start) {
+                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>`;
+                        } else if (isExtendedCell && i === task.originalEnd + 1) {
+                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight text-slate-950 truncate">+Ext</span>`;
+                        }
 
                         tr.innerHTML += `
                             <td class="timeline-cell ${currentClass} text-center align-middle" 
                                 onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk atur rentang hari">
-                                ${isActive ? `<div class="w-full h-7 ${statusClass} ${barRounded} flex items-center justify-center text-slate-950 overflow-hidden transition-all">${textInBar}</div>` : ''}
+                                ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
                             </td>
                         `;
                     }
@@ -613,13 +644,16 @@
                 val = Math.max(1, Math.min(24, val));
                 task.start = val;
                 if (task.end < task.start) task.end = task.start;
+                if (!task.originalEnd || task.originalEnd < task.start) task.originalEnd = task.end;
             } else if (field === 'end') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = val;
                 if (task.start > task.end) task.start = task.end;
+                if (!task.originalEnd) task.originalEnd = task.end;
             } else if (field === 'duration') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = Math.min(24, task.start + val - 1);
+                if (!task.originalEnd) task.originalEnd = task.end;
             }
 
             saveData();
@@ -630,6 +664,8 @@
         function handleCellClick(taskId, day) {
             const task = tasks.find(t => t.id === taskId);
             if (!task) return;
+
+            if (!task.originalEnd) task.originalEnd = task.end;
 
             if (day < task.start) {
                 task.start = day;
@@ -652,11 +688,17 @@
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
+            // Kunci deadline asli jika belum ada
+            if (!task.originalEnd) {
+                task.originalEnd = task.end;
+            }
+
             if (task.end < 24) {
                 task.end += 1;
                 saveData();
                 renderTable(parseInt(slider.value));
-                showToast(`Waktu tambahan +1 hari berhasil ditambahkan!`);
+                const extraDays = task.end - task.originalEnd;
+                showToast(`Waktu tambahan (+${extraDays} Hari dari Deadline Hari ${task.originalEnd}) berhasil ditambahkan!`);
             } else {
                 showToast('Tidak dapat menambah waktu, sudah mencapai batas maksimal (Hari 24).', true);
             }
