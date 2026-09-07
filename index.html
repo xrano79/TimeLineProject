@@ -555,6 +555,9 @@
                         </td>
                         <td class="text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
+                                <button onclick="extendTask(${task.id})" title="Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-500 hover:text-orange-400 rounded transition">
+                                    <i data-lucide="timer" class="w-3.5 h-3.5"></i>
+                                </button>
                                 <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </button>
@@ -643,6 +646,20 @@
             saveData();
             renderTable(parseInt(slider.value));
             showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
+        }
+
+        function extendTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            if (task.end < 24) {
+                task.end += 1;
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast(`Waktu tambahan +1 hari berhasil ditambahkan!`);
+            } else {
+                showToast('Tidak dapat menambah waktu, sudah mencapai batas maksimal (Hari 24).', true);
+            }
         }
 
         function syncFormValues(changedField) {
