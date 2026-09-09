@@ -1,9 +1,13 @@
+<!-- Chosen Palette: Glassmorphism Dark Neon (Cyan, Slate, Amber, Rose, Emerald, Orange) -->
+<!-- Application Structure Plan: Full Integrated Interactive Project Dashboard combining Gantt Timeline with Extension tracking (+/- Extra Days), Task Progress Tracking (0-100%), Issue Log & Action Plan, Real-time KPI Stats Gauge, and Import/Export capabilities. -->
+<!-- Visualization & Content Choices: Dynamic HTML/CSS tables with Tailwind and Vanilla JS state management. Interactive Gantt progress and extended time bars, Issue management modal & status badges, SVG gauge circle for KPIs. NO SVG graphics library / NO Mermaid. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Modern - Timeline Proyek September</title>
+    <title>Dashboard Modern - Progress & Timeline Proyek</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -16,7 +20,9 @@
                             blue: '#3b82f6',
                             purple: '#a855f7',
                             emerald: '#10b981',
-                            amber: '#f59e0b'
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            orange: '#f97316'
                         }
                     }
                 }
@@ -33,7 +39,7 @@
         }
         
         .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.70);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(56, 189, 248, 0.15);
@@ -41,7 +47,7 @@
         }
 
         .glass-card {
-            background: rgba(30, 41, 59, 0.5);
+            background: rgba(30, 41, 59, 0.55);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
@@ -159,7 +165,6 @@
             box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
         }
 
-        /* Gantt Bar untuk Waktu Tambahan (Extended / Overdue Extension) */
         .bar-extended {
             background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
             border: 1px solid rgba(253, 186, 116, 0.8);
@@ -187,7 +192,6 @@
             background: rgba(56, 189, 248, 0.6);
         }
 
-        /* Glow animation for active simulation badge */
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
             50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
@@ -199,13 +203,13 @@
 </head>
 <body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
 
-    <!-- Decorative Glow Accents in Background -->
+    <!-- Decorative Background Glows -->
     <div class="fixed -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
     <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-[1650px] mx-auto space-y-5 relative z-10">
+    <div class="max-w-[1700px] mx-auto space-y-6 relative z-10">
         
-        <!-- Top Dashboard Header Banner -->
+        <!-- Dashboard Header Banner -->
         <div class="glass-panel p-5 rounded-2xl flex flex-col xl:flex-row xl:items-center justify-between gap-5">
             <div class="flex items-center gap-4">
                 <div class="p-3.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-lg">
@@ -213,12 +217,14 @@
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-400">
-                        Dashboard Modern - Timeline Proyek September
+                        Dashboard Modern - Progress & Timeline Proyek
                     </h1>
-                    <p class="text-xs md:text-sm text-slate-400 flex items-center gap-3 mt-1">
-                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> Bulan: <strong class="text-slate-200">September</strong></span>
+                    <p class="text-xs md:text-sm text-slate-400 flex items-center gap-3 mt-1 flex-wrap">
+                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> Periode: <strong class="text-slate-200">September</strong></span>
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
-                        <span id="taskCounterText" class="text-slate-300 font-medium">Total Tasks: 11</span>
+                        <span id="taskCounterText" class="text-slate-300 font-medium">Total Task: 11</span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span id="issueCounterText" class="text-amber-400 font-medium">Kendala: 0 Open</span>
                     </p>
                 </div>
             </div>
@@ -226,37 +232,41 @@
             <!-- Top Dashboard Stats & Controls -->
             <div class="flex flex-wrap items-center gap-3">
                 
-                <!-- Stat Gauge Widget -->
+                <!-- Stat Gauge Widget Progress Rata-rata -->
                 <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3 border border-teal-500/20">
                     <div class="relative w-11 h-11 flex items-center justify-center">
                         <svg class="w-11 h-11 transform -rotate-90">
-                            <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-slate-800" fill="transparent" />
-                            <circle id="progressCircle" cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3" class="text-cyan-400 transition-all duration-500" stroke-dasharray="113" stroke-dashoffset="30" fill="transparent" />
+                            <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800" fill="transparent" />
+                            <circle id="progressCircle" cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-cyan-400 transition-all duration-500" stroke-dasharray="113" stroke-dashoffset="113" fill="transparent" />
                         </svg>
-                        <span id="completionPercent" class="absolute text-[10px] font-bold text-cyan-300">72%</span>
+                        <span id="completionPercent" class="absolute text-[10px] font-bold text-cyan-300">0%</span>
                     </div>
                     <div>
-                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Progress Completion</p>
-                        <p id="completionLabel" class="text-xs font-bold text-slate-200">8 dari 11 Selesai</p>
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Rata-Rata Progress</p>
+                        <p id="completionLabel" class="text-xs font-bold text-slate-200">0 dari 11 Task 100%</p>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="openAddTaskModal()" class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                    <button onclick="openAddTaskModal()" class="px-3.5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                         <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
                         <span>Tambah Task</span>
                     </button>
-                    <button onclick="exportJSON()" class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-slate-700">
+                    <button onclick="openAddIssueModal()" class="px-3.5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                        <i data-lucide="alert-circle" class="w-4 h-4 stroke-[2.5]"></i>
+                        <span>Catat Issue</span>
+                    </button>
+                    <button onclick="exportJSON()" class="px-3 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1 border border-slate-700">
                         <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
                         <span>Ekspor</span>
                     </button>
-                    <label class="px-3.5 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1.5 border border-slate-700">
+                    <label class="px-3 py-2.5 glass-card hover:bg-slate-800/80 text-slate-200 rounded-xl text-xs md:text-sm font-medium transition cursor-pointer flex items-center gap-1 border border-slate-700">
                         <i data-lucide="upload" class="w-4 h-4 text-cyan-400"></i>
                         <span>Impor</span>
                         <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importJSON(event)">
                     </label>
-                    <button onclick="confirmResetData()" class="px-3.5 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                    <button onclick="confirmResetData()" class="px-3 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                         <span>Reset</span>
                     </button>
@@ -264,7 +274,7 @@
             </div>
         </div>
 
-        <!-- Middle Section: Interactive Slider & Legend Cards -->
+        <!-- Middle Section: Interactive Slider & Legend -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
             <!-- Day Simulation Card -->
@@ -272,7 +282,7 @@
                 <div class="flex justify-between items-center mb-3">
                     <label for="daySlider" class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
                         <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
-                        Simulasi "We are here":
+                        Simulasi Hari Proyek ("We are here"):
                     </label>
                     <span id="dayDisplay" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-extrabold text-xs glow-active">Hari 4</span>
                 </div>
@@ -289,28 +299,28 @@
                     <span class="w-3.5 h-3.5 bg-slate-600 rounded-md border border-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.4)]"></span>
                     <div class="text-xs">
                         <p class="font-bold text-slate-200">Not Started</p>
-                        <p class="text-[10px] text-slate-400">Belum dimulai</p>
+                        <p class="text-[10px] text-slate-400">Jadwal belum jalan</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
                     <span class="w-3.5 h-3.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-md shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
                     <div class="text-xs">
                         <p class="font-bold text-cyan-300">In Progress</p>
-                        <p class="text-[10px] text-slate-400">Sedang berlangsung</p>
+                        <p class="text-[10px] text-slate-400">Proses pengerjaan</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
                     <span class="w-3.5 h-3.5 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-md shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
                     <div class="text-xs">
-                        <p class="font-bold text-emerald-300">Finish</p>
-                        <p class="text-[10px] text-slate-400">Telah selesai</p>
+                        <p class="font-bold text-emerald-300">Finish / Complete</p>
+                        <p class="text-[10px] text-slate-400">Telah selesai (100%)</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
                     <span class="w-3.5 h-3.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-md shadow-[0_0_10px_rgba(249,115,22,0.8)]"></span>
                     <div class="text-xs">
                         <p class="font-bold text-orange-400">Extended</p>
-                        <p class="text-[10px] text-slate-400">Waktu Tambahan Deadline</p>
+                        <p class="text-[10px] text-slate-400">Waktu Tambahan (+Hari)</p>
                     </div>
                 </div>
             </div>
@@ -318,9 +328,9 @@
 
         <!-- Timeline Gantt Table Container -->
         <div class="glass-panel rounded-2xl overflow-hidden">
-            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Klik langsung angka di kolom <strong>Start/End/Durasi</strong> atau klik sel timeline untuk memperbarui jadwal.</span>
-                <span class="font-semibold text-cyan-400">September (1 - 24)</span>
+            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka pada kolom <strong>Start / End / Durasi / Progress (%)</strong> atau gunakan tombol + / - untuk perpanjangan waktu.</span>
+                <span class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek September (1 - 24)</span>
             </div>
             
             <div class="overflow-x-auto custom-scrollbar">
@@ -330,9 +340,55 @@
             </div>
         </div>
 
+        <!-- ISSUE LOG & ACTION PLAN SECTION -->
+        <div class="glass-panel p-5 rounded-2xl space-y-4 border-t-2 border-t-amber-500/40">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                            Issue Log & Action Plan
+                        </h2>
+                        <p class="text-xs text-slate-400">Daftar kendala teknis, rencana aksi penanganan, penanggung jawab (PIC), dan batas waktu.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="issueSummaryBadge" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700">
+                        0 Total Issue
+                    </span>
+                    <button onclick="openAddIssueModal()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-[0_0_12px_rgba(245,158,11,0.3)]">
+                        <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
+                        <span>Tambah Issue</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Issues Table -->
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-900/80 text-slate-300 font-bold text-xs uppercase tracking-wider">
+                            <th class="w-12 text-center py-3">NO</th>
+                            <th class="min-w-[220px]">ISSUE (Kendala)</th>
+                            <th class="min-w-[260px]">SOLUTION (Solusi / Tindakan)</th>
+                            <th class="w-36">PIC</th>
+                            <th class="w-28 text-center">DUE DATE</th>
+                            <th class="w-28 text-center">STATUS</th>
+                            <th class="w-20 text-center">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issueTableBody">
+                        <!-- Dynamic Issues -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Glassmorphic Modal Task Detail Editor -->
+    <!-- Modal Task Detail Editor -->
     <div id="taskModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
         <div class="glass-panel rounded-2xl w-full max-w-lg p-6 m-4 transform scale-95 transition-all duration-300 border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.2)]" id="taskModalContainer">
             <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
@@ -349,7 +405,7 @@
                 <input type="hidden" id="taskId">
                 
                 <div>
-                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Description</label>
+                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Nama / Deskripsi Task</label>
                     <input type="text" id="inputDesc" required placeholder="Nama / Deskripsi Task" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
 
@@ -368,14 +424,82 @@
                         <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Duration (Days)</label>
+                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Durasi (Hari)</label>
                         <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-orange-400 uppercase tracking-wider mb-1.5">Extend (Hari Tambahan)</label>
+                        <input type="number" id="inputExtend" min="0" max="23" value="0" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-orange-300 font-bold focus:outline-none focus:border-orange-400">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Progress (%)</label>
+                            <span id="inputProgressVal" class="text-xs font-bold text-emerald-300">0%</span>
+                        </div>
+                        <input type="range" id="inputProgress" min="0" max="100" value="0" oninput="document.getElementById('inputProgressVal').textContent = this.value + '%'" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
                     </div>
                 </div>
 
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
                     <button type="button" onclick="closeTaskModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(6,182,212,0.5)]">Save Changes</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(6,182,212,0.5)]">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Issue Log Editor -->
+    <div id="issueModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-lg p-6 m-4 transform scale-95 transition-all duration-300 border border-amber-500/30 shadow-[0_0_50px_rgba(245,158,11,0.2)]" id="issueModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-amber-400 rounded-full"></div>
+                    <h3 id="issueModalTitle" class="text-lg font-bold text-slate-100">Tambah Issue Baru</h3>
+                </div>
+                <button onclick="closeIssueModal()" class="text-slate-400 hover:text-amber-400 transition p-1 rounded-lg hover:bg-slate-800">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="issueForm" onsubmit="handleIssueFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="issueId">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1.5">Issue (Kendala)</label>
+                    <textarea id="inputIssueText" required rows="2" placeholder="Jelaskan kendala di lapangan..." class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1.5">Solution (Solusi / Tindakan)</label>
+                    <textarea id="inputIssueSolution" required rows="2" placeholder="Rencana aksi atau penanganan..." class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">PIC</label>
+                        <input type="text" id="inputIssuePic" required placeholder="Nama / Tim PIC" class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Due Date</label>
+                        <input type="text" id="inputIssueDueDate" required placeholder="DD/MM/YYYY" class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Status Issue</label>
+                    <select id="inputIssueStatus" class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+                        <option value="Open">Open (Perlu Tindakan)</option>
+                        <option value="In Progress">In Progress (Sedang Diproses)</option>
+                        <option value="Resolved">Resolved (Selesai)</option>
+                    </select>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
+                    <button type="button" onclick="closeIssueModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(245,158,11,0.5)]">Simpan Issue</button>
                 </div>
             </form>
         </div>
@@ -404,22 +528,36 @@
     </div>
 
     <script>
-        // Data Default Tugas Awal (Termasuk Original Deadline)
+        // Data Default Tugas Awal (Termasuk Extend & Progress %)
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0 },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0 },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0 },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0 },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0 },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0 },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0 },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0 },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0 },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0 },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0 },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0 },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0 },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0 },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0 },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 0 },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0 },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0 },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0 },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0 },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0 },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0 },
+        ];
+
+        // Default Issue Log awal
+        const defaultIssues = [
+            {
+                id: 1,
+                issue: 'Akses jaringan di titik A belum stabil',
+                solution: 'Berkoordinasi dengan tim IT Local untuk re-konfigurasi router',
+                pic: 'IT Local',
+                dueDate: '15/09/2026',
+                status: 'In Progress'
+            }
         ];
 
         let tasks = [];
+        let issues = [];
+
         const yellowDays = [5, 12, 19]; // Sabtu (Kuning)
         const redDays = [6, 13, 20];    // Minggu (Merah)
 
@@ -434,17 +572,19 @@
         const dayDisplay = document.getElementById('dayDisplay');
 
         function loadData() {
-            const saved = localStorage.getItem('project_timeline_tasks_v3');
-            if (saved) {
+            const savedTasks = localStorage.getItem('project_timeline_tasks_v4');
+            const savedIssues = localStorage.getItem('project_timeline_issues_v4');
+
+            if (savedTasks) {
                 try {
-                    tasks = JSON.parse(saved);
-                    // Mapping untuk kompatibilitas data lama jika ada
+                    tasks = JSON.parse(savedTasks);
                     tasks = tasks.map(t => {
                         if (t.originalEnd !== undefined) {
                             let ext = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
-                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext };
+                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext, progress: t.progress || 0 };
                         }
                         if (t.extend === undefined) t.extend = 0;
+                        if (t.progress === undefined) t.progress = 0;
                         return t;
                     });
                 } catch (e) {
@@ -453,33 +593,45 @@
             } else {
                 tasks = JSON.parse(JSON.stringify(defaultTasks));
             }
+
+            if (savedIssues) {
+                try { issues = JSON.parse(savedIssues); } catch (e) { issues = JSON.parse(JSON.stringify(defaultIssues)); }
+            } else {
+                issues = JSON.parse(JSON.stringify(defaultIssues));
+            }
         }
 
         function saveData() {
-            localStorage.setItem('project_timeline_tasks_v3', JSON.stringify(tasks));
+            localStorage.setItem('project_timeline_tasks_v4', JSON.stringify(tasks));
+            localStorage.setItem('project_timeline_issues_v4', JSON.stringify(issues));
             updateStats();
+            renderIssues();
         }
 
         function updateStats() {
             const elCounter = document.getElementById('taskCounterText');
-            if (elCounter) elCounter.textContent = `Total Tasks: ${tasks.length}`;
+            if (elCounter) elCounter.textContent = `Total Task: ${tasks.length}`;
 
-            // Calculate Completion %
-            const activeDay = parseInt(slider.value) || currentDay;
-            const completedCount = tasks.filter(t => activeDay > (t.end + (t.extend || 0))).length;
-            const percentage = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+            // Issue Counter
+            const openIssuesCount = issues.filter(i => i.status !== 'Resolved').length;
+            const elIssueCounter = document.getElementById('issueCounterText');
+            if (elIssueCounter) elIssueCounter.textContent = `Kendala: ${openIssuesCount} Open`;
+
+            // Calculate Progress Rata-rata & Complete Count
+            const totalProgress = tasks.reduce((sum, t) => sum + (parseInt(t.progress) || 0), 0);
+            const avgProgress = tasks.length > 0 ? Math.round(totalProgress / tasks.length) : 0;
+            const completedCount = tasks.filter(t => (parseInt(t.progress) || 0) === 100).length;
 
             const circle = document.getElementById('progressCircle');
             const pctText = document.getElementById('completionPercent');
             const labelText = document.getElementById('completionLabel');
 
             if (circle) {
-                // Circle circumference ~ 113
-                const offset = 113 - (113 * percentage) / 100;
-                circle.style.strokeDashoffset = offset;
+                const offset = 113 - (113 * avgProgress) / 100;
+                circle.style.strokeDashoffset = Math.max(0, offset);
             }
-            if (pctText) pctText.textContent = `${percentage}%`;
-            if (labelText) labelText.textContent = `${completedCount} dari ${tasks.length} Selesai`;
+            if (pctText) pctText.textContent = `${avgProgress}%`;
+            if (labelText) labelText.textContent = `${completedCount} dari ${tasks.length} Task 100%`;
         }
 
         function renderTable(activeDay) {
@@ -494,11 +646,12 @@
                 <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
                     <th rowspan="2" class="w-10 text-center bg-slate-900/95 border-b border-slate-800">No</th>
                     <th rowspan="2" class="min-w-[210px] text-left bg-slate-900/95 border-b border-slate-800 text-cyan-300">TASK NAME</th>
-                    <th rowspan="2" class="min-w-[170px] text-left bg-slate-900/95 border-b border-slate-800">PIC</th>
-                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">Start</th>
-                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800">End</th>
-                    <th rowspan="2" class="w-14 text-center bg-slate-900/95 border-b border-slate-800 text-cyan-400">Durasi</th>
-                    <th rowspan="2" class="w-20 text-center bg-slate-900/95 border-b border-slate-800">Aksi</th>
+                    <th rowspan="2" class="min-w-[150px] text-left bg-slate-900/95 border-b border-slate-800">PIC</th>
+                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800">Start</th>
+                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800">End</th>
+                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800 text-cyan-400">Durasi</th>
+                    <th rowspan="2" class="w-20 text-center bg-slate-900/95 border-b border-slate-800 text-emerald-400">Progress (%)</th>
+                    <th rowspan="2" class="w-24 text-center bg-slate-900/95 border-b border-slate-800">Aksi</th>
                     <th colspan="24" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest">HARI (SEPTEMBER)</th>
                 </tr>
             `;
@@ -529,7 +682,7 @@
             if (tasks.length === 0) {
                 const emptyTr = document.createElement('tr');
                 emptyTr.innerHTML = `
-                    <td colspan="31" class="text-center py-10 text-slate-500 text-xs">
+                    <td colspan="32" class="text-center py-10 text-slate-500 text-xs">
                         Belum ada task. Klik tombol <strong>+ Tambah Task</strong> di atas.
                     </td>
                 `;
@@ -543,40 +696,68 @@
                     const duration = (task.end - task.start) + 1;
                     const extend = task.extend || 0;
                     const actualEnd = task.end + extend;
+                    const taskProg = parseInt(task.progress) || 0;
+
+                    let statusClass = '';
+                    let statusLabel = '';
+                    if (taskProg === 100) {
+                        statusClass = 'bar-finish';
+                        statusLabel = '100%';
+                    } else if (activeDay < task.start) {
+                        statusClass = 'bar-not-started';
+                        statusLabel = `${taskProg}%`;
+                    } else if (activeDay > actualEnd) {
+                        statusClass = 'bar-extended';
+                        statusLabel = `${taskProg}% (Delay)`;
+                    } else {
+                        statusClass = 'bar-in-progress';
+                        statusLabel = `${taskProg}%`;
+                    }
 
                     tr.innerHTML = `
                         <td class="text-center font-mono text-slate-500 text-xs">${index + 1}</td>
-                        <td class="font-semibold text-slate-100 flex items-center justify-between gap-2 py-2.5">
-                            <span>${escapeHtml(task.desc)}</span>
+                        <td class="font-semibold text-slate-100 py-2.5">
+                            <div>${escapeHtml(task.desc)}</div>
+                            <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                                <div class="bg-gradient-to-r from-teal-400 to-cyan-400 h-full rounded-full" style="width: ${taskProg}%"></div>
+                            </div>
                         </td>
                         <td class="text-slate-400 text-xs">${escapeHtml(task.pic)}</td>
                         <td class="text-center">
                             <input type="number" min="1" max="24" value="${task.start}" 
                                 onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
-                                class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                class="w-10 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
                         <td class="text-center">
                             <div class="flex items-center justify-center gap-0.5">
                                 <input type="number" min="1" max="24" value="${task.end}" 
                                     onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
-                                    class="w-11 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                    class="w-10 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                                 ${extend > 0 ? `<span class="text-[10px] text-orange-400 font-bold" title="Extended sampai hari ${actualEnd}">+${extend}</span>` : ''}
                             </div>
                         </td>
                         <td class="text-center">
                             <input type="number" min="1" max="24" value="${duration}" 
                                 onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
-                                class="w-11 text-center py-0.5 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                class="w-10 text-center py-0.5 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                        </td>
+                        <td class="text-center">
+                            <div class="flex items-center justify-center gap-1">
+                                <input type="number" min="0" max="100" value="${taskProg}" 
+                                    onchange="inlineUpdateTask(${task.id}, 'progress', this.value)" 
+                                    class="w-11 text-center py-0.5 font-extrabold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 rounded font-mono text-xs focus:border-emerald-400 focus:outline-none">
+                                <span class="text-[10px] text-emerald-400 font-bold">%</span>
+                            </div>
                         </td>
                         <td class="text-center whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
+                                <button onclick="extendTask(${task.id}, 1)" title="Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-400 hover:text-orange-400 rounded transition">
+                                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                                </button>
                                 ${extend > 0 ? `
                                 <button onclick="extendTask(${task.id}, -1)" title="Kurangi Waktu Tambahan (-1 Hari)" class="p-1 hover:bg-rose-500/20 text-orange-400 hover:text-rose-400 rounded transition">
                                     <i data-lucide="minus-circle" class="w-3.5 h-3.5"></i>
                                 </button>` : ''}
-                                <button onclick="extendTask(${task.id}, 1)" title="Tambah Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-500 hover:text-orange-400 rounded transition">
-                                    <i data-lucide="timer" class="w-3.5 h-3.5"></i>
-                                </button>
                                 <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </button>
@@ -587,48 +768,32 @@
                         </td>
                     `;
 
-                    // Timeline Days
+                    // Timeline Days Columns
                     for(let i = 1; i <= 24; i++) {
-                        let isPlanned = i >= task.start && i <= task.end;
-                        let isExtended = extend > 0 && i > task.end && i <= actualEnd;
-                        let isActive = isPlanned || isExtended;
-                        
-                        let cellStatusClass = '';
-                        let cellStatusLabel = '';
+                        let isNormalBar = i >= task.start && i <= task.end;
+                        let isExtendedBar = i > task.end && i <= actualEnd;
+                        let isActive = isNormalBar || isExtendedBar;
 
-                        if (isPlanned) {
-                            if (activeDay < task.start) {
-                                cellStatusClass = 'bar-not-started';
-                                cellStatusLabel = 'Not Started';
-                            } else if (activeDay > actualEnd) {
-                                cellStatusClass = 'bar-finish';
-                                cellStatusLabel = 'Finish';
-                            } else {
-                                cellStatusClass = 'bar-in-progress';
-                                cellStatusLabel = 'In Progress';
-                            }
-                        } else if (isExtended) {
-                            cellStatusClass = 'bar-extended';
-                            cellStatusLabel = 'Extended';
-                        }
+                        let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
 
                         let currentClass = (i === activeDay) ? 'col-current' : '';
                         if (i === activeDay && isLastRow) {
                             currentClass += ' col-current-bottom';
                         }
 
-                        let barRounded = '';
-                        if (isActive) {
-                            if (i === task.start && i === actualEnd) barRounded = 'rounded-md';
-                            else if (i === task.start) barRounded = 'rounded-l-lg';
-                            else if (i === actualEnd) barRounded = 'rounded-r-lg';
+                        let barRounded = 'rounded-md';
+                        if (i === task.start && i === actualEnd) {
+                            barRounded = 'rounded-lg';
+                        } else if (i === task.start) {
+                            barRounded = 'rounded-l-lg';
+                        } else if (i === actualEnd) {
+                            barRounded = 'rounded-r-lg';
                         }
 
-                        // Label teks di dalam bar
                         let textInBar = '';
                         if (i === task.start) {
-                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${cellStatusLabel}</span>`;
-                        } else if (isExtended && i === task.end + 1) {
+                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>`;
+                        } else if (isExtendedBar && i === task.end + 1) {
                             textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight text-slate-950 truncate">+Ext</span>`;
                         }
 
@@ -647,6 +812,141 @@
             lucide.createIcons();
         }
 
+        // --- ISSUE LOG FUNCTIONS ---
+        function renderIssues() {
+            const tbody = document.getElementById('issueTableBody');
+            const summaryBadge = document.getElementById('issueSummaryBadge');
+            tbody.innerHTML = '';
+
+            if (summaryBadge) summaryBadge.textContent = `${issues.length} Total Issue`;
+
+            if (issues.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-slate-500 text-xs">
+                            Belum ada kendala yang dicatat. Klik <strong>+ Tambah Issue</strong> untuk mencatat.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            issues.forEach((issue, index) => {
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 transition border-b border-slate-800/60";
+
+                let statusBadgeClass = '';
+                if (issue.status === 'Open') {
+                    statusBadgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+                } else if (issue.status === 'In Progress') {
+                    statusBadgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+                } else {
+                    statusBadgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+                }
+
+                tr.innerHTML = `
+                    <td class="text-center font-mono text-slate-500 text-xs py-3">${index + 1}</td>
+                    <td class="font-semibold text-slate-100 text-xs">${escapeHtml(issue.issue)}</td>
+                    <td class="text-slate-300 text-xs">${escapeHtml(issue.solution)}</td>
+                    <td class="text-cyan-300 text-xs font-medium">${escapeHtml(issue.pic)}</td>
+                    <td class="text-center font-mono text-xs text-slate-400">${escapeHtml(issue.dueDate)}</td>
+                    <td class="text-center">
+                        <span class="inline-block px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${statusBadgeClass}">
+                            ${escapeHtml(issue.status)}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <button onclick="openEditIssueModal(${issue.id})" title="Edit Issue" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-amber-400 rounded transition">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="confirmDeleteIssue(${issue.id})" title="Hapus Issue" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded transition">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        function openAddIssueModal() {
+            document.getElementById('issueModalTitle').textContent = 'Tambah Issue Baru';
+            document.getElementById('issueId').value = '';
+            document.getElementById('inputIssueText').value = '';
+            document.getElementById('inputIssueSolution').value = '';
+            document.getElementById('inputIssuePic').value = '';
+            document.getElementById('inputIssueDueDate').value = '';
+            document.getElementById('inputIssueStatus').value = 'Open';
+            showModal('issueModal');
+        }
+
+        function openEditIssueModal(id) {
+            const item = issues.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('issueModalTitle').textContent = 'Edit Issue & Action Plan';
+            document.getElementById('issueId').value = item.id;
+            document.getElementById('inputIssueText').value = item.issue;
+            document.getElementById('inputIssueSolution').value = item.solution;
+            document.getElementById('inputIssuePic').value = item.pic;
+            document.getElementById('inputIssueDueDate').value = item.dueDate;
+            document.getElementById('inputIssueStatus').value = item.status;
+            showModal('issueModal');
+        }
+
+        function handleIssueFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('issueId').value;
+            const issueText = document.getElementById('inputIssueText').value.trim();
+            const solution = document.getElementById('inputIssueSolution').value.trim();
+            const pic = document.getElementById('inputIssuePic').value.trim();
+            const dueDate = document.getElementById('inputIssueDueDate').value.trim();
+            const status = document.getElementById('inputIssueStatus').value;
+
+            if (!issueText || !solution) return;
+
+            if (id) {
+                const item = issues.find(i => i.id === parseInt(id));
+                if (item) {
+                    item.issue = issueText;
+                    item.solution = solution;
+                    item.pic = pic;
+                    item.dueDate = dueDate;
+                    item.status = status;
+                }
+            } else {
+                const newId = issues.length > 0 ? Math.max(...issues.map(i => i.id)) + 1 : 1;
+                issues.push({ id: newId, issue: issueText, solution, pic, dueDate, status });
+            }
+
+            saveData();
+            closeIssueModal();
+            showToast(id ? 'Issue berhasil diperbarui!' : 'Issue baru berhasil ditambahkan!');
+        }
+
+        function confirmDeleteIssue(id) {
+            const item = issues.find(i => i.id === id);
+            if (!item) return;
+
+            showConfirm('Hapus Issue', `Yakin ingin menghapus kendala "${item.issue}"?`, () => {
+                issues = issues.filter(i => i.id !== id);
+                saveData();
+                showToast('Issue berhasil dihapus');
+            });
+        }
+
+        function closeIssueModal() {
+            const modal = document.getElementById('issueModal');
+            const container = document.getElementById('issueModalContainer');
+            modal.classList.add('opacity-0');
+            if (container) container.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // --- TASK MANAGEMENT INLINE & MODAL ---
         function inlineUpdateTask(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
@@ -665,16 +965,14 @@
             } else if (field === 'duration') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = Math.min(24, task.start + val - 1);
-            }
-            
-            // Batasi agar total hari tidak melebihi batas 24
-            if (task.end + (task.extend || 0) > 24) {
-                task.extend = Math.max(0, 24 - task.end);
+            } else if (field === 'progress') {
+                val = Math.max(0, Math.min(100, val));
+                task.progress = val;
             }
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast('Jadwal awal berhasil diperbarui!');
+            showToast('Data task berhasil diperbarui!');
         }
 
         function handleCellClick(taskId, day) {
@@ -692,40 +990,29 @@
                     task.end = day;
                 }
             }
-            
-            // Batasi agar total hari tidak melebihi batas 24
-            if (task.end + (task.extend || 0) > 24) {
-                task.extend = Math.max(0, 24 - task.end);
-            }
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast(`Task "${task.desc}" jadwal awal diatur ke Hari ${task.start} - ${task.end}`);
+            showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
         }
 
-        function extendTask(id, amount = 1) {
+        function extendTask(id, delta = 1) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
 
             if (task.extend === undefined) task.extend = 0;
+            const newExtend = task.extend + delta;
 
-            if (amount > 0) {
-                if (task.end + task.extend < 24) {
-                    task.extend += amount;
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast(`Waktu tambahan (+${task.extend} Hari dari jadwal awal) berhasil ditambahkan!`);
-                } else {
-                    showToast('Tidak dapat menambah waktu, sudah mencapai batas maksimal (Hari 24).', true);
-                }
-            } else {
-                if (task.extend > 0) {
-                    task.extend += amount;
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast(`Waktu tambahan dikurangi menjadi +${task.extend} Hari.`);
-                }
+            if (newExtend < 0) return;
+            if (task.end + newExtend > 24) {
+                showToast('Batas maksimal timeline adalah Hari 24.', true);
+                return;
             }
+
+            task.extend = newExtend;
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast(delta > 0 ? `Waktu tambahan (+${task.extend} Hari) diperbarui!` : 'Waktu tambahan dikurangi!');
         }
 
         function syncFormValues(changedField) {
@@ -760,6 +1047,9 @@
             document.getElementById('inputStart').value = 1;
             document.getElementById('inputEnd').value = 5;
             document.getElementById('inputDuration').value = 5;
+            document.getElementById('inputExtend').value = 0;
+            document.getElementById('inputProgress').value = 0;
+            document.getElementById('inputProgressVal').textContent = '0%';
             showModal('taskModal');
         }
 
@@ -774,6 +1064,11 @@
             document.getElementById('inputStart').value = task.start;
             document.getElementById('inputEnd').value = task.end;
             document.getElementById('inputDuration').value = (task.end - task.start) + 1;
+            document.getElementById('inputExtend').value = task.extend || 0;
+            
+            const prog = parseInt(task.progress) || 0;
+            document.getElementById('inputProgress').value = prog;
+            document.getElementById('inputProgressVal').textContent = `${prog}%`;
             showModal('taskModal');
         }
 
@@ -784,6 +1079,8 @@
             const pic = document.getElementById('inputPic').value.trim();
             const start = parseInt(document.getElementById('inputStart').value);
             const end = parseInt(document.getElementById('inputEnd').value);
+            const extend = parseInt(document.getElementById('inputExtend').value) || 0;
+            const progress = parseInt(document.getElementById('inputProgress').value) || 0;
 
             if (!desc || !pic) return;
 
@@ -794,20 +1091,18 @@
                     task.pic = pic;
                     task.start = start;
                     task.end = end;
-                    
-                    if (task.end + (task.extend || 0) > 24) {
-                        task.extend = Math.max(0, 24 - task.end);
-                    }
+                    task.extend = extend;
+                    task.progress = progress;
                 }
             } else {
                 const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({ id: newId, desc, pic, start, end, extend: 0 });
+                tasks.push({ id: newId, desc, pic, start, end, extend, progress });
             }
 
             saveData();
             renderTable(parseInt(slider.value));
             closeTaskModal();
-            showToast(id ? 'Perubahan berhasil disimpan!' : 'Task baru ditambahkan!');
+            showToast(id ? 'Perubahan task berhasil disimpan!' : 'Task baru ditambahkan!');
         }
 
         function confirmDeleteTask(id) {
@@ -823,8 +1118,9 @@
         }
 
         function confirmResetData() {
-            showConfirm('Reset Data Default', 'Semua perubahan revisi akan dikembalikan ke data awal. Lanjutkan?', () => {
+            showConfirm('Reset Data Default', 'Semua perubahan task dan issue akan dikembalikan ke kondisi awal. Lanjutkan?', () => {
                 tasks = JSON.parse(JSON.stringify(defaultTasks));
+                issues = JSON.parse(JSON.stringify(defaultIssues));
                 saveData();
                 renderTable(parseInt(slider.value));
                 showToast('Data berhasil di-reset ke awal');
@@ -832,10 +1128,11 @@
         }
 
         function exportJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 2));
+            const payload = { tasks, issues };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `Timeline_Proyek_September_${new Date().toISOString().slice(0,10)}.json`);
+            downloadAnchor.setAttribute("download", `Laporan_Proyek_Integrated_${new Date().toISOString().slice(0,10)}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -850,8 +1147,9 @@
             reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        tasks = imported;
+                    if (imported && (imported.tasks || Array.isArray(imported))) {
+                        tasks = imported.tasks || imported;
+                        issues = imported.issues || [];
                         saveData();
                         renderTable(parseInt(slider.value));
                         showToast('Data berhasil diimpor!');
@@ -922,7 +1220,7 @@
         }
 
         function escapeHtml(str) {
-            return String(str)
+            return String(str || '')
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -933,6 +1231,7 @@
         loadData();
         slider.value = currentDay;
         renderTable(currentDay);
+        renderIssues();
 
         slider.addEventListener('input', function(e) {
             const selectedDay = parseInt(e.target.value);
