@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Modern - Progress & Timeline Proyek</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -25,11 +24,9 @@
             }
         }
     </script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* Modern Glassmorphism Custom Styling */
         body {
             background: radial-gradient(circle at 10% 20%, rgba(15, 30, 45, 1) 0%, rgba(8, 15, 25, 1) 90%);
         }
@@ -48,7 +45,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Custom Table Styling */
         table {
             border-collapse: separate;
             border-spacing: 0;
@@ -84,7 +80,6 @@
             background-color: rgba(56, 189, 248, 0.08);
         }
 
-        /* Indicator Line "We are here" */
         .col-current {
             position: relative;
         }
@@ -142,7 +137,6 @@
             border-color: #3b82f6 transparent transparent transparent;
         }
 
-        /* Gantt Neon Bars */
         .bar-not-started {
             background: rgba(100, 116, 139, 0.5);
             border: 1px solid rgba(148, 163, 184, 0.3);
@@ -167,7 +161,6 @@
             box-shadow: 0 0 14px rgba(249, 115, 22, 0.7);
         }
 
-        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
             height: 10px;
             width: 10px;
@@ -199,13 +192,11 @@
 </head>
 <body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
 
-    <!-- Decorative Background Glows -->
     <div class="fixed -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
     <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="max-w-[1700px] mx-auto space-y-6 relative z-10">
         
-        <!-- Dashboard Header Banner -->
         <div class="glass-panel p-5 rounded-2xl flex flex-col xl:flex-row xl:items-center justify-between gap-5">
             <div class="flex items-center gap-4">
                 <div class="p-3.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 rounded-2xl shadow-lg">
@@ -225,10 +216,8 @@
                 </div>
             </div>
 
-            <!-- Top Dashboard Stats & Controls -->
             <div class="flex flex-wrap items-center gap-3">
                 
-                <!-- Stat Gauge Widget Progress Rata-rata -->
                 <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3 border border-teal-500/20">
                     <div class="relative w-11 h-11 flex items-center justify-center">
                         <svg class="w-11 h-11 transform -rotate-90">
@@ -243,7 +232,6 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex items-center gap-2 flex-wrap">
                     <button onclick="openAddTaskModal()" class="px-3.5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                         <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
@@ -270,10 +258,8 @@
             </div>
         </div>
 
-        <!-- Middle Section: Interactive Slider & Legend -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
-            <!-- Day Simulation Card -->
             <div class="lg:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-cyan-400">
                 <div class="flex justify-between items-center mb-3">
                     <label for="daySlider" class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
@@ -289,7 +275,6 @@
                 </div>
             </div>
 
-            <!-- Legend Status Card -->
             <div class="lg:col-span-7 glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-around gap-3">
                 <div class="flex items-center gap-3 bg-slate-900/40 px-3.5 py-2 rounded-xl border border-slate-800">
                     <span class="w-3.5 h-3.5 bg-slate-600 rounded-md border border-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.3)]"></span>
@@ -332,10 +317,9 @@
             </div>
         </div>
 
-        <!-- Timeline Gantt Table Container -->
         <div class="glass-panel rounded-2xl overflow-hidden">
             <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
-                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang jadwal. <strong>Klik di cell kalender</strong> untuk tambah/geser tanda <strong class="text-red-400">Actual Start</strong> (Klik lagi untuk hapus).</span>
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang jadwal. <strong>Klik di cell</strong> untuk Actual Start. <strong>Double-klik (Sabtu/Minggu)</strong> untuk set libur.</span>
                 <span class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek September (1 - 24)</span>
             </div>
             
@@ -346,7 +330,6 @@
             </div>
         </div>
 
-        <!-- ISSUE LOG & ACTION PLAN SECTION -->
         <div class="glass-panel p-5 rounded-2xl space-y-4 border-t-2 border-t-amber-500/40">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                 <div class="flex items-center gap-3">
@@ -371,7 +354,6 @@
                 </div>
             </div>
 
-            <!-- Issues Table -->
             <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left">
                     <thead>
@@ -528,28 +510,27 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold pointer-events-none">
         <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
         <span id="toastMsg">Pesan Toast</span>
     </div>
 
     <script>
-        // Data Default Tugas Awal
+        // Data Default ditambahkan property excludedDays
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8 },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0, actualStart: null },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0, actualStart: null },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0, actualStart: null },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0, actualStart: null },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0, actualStart: null },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0, actualStart: null },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8, excludedDays: [] },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
         ];
 
-        // Default Issue Log awal
         const defaultIssues = [
             {
                 id: 1,
@@ -572,7 +553,6 @@
         if (currentDay > 24) currentDay = 24;
         if (currentDay < 1) currentDay = 4;
 
-        // DOM Elements
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
         const dayDisplay = document.getElementById('dayDisplay');
@@ -583,16 +563,20 @@
 
             if (savedTasks) {
                 try {
-                    tasks = JSON.parse(savedTasks);
-                    tasks = tasks.map(t => {
+                    let parsedTasks = JSON.parse(savedTasks);
+                    tasks = parsedTasks.map(t => {
+                        // Migrasi data jika ada struktur lama
+                        let newTask = { ...t };
                         if (t.originalEnd !== undefined) {
-                            let ext = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
-                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext, progress: t.progress || 0, actualStart: t.actualStart || null };
+                            newTask.end = t.originalEnd;
+                            newTask.extend = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
+                            delete newTask.originalEnd;
                         }
-                        if (t.extend === undefined) t.extend = 0;
-                        if (t.progress === undefined) t.progress = 0;
-                        if (t.actualStart === undefined) t.actualStart = null;
-                        return t;
+                        if (newTask.extend === undefined) newTask.extend = 0;
+                        if (newTask.progress === undefined) newTask.progress = 0;
+                        if (newTask.actualStart === undefined) newTask.actualStart = null;
+                        if (newTask.excludedDays === undefined) newTask.excludedDays = []; // Default array kosong
+                        return newTask;
                     });
                 } catch (e) {
                     tasks = JSON.parse(JSON.stringify(defaultTasks));
@@ -619,12 +603,10 @@
             const elCounter = document.getElementById('taskCounterText');
             if (elCounter) elCounter.textContent = `Total Task: ${tasks.length}`;
 
-            // Issue Counter
             const openIssuesCount = issues.filter(i => i.status !== 'Resolved').length;
             const elIssueCounter = document.getElementById('issueCounterText');
             if (elIssueCounter) elIssueCounter.textContent = `Kendala: ${openIssuesCount} Open`;
 
-            // Calculate Progress Rata-rata & Complete Count
             const totalProgress = tasks.reduce((sum, t) => sum + (parseInt(t.progress) || 0), 0);
             const avgProgress = tasks.length > 0 ? Math.round(totalProgress / tasks.length) : 0;
             const completedCount = tasks.filter(t => (parseInt(t.progress) || 0) === 100).length;
@@ -646,9 +628,7 @@
             dayDisplay.textContent = `HARI ${activeDay}`;
             updateStats();
 
-            // --- THEAD ---
             const thead = document.createElement('thead');
-            
             let tr1 = `
                 <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
                     <th rowspan="2" class="w-10 text-center bg-slate-900/95 border-b border-slate-800">No</th>
@@ -683,7 +663,6 @@
             thead.innerHTML += tr2;
             table.appendChild(thead);
 
-            // --- TBODY ---
             const tbody = document.createElement('tbody');
             
             if (tasks.length === 0) {
@@ -775,50 +754,49 @@
                         </td>
                     `;
 
-                    // Timeline Days Columns
+                    // Menemukan hari aktif pertama yang tidak dikecualikan (libur)
+                    let firstActiveDay = task.start;
+                    while(task.excludedDays && task.excludedDays.includes(firstActiveDay) && firstActiveDay <= actualEnd) {
+                        firstActiveDay++;
+                    }
+
                     for(let i = 1; i <= 24; i++) {
+                        // Periksa apakah hari ini libur
+                        let isExcluded = task.excludedDays && task.excludedDays.includes(i);
                         let isNormalBar = i >= task.start && i <= task.end;
                         let isExtendedBar = i > task.end && i <= actualEnd;
-                        let isActive = isNormalBar || isExtendedBar;
-
+                        
+                        // Aktif jika masuk range dan tidak dikecualikan
+                        let isActive = (isNormalBar || isExtendedBar) && !isExcluded;
                         let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
 
                         let currentClass = (i === activeDay) ? 'col-current' : '';
-                        if (i === activeDay && isLastRow) {
-                            currentClass += ' col-current-bottom';
-                        }
+                        if (i === activeDay && isLastRow) currentClass += ' col-current-bottom';
 
                         let barRounded = 'rounded-md';
-                        if (i === task.start && i === actualEnd) {
+                        if (i === firstActiveDay && i === actualEnd) {
                             barRounded = 'rounded-lg';
-                        } else if (i === task.start) {
+                        } else if (i === firstActiveDay) {
                             barRounded = 'rounded-l-lg';
                         } else if (i === actualEnd) {
                             barRounded = 'rounded-r-lg';
                         }
 
                         let textInBar = '';
-                        if (i === task.start) {
-                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>`;
-                        } else if (isExtendedBar && i === task.end + 1) {
-                            // Tempat jika ingin menambahkan teks pada area bar extended
+                        if (i === firstActiveDay && isActive) {
+                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate pointer-events-none">${statusLabel}</span>`;
                         }
 
-                        // TANDA ACTUAL START: Marker Merah Menunjuk ke Bawah
                         let actualStartMarker = '';
                         if (task.actualStart === i) {
                             actualStartMarker = `
-                                <div class="absolute -top-[2px] left-1/2 transform -translate-x-1/2 z-30 cursor-pointer hover:scale-110 transition-transform flex flex-col items-center group"
+                                <div class="absolute -top-[2px] left-1/2 transform -translate-x-1/2 z-30 cursor-grab hover:scale-110 transition-transform flex flex-col items-center group"
                                      draggable="true"
                                      ondragstart="event.dataTransfer.setData('text/plain', ${task.id})"
                                      title="Actual Start (Drag & Drop untuk geser, Klik untuk hapus)">
-                                     
-                                     <!-- Box Teks Actual Start -->
                                      <div class="bg-red-600 text-white font-extrabold text-[8px] tracking-wider px-1.5 py-0.5 rounded-sm shadow-[0_0_10px_rgba(220,38,38,0.9)] border border-red-400/50 leading-none whitespace-nowrap mb-[1px] pointer-events-none">
                                          ACTUAL
                                      </div>
-                                     
-                                     <!-- Panah Segitiga Merah Menunjuk ke Bawah -->
                                      <div class="w-0 h-0 border-l-[4.5px] border-l-transparent border-r-[4.5px] border-r-transparent border-t-[5px] border-t-red-600 drop-shadow-md pointer-events-none"></div>
                                 </div>
                             `;
@@ -826,10 +804,10 @@
 
                         tr.innerHTML += `
                             <td class="timeline-cell ${currentClass} text-center align-middle relative" 
-                                onclick="handleCellClick(${task.id}, ${i})"
+                                onclick="handleCellInteraction(${task.id}, ${i})"
                                 ondragover="event.preventDefault()"
                                 ondrop="handleDrop(event, ${task.id}, ${i})"
-                                title="Klik untuk set/hapus Actual Start pada hari ini">
+                                title="Klik: Set Actual Start | Dbl-Klik (Warna/Weekend): Set Libur/Kosong">
                                 ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
                                 ${actualStartMarker}
                             </td>
@@ -843,7 +821,80 @@
             lucide.createIcons();
         }
 
-        // --- ISSUE LOG FUNCTIONS ---
+        let clickTimer = null;
+
+        // Unified Click Handler untuk membedakan single dan double click
+        function handleCellInteraction(taskId, day) {
+            if (clickTimer) {
+                // Double Click Detected
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                processDoubleClick(taskId, day);
+            } else {
+                // Single Click Detected (menunggu delay 250ms)
+                clickTimer = setTimeout(() => {
+                    processSingleClick(taskId, day);
+                    clickTimer = null;
+                }, 250);
+            }
+        }
+
+        function processSingleClick(taskId, day) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            if (task.actualStart === day) {
+                task.actualStart = null; 
+                showToast('Actual Start dihapus');
+            } else {
+                task.actualStart = day; 
+                showToast(`Actual Start diatur ke Hari ${day}`);
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+        }
+
+        function processDoubleClick(taskId, day) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            // Validasi: hanya diperbolehkan toggle pada area weekend (Sabtu / Minggu)
+            if (!yellowDays.includes(day) && !redDays.includes(day)) {
+                showToast('Hanya area Sabtu & Minggu yang bisa diset libur', true);
+                return;
+            }
+
+            if (!task.excludedDays) task.excludedDays = [];
+            
+            const index = task.excludedDays.indexOf(day);
+            if (index > -1) {
+                task.excludedDays.splice(index, 1);
+                showToast(`Hari ${day} diaktifkan kembali`);
+            } else {
+                task.excludedDays.push(day);
+                showToast(`Hari ${day} diset sebagai libur (kosong)`);
+            }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+        }
+
+        function handleDrop(e, taskId, day) {
+            e.preventDefault();
+            const draggedTaskId = e.dataTransfer.getData('text/plain');
+            
+            if (draggedTaskId && parseInt(draggedTaskId) === taskId) {
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.actualStart = day;
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast(`Actual Start digeser ke Hari ${day}`);
+                }
+            }
+        }
+
         function renderIssues() {
             const tbody = document.getElementById('issueTableBody');
             const summaryBadge = document.getElementById('issueSummaryBadge');
@@ -867,13 +918,9 @@
                 tr.className = "hover:bg-slate-800/40 transition border-b border-slate-800/60";
 
                 let statusBadgeClass = '';
-                if (issue.status === 'Open') {
-                    statusBadgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
-                } else if (issue.status === 'In Progress') {
-                    statusBadgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-                } else {
-                    statusBadgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-                }
+                if (issue.status === 'Open') statusBadgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+                else if (issue.status === 'In Progress') statusBadgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+                else statusBadgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
 
                 tr.innerHTML = `
                     <td class="text-center font-mono text-slate-500 text-xs py-3">${index + 1}</td>
@@ -942,30 +989,22 @@
             if (id) {
                 const item = issues.find(i => i.id === parseInt(id));
                 if (item) {
-                    item.issue = issueText;
-                    item.solution = solution;
-                    item.pic = pic;
-                    item.dueDate = dueDate;
-                    item.status = status;
+                    item.issue = issueText; item.solution = solution; item.pic = pic; item.dueDate = dueDate; item.status = status;
                 }
             } else {
                 const newId = issues.length > 0 ? Math.max(...issues.map(i => i.id)) + 1 : 1;
                 issues.push({ id: newId, issue: issueText, solution, pic, dueDate, status });
             }
 
-            saveData();
-            closeIssueModal();
-            showToast(id ? 'Issue berhasil diperbarui!' : 'Issue baru berhasil ditambahkan!');
+            saveData(); closeIssueModal(); showToast(id ? 'Issue berhasil diperbarui!' : 'Issue baru ditambahkan!');
         }
 
         function confirmDeleteIssue(id) {
             const item = issues.find(i => i.id === id);
             if (!item) return;
-
             showConfirm('Hapus Issue', `Yakin ingin menghapus kendala "${item.issue}"?`, () => {
                 issues = issues.filter(i => i.id !== id);
-                saveData();
-                showToast('Issue berhasil dihapus');
+                saveData(); showToast('Issue dihapus');
             });
         }
 
@@ -977,7 +1016,6 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
-        // --- TASK MANAGEMENT INLINE & MODAL ---
         function inlineUpdateTask(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
@@ -986,57 +1024,19 @@
             if (isNaN(val)) return;
 
             if (field === 'start') {
-                val = Math.max(1, Math.min(24, val));
-                task.start = val;
+                val = Math.max(1, Math.min(24, val)); task.start = val;
                 if (task.end < task.start) task.end = task.start;
             } else if (field === 'end') {
-                val = Math.max(1, Math.min(24, val));
-                task.end = val;
+                val = Math.max(1, Math.min(24, val)); task.end = val;
                 if (task.start > task.end) task.start = task.end;
             } else if (field === 'duration') {
                 val = Math.max(1, Math.min(24, val));
                 task.end = Math.min(24, task.start + val - 1);
             } else if (field === 'progress') {
-                val = Math.max(0, Math.min(100, val));
-                task.progress = val;
+                val = Math.max(0, Math.min(100, val)); task.progress = val;
             }
 
-            saveData();
-            renderTable(parseInt(slider.value));
-            showToast('Data task berhasil diperbarui!');
-        }
-
-        // Klik cell untuk Set / Hapus Actual Start
-        function handleCellClick(taskId, day) {
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            if (task.actualStart === day) {
-                task.actualStart = null; // Menghapus jika diklik sekali lagi
-                showToast('Actual Start dihapus');
-            } else {
-                task.actualStart = day; // Set / Geser lewat klik
-                showToast(`Actual Start diatur ke Hari ${day}`);
-            }
-
-            saveData();
-            renderTable(parseInt(slider.value));
-        }
-
-        // Drag & Drop marker ke cell lain
-        function handleDrop(e, taskId, day) {
-            e.preventDefault();
-            const draggedTaskId = e.dataTransfer.getData('text/plain');
-            
-            if (draggedTaskId && parseInt(draggedTaskId) === taskId) {
-                const task = tasks.find(t => t.id === taskId);
-                if (task) {
-                    task.actualStart = day;
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast(`Actual Start digeser ke Hari ${day}`);
-                }
-            }
+            saveData(); renderTable(parseInt(slider.value)); showToast('Task diperbarui!');
         }
 
         function extendTask(id, delta = 1) {
@@ -1047,15 +1047,10 @@
             const newExtend = task.extend + delta;
 
             if (newExtend < 0) return;
-            if (task.end + newExtend > 24) {
-                showToast('Batas maksimal timeline adalah Hari 24.', true);
-                return;
-            }
+            if (task.end + newExtend > 24) { showToast('Maksimal Hari 24.', true); return; }
 
-            task.extend = newExtend;
-            saveData();
-            renderTable(parseInt(slider.value));
-            showToast(delta > 0 ? `Waktu tambahan (+${task.extend} Hari) diperbarui!` : 'Waktu tambahan dikurangi!');
+            task.extend = newExtend; saveData(); renderTable(parseInt(slider.value));
+            showToast(delta > 0 ? `Extended (+${task.extend})` : 'Extended dikurangi!');
         }
 
         function syncFormValues(changedField) {
@@ -1068,11 +1063,9 @@
             let duration = parseInt(durationInput.value) || 1;
 
             if (changedField === 'start') {
-                if (end < start) end = start;
-                duration = (end - start) + 1;
+                if (end < start) end = start; duration = (end - start) + 1;
             } else if (changedField === 'end') {
-                if (start > end) start = end;
-                duration = (end - start) + 1;
+                if (start > end) start = end; duration = (end - start) + 1;
             } else if (changedField === 'duration') {
                 end = Math.min(24, start + duration - 1);
             }
@@ -1085,14 +1078,10 @@
         function openAddTaskModal() {
             document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
             document.getElementById('taskId').value = '';
-            document.getElementById('inputDesc').value = '';
-            document.getElementById('inputPic').value = '';
-            document.getElementById('inputStart').value = 1;
-            document.getElementById('inputEnd').value = 5;
-            document.getElementById('inputDuration').value = 5;
-            document.getElementById('inputExtend').value = 0;
-            document.getElementById('inputProgress').value = 0;
-            document.getElementById('inputProgressVal').textContent = '0%';
+            document.getElementById('inputDesc').value = ''; document.getElementById('inputPic').value = '';
+            document.getElementById('inputStart').value = 1; document.getElementById('inputEnd').value = 5;
+            document.getElementById('inputDuration').value = 5; document.getElementById('inputExtend').value = 0;
+            document.getElementById('inputProgress').value = 0; document.getElementById('inputProgressVal').textContent = '0%';
             showModal('taskModal');
         }
 
@@ -1102,26 +1091,21 @@
 
             document.getElementById('modalTitle').textContent = 'Edit Task Detail';
             document.getElementById('taskId').value = task.id;
-            document.getElementById('inputDesc').value = task.desc;
-            document.getElementById('inputPic').value = task.pic;
-            document.getElementById('inputStart').value = task.start;
-            document.getElementById('inputEnd').value = task.end;
+            document.getElementById('inputDesc').value = task.desc; document.getElementById('inputPic').value = task.pic;
+            document.getElementById('inputStart').value = task.start; document.getElementById('inputEnd').value = task.end;
             document.getElementById('inputDuration').value = (task.end - task.start) + 1;
             document.getElementById('inputExtend').value = task.extend || 0;
             
             const prog = parseInt(task.progress) || 0;
-            document.getElementById('inputProgress').value = prog;
-            document.getElementById('inputProgressVal').textContent = `${prog}%`;
+            document.getElementById('inputProgress').value = prog; document.getElementById('inputProgressVal').textContent = `${prog}%`;
             showModal('taskModal');
         }
 
         function handleTaskFormSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('taskId').value;
-            const desc = document.getElementById('inputDesc').value.trim();
-            const pic = document.getElementById('inputPic').value.trim();
-            const start = parseInt(document.getElementById('inputStart').value);
-            const end = parseInt(document.getElementById('inputEnd').value);
+            const desc = document.getElementById('inputDesc').value.trim(); const pic = document.getElementById('inputPic').value.trim();
+            const start = parseInt(document.getElementById('inputStart').value); const end = parseInt(document.getElementById('inputEnd').value);
             const extend = parseInt(document.getElementById('inputExtend').value) || 0;
             const progress = parseInt(document.getElementById('inputProgress').value) || 0;
 
@@ -1129,44 +1113,29 @@
 
             if (id) {
                 const task = tasks.find(t => t.id === parseInt(id));
-                if (task) {
-                    task.desc = desc;
-                    task.pic = pic;
-                    task.start = start;
-                    task.end = end;
-                    task.extend = extend;
-                    task.progress = progress;
-                }
+                if (task) { task.desc = desc; task.pic = pic; task.start = start; task.end = end; task.extend = extend; task.progress = progress; }
             } else {
                 const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({ id: newId, desc, pic, start, end, extend, progress, actualStart: null });
+                tasks.push({ id: newId, desc, pic, start, end, extend, progress, actualStart: null, excludedDays: [] });
             }
 
-            saveData();
-            renderTable(parseInt(slider.value));
-            closeTaskModal();
-            showToast(id ? 'Perubahan task berhasil disimpan!' : 'Task baru ditambahkan!');
+            saveData(); renderTable(parseInt(slider.value)); closeTaskModal();
+            showToast(id ? 'Task disimpan!' : 'Task ditambahkan!');
         }
 
         function confirmDeleteTask(id) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
-
             showConfirm('Hapus Task', `Yakin ingin menghapus "${task.desc}"?`, () => {
                 tasks = tasks.filter(t => t.id !== id);
-                saveData();
-                renderTable(parseInt(slider.value));
-                showToast('Task berhasil dihapus');
+                saveData(); renderTable(parseInt(slider.value)); showToast('Task dihapus');
             });
         }
 
         function confirmResetData() {
-            showConfirm('Reset Data Default', 'Semua perubahan task dan issue akan dikembalikan ke kondisi awal. Lanjutkan?', () => {
-                tasks = JSON.parse(JSON.stringify(defaultTasks));
-                issues = JSON.parse(JSON.stringify(defaultIssues));
-                saveData();
-                renderTable(parseInt(slider.value));
-                showToast('Data berhasil di-reset ke awal');
+            showConfirm('Reset Data Default', 'Semua perubahan akan dikembalikan ke kondisi awal. Lanjutkan?', () => {
+                tasks = JSON.parse(JSON.stringify(defaultTasks)); issues = JSON.parse(JSON.stringify(defaultIssues));
+                saveData(); renderTable(parseInt(slider.value)); showToast('Data di-reset');
             });
         }
 
@@ -1175,11 +1144,9 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `Laporan_Proyek_Integrated_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast('File JSON berhasil diekspor');
+            downloadAnchor.setAttribute("download", `Laporan_Proyek_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+            showToast('JSON diekspor');
         }
 
         function importJSON(event) {
@@ -1191,20 +1158,12 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (imported && (imported.tasks || Array.isArray(imported))) {
-                        tasks = imported.tasks || imported;
-                        issues = imported.issues || [];
-                        saveData();
-                        renderTable(parseInt(slider.value));
-                        showToast('Data berhasil diimpor!');
-                    } else {
-                        showToast('Format JSON tidak valid!', true);
-                    }
-                } catch (err) {
-                    showToast('Gagal membaca file JSON!', true);
-                }
+                        tasks = imported.tasks || imported; issues = imported.issues || [];
+                        saveData(); renderTable(parseInt(slider.value)); showToast('Data diimpor!');
+                    } else { showToast('Format tidak valid!', true); }
+                } catch (err) { showToast('Gagal membaca JSON!', true); }
             };
-            reader.readAsText(file);
-            event.target.value = '';
+            reader.readAsText(file); event.target.value = '';
         }
 
         function showModal(modalId) {
@@ -1218,56 +1177,29 @@
         }
 
         function closeTaskModal() {
-            const modal = document.getElementById('taskModal');
-            const container = document.getElementById('taskModalContainer');
-            modal.classList.add('opacity-0');
-            if (container) container.classList.add('scale-95');
+            const modal = document.getElementById('taskModal'); const container = document.getElementById('taskModalContainer');
+            modal.classList.add('opacity-0'); if (container) container.classList.add('scale-95');
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
         function showConfirm(title, message, onOk) {
             const modal = document.getElementById('confirmModal');
-            document.getElementById('confirmTitle').textContent = title;
-            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmTitle').textContent = title; document.getElementById('confirmMessage').textContent = message;
+            const okBtn = document.getElementById('confirmOkBtn'); const cancelBtn = document.getElementById('confirmCancelBtn');
 
-            const okBtn = document.getElementById('confirmOkBtn');
-            const cancelBtn = document.getElementById('confirmCancelBtn');
-
-            const closeConfirm = () => {
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 200);
-            };
-
-            okBtn.onclick = () => {
-                closeConfirm();
-                onOk();
-            };
-
-            cancelBtn.onclick = closeConfirm;
-            showModal('confirmModal');
+            const closeConfirm = () => { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 200); };
+            okBtn.onclick = () => { closeConfirm(); onOk(); }; cancelBtn.onclick = closeConfirm; showModal('confirmModal');
         }
 
         function showToast(msg, isError = false) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.textContent = msg;
-            toastIcon.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
-            
+            const toast = document.getElementById('toast'); const toastMsg = document.getElementById('toastMsg'); const toastIcon = document.getElementById('toastIcon');
+            toastMsg.textContent = msg; toastIcon.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
             toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
         }
 
         function escapeHtml(str) {
-            return String(str || '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
         // Init
@@ -1276,10 +1208,7 @@
         renderTable(currentDay);
         renderIssues();
 
-        slider.addEventListener('input', function(e) {
-            const selectedDay = parseInt(e.target.value);
-            renderTable(selectedDay);
-        });
+        slider.addEventListener('input', function(e) { renderTable(parseInt(e.target.value)); });
 
         lucide.createIcons();
     </script>
