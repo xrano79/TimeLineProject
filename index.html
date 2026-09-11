@@ -1,7 +1,4 @@
 <!-- Chosen Palette: Glassmorphism Dark Neon (Cyan, Slate, Amber, Rose, Emerald, Orange) -->
-<!-- Application Structure Plan: Full Integrated Interactive Project Dashboard combining Gantt Timeline with Extension tracking (+/- Extra Days), Task Progress Tracking (0-100%), Issue Log & Action Plan, Real-time KPI Stats Gauge, and Import/Export capabilities. -->
-<!-- Visualization & Content Choices: Dynamic HTML/CSS tables with Tailwind and Vanilla JS state management. Interactive Gantt progress and extended time bars, Issue management modal & status badges, SVG gauge circle for KPIs. NO SVG graphics library / NO Mermaid. -->
-<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -528,7 +525,7 @@
     </div>
 
     <script>
-        // Data Default Tugas Awal (Termasuk Extend, Progress %, dan Actual Start)
+        // Data Default Tugas Awal
         const defaultTasks = [
             { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null },
             { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null },
@@ -798,17 +795,20 @@
                             textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight text-slate-950 truncate">+Ext</span>`;
                         }
 
-                        // Menentukan Marker Actual Start
+                        // Menentukan Marker Actual Start (Berbentuk Label Kapsul)
                         let actualStartMarker = '';
                         if (task.actualStart === i) {
                             actualStartMarker = `
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 cursor-grab hover:scale-110 transition-transform"
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 cursor-grab hover:scale-105 transition-transform"
                                      draggable="true"
                                      ondragstart="event.dataTransfer.setData('text/plain', ${task.id})"
                                      title="Actual Start (Drag & Drop untuk geser, Klik untuk hapus)">
-                                     <div class="bg-rose-500 text-white rounded-md p-[3px] shadow-[0_0_12px_rgba(244,63,94,0.9)] border border-white/50 flex items-center justify-center pointer-events-none">
-                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                     
+                                     <div class="bg-gradient-to-r from-rose-600 to-rose-500 text-white rounded-full px-2 py-0.5 shadow-[0_0_12px_rgba(244,63,94,0.9)] border border-rose-300/50 flex items-center justify-center gap-1 pointer-events-none whitespace-nowrap">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                         <span class="text-[8px] font-bold uppercase tracking-wide">Actual Start</span>
                                      </div>
+                                     
                                 </div>
                             `;
                         }
@@ -1274,3 +1274,4 @@
     </script>
 </body>
 </html>
+```eof
