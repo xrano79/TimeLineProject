@@ -329,7 +329,7 @@
         <!-- Timeline Gantt Table Container -->
         <div class="glass-panel rounded-2xl overflow-hidden">
             <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
-                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka pada kolom <strong>Start / End / Durasi / Progress (%)</strong> atau gunakan tombol + / - untuk perpanjangan waktu.</span>
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang jadwal. <strong>Klik di cell kalender</strong> untuk tambah/geser tanda <strong>Actual Start</strong> (Klik lagi untuk hapus).</span>
                 <span class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek September (1 - 24)</span>
             </div>
             
@@ -528,19 +528,19 @@
     </div>
 
     <script>
-        // Data Default Tugas Awal (Termasuk Extend & Progress %)
+        // Data Default Tugas Awal (Termasuk Extend, Progress %, dan Actual Start)
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0 },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0 },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0 },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0 },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 0 },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0 },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0 },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0 },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0 },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0 },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0 },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null },
+            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null },
+            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 0, actualStart: null },
+            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0, actualStart: null },
+            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0, actualStart: null },
+            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0, actualStart: null },
+            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0, actualStart: null },
+            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0, actualStart: null },
+            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0, actualStart: null },
         ];
 
         // Default Issue Log awal
@@ -572,8 +572,8 @@
         const dayDisplay = document.getElementById('dayDisplay');
 
         function loadData() {
-            const savedTasks = localStorage.getItem('project_timeline_tasks_v4');
-            const savedIssues = localStorage.getItem('project_timeline_issues_v4');
+            const savedTasks = localStorage.getItem('project_timeline_tasks_v5');
+            const savedIssues = localStorage.getItem('project_timeline_issues_v5');
 
             if (savedTasks) {
                 try {
@@ -581,10 +581,11 @@
                     tasks = tasks.map(t => {
                         if (t.originalEnd !== undefined) {
                             let ext = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
-                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext, progress: t.progress || 0 };
+                            return { id: t.id, desc: t.desc, pic: t.pic, start: t.start, end: t.originalEnd, extend: ext, progress: t.progress || 0, actualStart: t.actualStart || null };
                         }
                         if (t.extend === undefined) t.extend = 0;
                         if (t.progress === undefined) t.progress = 0;
+                        if (t.actualStart === undefined) t.actualStart = null;
                         return t;
                     });
                 } catch (e) {
@@ -602,8 +603,8 @@
         }
 
         function saveData() {
-            localStorage.setItem('project_timeline_tasks_v4', JSON.stringify(tasks));
-            localStorage.setItem('project_timeline_issues_v4', JSON.stringify(issues));
+            localStorage.setItem('project_timeline_tasks_v5', JSON.stringify(tasks));
+            localStorage.setItem('project_timeline_issues_v5', JSON.stringify(issues));
             updateStats();
             renderIssues();
         }
@@ -797,10 +798,29 @@
                             textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight text-slate-950 truncate">+Ext</span>`;
                         }
 
+                        // Menentukan Marker Actual Start
+                        let actualStartMarker = '';
+                        if (task.actualStart === i) {
+                            actualStartMarker = `
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 cursor-grab hover:scale-110 transition-transform"
+                                     draggable="true"
+                                     ondragstart="event.dataTransfer.setData('text/plain', ${task.id})"
+                                     title="Actual Start (Drag & Drop untuk geser, Klik untuk hapus)">
+                                     <div class="bg-rose-500 text-white rounded-md p-[3px] shadow-[0_0_12px_rgba(244,63,94,0.9)] border border-white/50 flex items-center justify-center pointer-events-none">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                     </div>
+                                </div>
+                            `;
+                        }
+
                         tr.innerHTML += `
-                            <td class="timeline-cell ${currentClass} text-center align-middle" 
-                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk atur rentang hari">
+                            <td class="timeline-cell ${currentClass} text-center align-middle relative" 
+                                onclick="handleCellClick(${task.id}, ${i})"
+                                ondragover="event.preventDefault()"
+                                ondrop="handleDrop(event, ${task.id}, ${i})"
+                                title="Klik untuk set/hapus Actual Start pada hari ini">
                                 ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
+                                ${actualStartMarker}
                             </td>
                         `;
                     }
@@ -975,25 +995,37 @@
             showToast('Data task berhasil diperbarui!');
         }
 
+        // FUNGSI BARU: Klik cell untuk Set / Hapus Actual Start
         function handleCellClick(taskId, day) {
             const task = tasks.find(t => t.id === taskId);
             if (!task) return;
 
-            if (day < task.start) {
-                task.start = day;
-            } else if (day > task.end) {
-                task.end = day;
+            if (task.actualStart === day) {
+                task.actualStart = null; // Menghapus jika diklik sekali lagi
+                showToast('Actual Start dihapus');
             } else {
-                if (Math.abs(day - task.start) <= Math.abs(day - task.end)) {
-                    task.start = day;
-                } else {
-                    task.end = day;
-                }
+                task.actualStart = day; // Set / Geser lewat klik
+                showToast(`Actual Start diatur ke Hari ${day}`);
             }
 
             saveData();
             renderTable(parseInt(slider.value));
-            showToast(`Task "${task.desc}" diatur ke Hari ${task.start} - ${task.end}`);
+        }
+
+        // FUNGSI BARU: Event saat marker didrag lalu dilepas ke sel lain
+        function handleDrop(e, taskId, day) {
+            e.preventDefault();
+            const draggedTaskId = e.dataTransfer.getData('text/plain');
+            
+            if (draggedTaskId && parseInt(draggedTaskId) === taskId) {
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.actualStart = day;
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                    showToast(`Actual Start digeser ke Hari ${day}`);
+                }
+            }
         }
 
         function extendTask(id, delta = 1) {
@@ -1096,7 +1128,7 @@
                 }
             } else {
                 const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({ id: newId, desc, pic, start, end, extend, progress });
+                tasks.push({ id: newId, desc, pic, start, end, extend, progress, actualStart: null });
             }
 
             saveData();
