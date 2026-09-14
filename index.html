@@ -61,11 +61,10 @@
         th:first-child, td:first-child { border-left: 1px solid rgba(51, 65, 85, 0.5); }
         thead tr:first-child th { border-top: 1px solid rgba(51, 65, 85, 0.5); }
 
-        /* CSS Freeze Columns Setup */
         .sticky-col {
             position: sticky;
             z-index: 30;
-            background-color: rgb(15, 23, 42); /* slate-900 */
+            background-color: rgb(15, 23, 42); 
             border-right: 1px solid rgba(51, 65, 85, 0.5) !important;
         }
         th.sticky-col {
@@ -265,7 +264,7 @@
                     </div>
                     <div class="text-xs">
                         <p class="font-bold text-red-400">Actual Start</p>
-                        <p class="text-[10px] text-slate-400">Tanda Mulai Aktual</p>
+                        <p class="text-[10px] text-slate-400">Klik 1x di area</p>
                     </div>
                 </div>
             </div>
@@ -273,7 +272,7 @@
 
         <div class="glass-panel rounded-2xl overflow-hidden relative">
             <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2 sticky top-0 left-0 z-50">
-                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang. <strong>Scroll ke kanan</strong> untuk lihat timeline (kolom kiri di-freeze).</span>
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang. <strong>Double-Click kotak timeline</strong> untuk kosongkan hari (Libur).</span>
                 <span id="tableTitleBadge" class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek</span>
             </div>
             
@@ -552,12 +551,13 @@
             endDay: 24
         };
 
+        // NEW FEATURE: Menambahkan skippedDays (Hari libur) ke default tasks
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null },
-            { id: 2, desc: 'Hardware Commisioning', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null },
-            { id: 3, desc: 'Activation CCTV', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8 },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 2, desc: 'Hardware Commisioning', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 3, desc: 'Activation CCTV', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8, skippedDays: [] },
         ];
 
         const defaultIssues = [
@@ -577,6 +577,9 @@
         let issues = [];
         const yellowDays = [5, 12, 19, 26]; // Sabtu (Kuning)
         const redDays = [6, 13, 20, 27];    // Minggu (Merah)
+        
+        // Menangani timer click ganda vs click tunggal (Untuk fitur actual start vs skip day)
+        let cellClickTimer = null; 
 
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
@@ -712,7 +715,6 @@
                     else if (activeDay > actualEnd) { statusClass = 'bar-extended'; statusLabel = `${taskProg}% (Delay)`; } 
                     else { statusClass = 'bar-in-progress'; statusLabel = `${taskProg}%`; }
 
-                    // Kolom Info - Sticky (Menggunakan td.sticky-col)
                     tr.innerHTML = `
                         <td class="sticky-col sc-1 text-center font-mono text-slate-500 text-[11px] group-hover:bg-slate-800/80 transition-colors">${index + 1}</td>
                         <td class="sticky-col sc-2 font-semibold text-slate-100 py-2.5 text-xs truncate group-hover:bg-slate-800/80 transition-colors" title="${escapeHtml(task.desc)}">
@@ -758,11 +760,17 @@
                         </td>
                     `;
 
-                    // Timeline Days Columns (Scrollable Area)
+                    // Timeline Days Columns 
                     for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
+                        // NEW FEATURE: Cek apakah hari ini diskip/libur pada task ini
+                        let isSkipped = task.skippedDays && task.skippedDays.includes(i);
+                        
                         let isNormalBar = i >= task.start && i <= task.end;
                         let isExtendedBar = i > task.end && i <= actualEnd;
-                        let isActive = isNormalBar || isExtendedBar;
+                        
+                        // Bar hanya digambar jika berada dalam rentang start-end dan TIDAK DISKIP
+                        let isActive = (isNormalBar || isExtendedBar) && !isSkipped;
+                        
                         let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
 
                         let currentClass = (i === activeDay) ? 'col-current' : '';
@@ -787,7 +795,8 @@
 
                         tr.innerHTML += `
                             <td class="timeline-cell ${currentClass} text-center align-middle relative z-10" 
-                                onclick="handleCellClick(${task.id}, ${i})" title="Klik untuk Actual Start di Hari ${i}">
+                                onclick="handleCellInteraction(${task.id}, ${i})" 
+                                title="Klik 1x: Set Actual Start | Double-Klik: Kosongkan Hari (Libur)">
                                 ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
                                 ${actualStartMarker}
                             </td>
@@ -845,6 +854,82 @@
             lucide.createIcons();
         }
 
+        // --- Core Interactions ---
+        // NEW FEATURE: Menangani click vs double-click pada cell timeline
+        function handleCellInteraction(taskId, day) {
+            // Jika ada click sebelumnya dan timer masih jalan = Double Click!
+            if (cellClickTimer) {
+                clearTimeout(cellClickTimer);
+                cellClickTimer = null;
+                
+                // --- Logic Double Click (Kosongkan Hari) ---
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+                
+                // Pastikan array exist
+                if (!task.skippedDays) task.skippedDays = [];
+                
+                const index = task.skippedDays.indexOf(day);
+                if (index > -1) {
+                    // Hapus dari daftar skip (Aktifkan kembali)
+                    task.skippedDays.splice(index, 1);
+                    showToast(`Hari ${day} kembali diaktifkan (Bar muncul)`);
+                } else {
+                    // Tambahkan ke daftar skip (Kosongkan/Libur)
+                    task.skippedDays.push(day);
+                    showToast(`Hari ${day} diliburkan / dikosongkan`);
+                }
+                
+                saveData();
+                renderTable(parseInt(slider.value));
+            } else {
+                // --- Logic Single Click (Actual Start) dengan Delay ---
+                cellClickTimer = setTimeout(() => {
+                    cellClickTimer = null; // Reset timer
+
+                    const task = tasks.find(t => t.id === taskId);
+                    if (!task) return;
+
+                    if (task.actualStart === day) { 
+                        task.actualStart = null; 
+                        showToast('Tanda Actual Start dihapus'); 
+                    } else { 
+                        task.actualStart = day; 
+                        showToast(`Actual Start di-set ke Hari ${day}`); 
+                    }
+                    
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                }, 250); // Delay 250ms untuk menanti kemungkinan klik kedua
+            }
+        }
+
+        function inlineUpdateTask(id, field, value) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            let val = parseInt(value);
+            if (isNaN(val)) return;
+
+            if (field === 'start') { val = Math.max(1, Math.min(31, val)); task.start = val; if (task.end < task.start) task.end = task.start; } 
+            else if (field === 'end') { val = Math.max(1, Math.min(31, val)); task.end = val; if (task.start > task.end) task.start = task.end; } 
+            else if (field === 'duration') { val = Math.max(1, Math.min(31, val)); task.end = Math.min(31, task.start + val - 1); } 
+            else if (field === 'progress') { val = Math.max(0, Math.min(100, val)); task.progress = val; }
+
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast('Task diperbarui!');
+        }
+
+        function extendTask(id, delta = 1) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            const newExtend = (task.extend || 0) + delta;
+            if (newExtend < 0 || task.end + newExtend > 31) return;
+            task.extend = newExtend;
+            saveData();
+            renderTable(parseInt(slider.value));
+        }
+
         function openConfigModal() {
             document.getElementById('configMonth').value = projectConfig.month;
             document.getElementById('configYear').value = projectConfig.year;
@@ -853,9 +938,7 @@
             showModal('configModal');
         }
 
-        function closeConfigModal() {
-            hideModal('configModal', 'configModalContainer');
-        }
+        function closeConfigModal() { hideModal('configModal', 'configModalContainer'); }
 
         function handleConfigFormSubmit(e) {
             e.preventDefault();
@@ -877,6 +960,95 @@
             renderTable(parseInt(slider.value));
             closeConfigModal();
             showToast('Pengaturan Proyek berhasil diperbarui');
+        }
+
+        function syncFormValues(changedField) {
+            const startInput = document.getElementById('inputStart');
+            const endInput = document.getElementById('inputEnd');
+            const durationInput = document.getElementById('inputDuration');
+
+            let start = parseInt(startInput.value) || 1;
+            let end = parseInt(endInput.value) || 1;
+            let duration = parseInt(durationInput.value) || 1;
+
+            if (changedField === 'start') { if (end < start) end = start; duration = (end - start) + 1; } 
+            else if (changedField === 'end') { if (start > end) start = end; duration = (end - start) + 1; } 
+            else if (changedField === 'duration') { end = Math.min(31, start + duration - 1); }
+
+            startInput.value = start; endInput.value = end; durationInput.value = duration;
+        }
+
+        function openAddTaskModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
+            document.getElementById('taskId').value = '';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPic').value = '';
+            document.getElementById('inputStart').value = projectConfig.startDay;
+            document.getElementById('inputEnd').value = projectConfig.startDay + 2;
+            document.getElementById('inputDuration').value = 3;
+            document.getElementById('inputExtend').value = 0;
+            document.getElementById('inputProgress').value = 0;
+            document.getElementById('inputProgressVal').textContent = '0%';
+            showModal('taskModal');
+        }
+
+        function openEditTaskModal(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            document.getElementById('modalTitle').textContent = 'Edit Task';
+            document.getElementById('taskId').value = task.id;
+            document.getElementById('inputDesc').value = task.desc;
+            document.getElementById('inputPic').value = task.pic;
+            document.getElementById('inputStart').value = task.start;
+            document.getElementById('inputEnd').value = task.end;
+            document.getElementById('inputDuration').value = (task.end - task.start) + 1;
+            document.getElementById('inputExtend').value = task.extend || 0;
+            const prog = parseInt(task.progress) || 0;
+            document.getElementById('inputProgress').value = prog;
+            document.getElementById('inputProgressVal').textContent = `${prog}%`;
+            showModal('taskModal');
+        }
+
+        function handleTaskFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('taskId').value;
+            const tData = {
+                desc: document.getElementById('inputDesc').value.trim(),
+                pic: document.getElementById('inputPic').value.trim(),
+                start: parseInt(document.getElementById('inputStart').value),
+                end: parseInt(document.getElementById('inputEnd').value),
+                extend: parseInt(document.getElementById('inputExtend').value) || 0,
+                progress: parseInt(document.getElementById('inputProgress').value) || 0,
+                skippedDays: [] // Pastikan task baru memiliki properti skippedDays
+            };
+            if (!tData.desc || !tData.pic) return;
+
+            if (id) {
+                const index = tasks.findIndex(t => t.id === parseInt(id));
+                if (index !== -1) {
+                    // Preserve existing skippedDays when editing
+                    tData.skippedDays = tasks[index].skippedDays || [];
+                    tasks[index] = { ...tasks[index], ...tData };
+                }
+            } else {
+                tData.id = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                tData.actualStart = null;
+                tasks.push(tData);
+            }
+            saveData();
+            renderTable(parseInt(slider.value));
+            closeTaskModal();
+            showToast('Task berhasil disimpan!');
+        }
+
+        function closeTaskModal() { hideModal('taskModal', 'taskModalContainer'); }
+        function confirmDeleteTask(id) {
+            showConfirm('Hapus Task', 'Yakin ingin menghapus task ini?', () => {
+                tasks = tasks.filter(t => t.id !== id);
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Task dihapus');
+            });
         }
 
         function openAddIssueModal() {
@@ -942,125 +1114,6 @@
             });
         }
 
-        function inlineUpdateTask(id, field, value) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-            let val = parseInt(value);
-            if (isNaN(val)) return;
-
-            if (field === 'start') { val = Math.max(1, Math.min(31, val)); task.start = val; if (task.end < task.start) task.end = task.start; } 
-            else if (field === 'end') { val = Math.max(1, Math.min(31, val)); task.end = val; if (task.start > task.end) task.start = task.end; } 
-            else if (field === 'duration') { val = Math.max(1, Math.min(31, val)); task.end = Math.min(31, task.start + val - 1); } 
-            else if (field === 'progress') { val = Math.max(0, Math.min(100, val)); task.progress = val; }
-
-            saveData();
-            renderTable(parseInt(slider.value));
-            showToast('Task diperbarui!');
-        }
-
-        function handleCellClick(taskId, day) {
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-            if (task.actualStart === day) { task.actualStart = null; showToast('Actual Start dihapus'); } 
-            else { task.actualStart = day; showToast(`Actual Start di set ke Hari ${day}`); }
-            saveData();
-            renderTable(parseInt(slider.value));
-        }
-
-        function extendTask(id, delta = 1) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-            const newExtend = (task.extend || 0) + delta;
-            if (newExtend < 0 || task.end + newExtend > 31) return;
-            task.extend = newExtend;
-            saveData();
-            renderTable(parseInt(slider.value));
-        }
-
-        function syncFormValues(changedField) {
-            const startInput = document.getElementById('inputStart');
-            const endInput = document.getElementById('inputEnd');
-            const durationInput = document.getElementById('inputDuration');
-
-            let start = parseInt(startInput.value) || 1;
-            let end = parseInt(endInput.value) || 1;
-            let duration = parseInt(durationInput.value) || 1;
-
-            if (changedField === 'start') { if (end < start) end = start; duration = (end - start) + 1; } 
-            else if (changedField === 'end') { if (start > end) start = end; duration = (end - start) + 1; } 
-            else if (changedField === 'duration') { end = Math.min(31, start + duration - 1); }
-
-            startInput.value = start; endInput.value = end; durationInput.value = duration;
-        }
-
-        function openAddTaskModal() {
-            document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
-            document.getElementById('taskId').value = '';
-            document.getElementById('inputDesc').value = '';
-            document.getElementById('inputPic').value = '';
-            document.getElementById('inputStart').value = projectConfig.startDay;
-            document.getElementById('inputEnd').value = projectConfig.startDay + 2;
-            document.getElementById('inputDuration').value = 3;
-            document.getElementById('inputExtend').value = 0;
-            document.getElementById('inputProgress').value = 0;
-            document.getElementById('inputProgressVal').textContent = '0%';
-            showModal('taskModal');
-        }
-
-        function openEditTaskModal(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-            document.getElementById('modalTitle').textContent = 'Edit Task';
-            document.getElementById('taskId').value = task.id;
-            document.getElementById('inputDesc').value = task.desc;
-            document.getElementById('inputPic').value = task.pic;
-            document.getElementById('inputStart').value = task.start;
-            document.getElementById('inputEnd').value = task.end;
-            document.getElementById('inputDuration').value = (task.end - task.start) + 1;
-            document.getElementById('inputExtend').value = task.extend || 0;
-            const prog = parseInt(task.progress) || 0;
-            document.getElementById('inputProgress').value = prog;
-            document.getElementById('inputProgressVal').textContent = `${prog}%`;
-            showModal('taskModal');
-        }
-
-        function handleTaskFormSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('taskId').value;
-            const tData = {
-                desc: document.getElementById('inputDesc').value.trim(),
-                pic: document.getElementById('inputPic').value.trim(),
-                start: parseInt(document.getElementById('inputStart').value),
-                end: parseInt(document.getElementById('inputEnd').value),
-                extend: parseInt(document.getElementById('inputExtend').value) || 0,
-                progress: parseInt(document.getElementById('inputProgress').value) || 0
-            };
-            if (!tData.desc || !tData.pic) return;
-
-            if (id) {
-                const index = tasks.findIndex(t => t.id === parseInt(id));
-                if (index !== -1) tasks[index] = { ...tasks[index], ...tData };
-            } else {
-                tData.id = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tData.actualStart = null;
-                tasks.push(tData);
-            }
-            saveData();
-            renderTable(parseInt(slider.value));
-            closeTaskModal();
-            showToast('Task berhasil disimpan!');
-        }
-
-        function closeTaskModal() { hideModal('taskModal', 'taskModalContainer'); }
-        function confirmDeleteTask(id) {
-            showConfirm('Hapus Task', 'Yakin ingin menghapus task ini?', () => {
-                tasks = tasks.filter(t => t.id !== id);
-                saveData();
-                renderTable(parseInt(slider.value));
-                showToast('Task dihapus');
-            });
-        }
-
         function confirmResetData() {
             showConfirm('Reset Data', 'Semua perubahan akan kembali ke kondisi awal. Lanjutkan?', () => {
                 tasks = JSON.parse(JSON.stringify(defaultTasks));
@@ -1094,6 +1147,10 @@
                         projectConfig = imported.config || projectConfig;
                         tasks = imported.tasks || imported;
                         issues = imported.issues || [];
+                        
+                        // Sanitize old tasks missing the array
+                        tasks.forEach(t => { if(!t.skippedDays) t.skippedDays = []; });
+                        
                         saveData();
                         updateConfigUI();
                         renderTable(parseInt(slider.value));
