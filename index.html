@@ -10,15 +10,7 @@
             theme: {
                 extend: {
                     colors: {
-                        neon: {
-                            cyan: '#06b6d4',
-                            blue: '#3b82f6',
-                            purple: '#a855f7',
-                            emerald: '#10b981',
-                            amber: '#f59e0b',
-                            rose: '#f43f5e',
-                            orange: '#f97316'
-                        }
+                        neon: { cyan: '#06b6d4', blue: '#3b82f6', purple: '#a855f7', emerald: '#10b981', amber: '#f59e0b', rose: '#f43f5e', orange: '#f97316' }
                     }
                 }
             }
@@ -27,50 +19,15 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        body {
-            background: radial-gradient(circle at 10% 20%, rgba(15, 30, 45, 1) 0%, rgba(8, 15, 25, 1) 90%);
-        }
-        
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.70);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.55);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-        }
-        
-        th, td {
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-            border-right: 1px solid rgba(51, 65, 85, 0.5);
-            padding: 8px 12px;
-            font-size: 0.82rem;
-        }
-
+        body { background: radial-gradient(circle at 10% 20%, rgba(15, 30, 45, 1) 0%, rgba(8, 15, 25, 1) 90%); }
+        .glass-panel { background: rgba(15, 23, 42, 0.70); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(56, 189, 248, 0.15); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .glass-card { background: rgba(30, 41, 59, 0.55); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        table { border-collapse: separate; border-spacing: 0; width: 100%; }
+        th, td { border-bottom: 1px solid rgba(51, 65, 85, 0.5); border-right: 1px solid rgba(51, 65, 85, 0.5); padding: 8px 12px; font-size: 0.82rem; }
         th:first-child, td:first-child { border-left: 1px solid rgba(51, 65, 85, 0.5); }
         thead tr:first-child th { border-top: 1px solid rgba(51, 65, 85, 0.5); }
-
-        .sticky-col {
-            position: sticky;
-            z-index: 30;
-            background-color: rgb(15, 23, 42); 
-            border-right: 1px solid rgba(51, 65, 85, 0.5) !important;
-        }
-        th.sticky-col {
-            z-index: 40;
-            background-color: rgb(15, 23, 42);
-        }
+        .sticky-col { position: sticky; z-index: 30; background-color: rgb(15, 23, 42); border-right: 1px solid rgba(51, 65, 85, 0.5) !important; }
+        th.sticky-col { z-index: 40; background-color: rgb(15, 23, 42); }
         .sc-1 { left: 0px; min-width: 40px; max-width: 40px; padding-left: 6px; padding-right: 6px; }
         .sc-2 { left: 40px; min-width: 220px; max-width: 220px; }
         .sc-3 { left: 260px; min-width: 140px; max-width: 140px; }
@@ -79,62 +36,24 @@
         .sc-6 { left: 515px; min-width: 50px; max-width: 50px; padding-left: 4px; padding-right: 4px; }
         .sc-7 { left: 565px; min-width: 75px; max-width: 75px; padding-left: 4px; padding-right: 4px; }
         .sc-8 { left: 640px; min-width: 105px; max-width: 105px; padding-left: 4px; padding-right: 4px; }
-        .sc-8::after {
-            content: '';
-            position: absolute;
-            top: 0; right: -6px; bottom: 0; width: 6px;
-            background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
-            pointer-events: none;
-        }
-
-        .timeline-cell {
-            padding: 0 !important;
-            min-width: 36px;
-            max-width: 36px;
-            height: 42px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
+        .sc-8::after { content: ''; position: absolute; top: 0; right: -6px; bottom: 0; width: 6px; background: linear-gradient(to right, rgba(0,0,0,0.5), transparent); pointer-events: none; }
+        .timeline-cell { padding: 0 !important; min-width: 36px; max-width: 36px; height: 42px; position: relative; cursor: pointer; transition: all 0.2s ease; }
         .timeline-cell:hover { background-color: rgba(56, 189, 248, 0.08); }
-
         .col-current { position: relative; }
-        .col-current::before {
-            content: ''; position: absolute; top: 0; bottom: 0; left: -1px; right: -1px;
-            border-left: 2px dashed #06b6d4; border-right: 2px dashed #06b6d4;
-            pointer-events: none; z-index: 20; background-color: rgba(6, 182, 212, 0.12);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
-        }
+        .col-current::before { content: ''; position: absolute; top: 0; bottom: 0; left: -1px; right: -1px; border-left: 2px dashed #06b6d4; border-right: 2px dashed #06b6d4; pointer-events: none; z-index: 20; background-color: rgba(6, 182, 212, 0.12); box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); }
         .col-current-top::before { border-top: 2px dashed #06b6d4; top: 0; }
         .col-current-bottom::before { border-bottom: 2px dashed #06b6d4; bottom: 0; }
-
-        .we-are-here-badge {
-            position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            color: #0f172a; font-weight: 800; padding: 2px 8px; border-radius: 6px;
-            font-size: 0.65rem; white-space: nowrap; z-index: 30;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); letter-spacing: 0.5px;
-        }
-        .we-are-here-badge::after {
-            content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
-            border-width: 4px 4px 0 4px; border-style: solid; border-color: #3b82f6 transparent transparent transparent;
-        }
-
+        .we-are-here-badge { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); color: #0f172a; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; white-space: nowrap; z-index: 30; box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); letter-spacing: 0.5px; }
+        .we-are-here-badge::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); border-width: 4px 4px 0 4px; border-style: solid; border-color: #3b82f6 transparent transparent transparent; }
         .bar-not-started { background: rgba(100, 116, 139, 0.5); border: 1px solid rgba(148, 163, 184, 0.3); box-shadow: 0 0 8px rgba(100, 116, 139, 0.3); }
         .bar-in-progress { background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%); border: 1px solid rgba(165, 243, 252, 0.6); box-shadow: 0 0 14px rgba(6, 182, 212, 0.6); }
         .bar-finish { background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%); border: 1px solid rgba(167, 243, 208, 0.6); box-shadow: 0 0 14px rgba(16, 185, 129, 0.6); }
         .bar-extended { background: linear-gradient(90deg, #f97316 0%, #ea580c 100%); border: 1px solid rgba(253, 186, 116, 0.8); box-shadow: 0 0 14px rgba(249, 115, 22, 0.7); }
-
         .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); border-radius: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 6px; border: 2px solid rgba(15, 23, 42, 0.8); }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
-            50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
-        }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); } 50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); } }
         .glow-active { animation: pulse-glow 2s infinite; }
     </style>
 </head>
@@ -167,7 +86,7 @@
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
                         <span id="issueCounterText" class="text-amber-400 font-medium">Kendala: 0 Open</span>
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
-                        <span id="syncStatus" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-400 border border-slate-600">Belum sync</span>
+                        <span id="syncStatus" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-400 border border-slate-600">Memuat...</span>
                     </p>
                 </div>
             </div>
@@ -209,18 +128,6 @@
                     <button onclick="confirmResetData()" class="px-3 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                         <span>Reset</span>
-                    </button>
-                    <button onclick="syncToDrive()" title="Simpan ke Google Drive" class="px-3 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
-                        <i data-lucide="cloud-upload" class="w-4 h-4"></i>
-                        <span>Sync</span>
-                    </button>
-                    <button onclick="pullFromDrive()" title="Ambil dari Google Drive" class="px-3 py-2.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
-                        <i data-lucide="cloud-download" class="w-4 h-4"></i>
-                        <span>Pull</span>
-                    </button>
-                    <button onclick="openDriveConfigModal()" title="Konfigurasi Drive" class="px-3 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
-                        <i data-lucide="settings-2" class="w-4 h-4"></i>
-                        <span>Drive Config</span>
                     </button>
                 </div>
             </div>
@@ -291,9 +198,7 @@
             </div>
             
             <div class="overflow-x-auto custom-scrollbar relative">
-                <table id="timelineTable" class="w-full text-slate-200 select-none">
-                    <!-- Dynamic Table Content -->
-                </table>
+                <table id="timelineTable" class="w-full text-slate-200 select-none"></table>
             </div>
         </div>
 
@@ -304,23 +209,18 @@
                         <i data-lucide="alert-triangle" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
-                            Issue Log & Action Plan
-                        </h2>
+                        <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">Issue Log & Action Plan</h2>
                         <p class="text-xs text-slate-400">Daftar kendala, tingkat dampak (Impact), tanggal kendala muncul, serta aksi penanganan.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span id="issueSummaryBadge" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700">
-                        0 Total Issue
-                    </span>
+                    <span id="issueSummaryBadge" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700">0 Total Issue</span>
                     <button onclick="openAddIssueModal()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-[0_0_12px_rgba(245,158,11,0.3)]">
                         <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
                         <span>Tambah Issue</span>
                     </button>
                 </div>
             </div>
-
             <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left">
                     <thead>
@@ -336,9 +236,7 @@
                             <th class="w-20 text-center">AKSI</th>
                         </tr>
                     </thead>
-                    <tbody id="issueTableBody">
-                        <!-- Dynamic Issues -->
-                    </tbody>
+                    <tbody id="issueTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -353,28 +251,17 @@
                     <div class="w-2 h-6 bg-slate-400 rounded-full"></div>
                     <h3 class="text-lg font-bold text-slate-100">Pengaturan Proyek</h3>
                 </div>
-                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg hover:bg-slate-800">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-
             <form id="configForm" onsubmit="handleConfigFormSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Bulan</label>
                         <select id="configMonth" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
-                            <option value="Januari">Januari</option>
-                            <option value="Februari">Februari</option>
-                            <option value="Maret">Maret</option>
-                            <option value="April">April</option>
-                            <option value="Mei">Mei</option>
-                            <option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option>
-                            <option value="Agustus">Agustus</option>
-                            <option value="September">September</option>
-                            <option value="Oktober">Oktober</option>
-                            <option value="November">November</option>
-                            <option value="Desember">Desember</option>
+                            <option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option>
+                            <option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option>
+                            <option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option>
                         </select>
                     </div>
                     <div>
@@ -382,7 +269,6 @@
                         <input type="number" id="configYear" min="2000" max="2100" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Mulai (Hari ke)</label>
@@ -393,7 +279,6 @@
                         <input type="number" id="configEndDay" min="1" max="31" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                 </div>
-
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
                     <button type="button" onclick="closeConfigModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
                     <button type="submit" class="px-5 py-2.5 bg-slate-200 hover:bg-white text-slate-900 font-extrabold rounded-xl text-xs transition">Simpan</button>
@@ -410,24 +295,18 @@
                     <div class="w-2 h-6 bg-cyan-400 rounded-full"></div>
                     <h3 id="modalTitle" class="text-lg font-bold text-slate-100">Task Detail Editor</h3>
                 </div>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-cyan-400 transition p-1 rounded-lg hover:bg-slate-800">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-cyan-400 transition p-1 rounded-lg hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-
             <form id="taskForm" onsubmit="handleTaskFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="taskId">
-                
                 <div>
                     <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Nama / Deskripsi Task</label>
                     <input type="text" id="inputDesc" required placeholder="Nama / Deskripsi Task" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">PIC (Penanggung Jawab)</label>
                     <input type="text" id="inputPic" required placeholder="PIC / Tim Terkait" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400">
                 </div>
-
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Start Day</label>
@@ -442,7 +321,6 @@
                         <input type="number" id="inputDuration" min="1" max="31" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-orange-400 uppercase tracking-wider mb-1.5">Extend (Hari Tambahan)</label>
@@ -456,7 +334,6 @@
                         <input type="range" id="inputProgress" min="0" max="100" value="0" oninput="document.getElementById('inputProgressVal').textContent = this.value + '%'" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
                     </div>
                 </div>
-
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
                     <button type="button" onclick="closeTaskModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
                     <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(6,182,212,0.5)]">Simpan Perubahan</button>
@@ -473,24 +350,18 @@
                     <div class="w-2 h-6 bg-amber-400 rounded-full"></div>
                     <h3 id="issueModalTitle" class="text-lg font-bold text-slate-100">Tambah Issue Baru</h3>
                 </div>
-                <button onclick="closeIssueModal()" class="text-slate-400 hover:text-amber-400 transition p-1 rounded-lg hover:bg-slate-800">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <button onclick="closeIssueModal()" class="text-slate-400 hover:text-amber-400 transition p-1 rounded-lg hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-
             <form id="issueForm" onsubmit="handleIssueFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="issueId">
-                
                 <div>
                     <label class="block text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1.5">Issue (Kendala)</label>
                     <textarea id="inputIssueText" required rows="2" placeholder="Jelaskan kendala di lapangan..." class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none"></textarea>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1.5">Solution (Solusi / Tindakan)</label>
                     <textarea id="inputIssueSolution" required rows="2" placeholder="Rencana aksi atau penanganan..." class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 resize-none"></textarea>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">PIC</label>
@@ -505,7 +376,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Raise Date</label>
@@ -516,7 +386,6 @@
                         <input type="date" id="inputIssueDueDate" required class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 [color-scheme:dark]">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Status Issue</label>
                     <select id="inputIssueStatus" class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
@@ -525,7 +394,6 @@
                         <option value="Resolved">Resolved (Selesai)</option>
                     </select>
                 </div>
-
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
                     <button type="button" onclick="closeIssueModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
                     <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(245,158,11,0.5)]">Simpan Issue</button>
@@ -534,7 +402,7 @@
         </div>
     </div>
 
-    <!-- Custom Glass Confirmation Modal -->
+    <!-- Confirm Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
         <div class="glass-panel rounded-2xl w-full max-w-sm p-6 m-4 text-center border border-rose-500/30">
             <div class="w-12 h-12 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -542,7 +410,6 @@
             </div>
             <h3 id="confirmTitle" class="text-base font-bold text-slate-100 mb-1">Konfirmasi</h3>
             <p id="confirmMessage" class="text-xs text-slate-400 mb-6">Apakah Anda yakin ingin melakukan tindakan ini?</p>
-            
             <div class="flex justify-center gap-3">
                 <button id="confirmCancelBtn" class="w-full py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
                 <button id="confirmOkBtn" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-[0_0_12px_rgba(225,29,72,0.5)]">Ya, Lanjutkan</button>
@@ -550,68 +417,28 @@
         </div>
     </div>
 
-    <!-- Modal Drive Config -->
-    <div id="driveConfigModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
-        <div class="glass-panel rounded-2xl w-full max-w-md p-6 m-4 transform scale-95 transition-all duration-300 border border-emerald-500/30 shadow-[0_0_50px_rgba(16,185,129,0.2)]" id="driveConfigModalContainer">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-6 bg-emerald-400 rounded-full"></div>
-                    <h3 class="text-lg font-bold text-slate-100">Konfigurasi Google Drive</h3>
-                </div>
-                <button onclick="closeDriveConfigModal()" class="text-slate-400 hover:text-emerald-400 transition p-1 rounded-lg hover:bg-slate-800">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <form id="driveConfigForm" onsubmit="handleDriveConfigSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1.5">URL Web App (Google Apps Script)</label>
-                    <input type="url" id="cfgDriveUrl" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1.5">URL hasil deploy Web App Google Apps Script.</p>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1.5">User Key (Kode Unik Anda)</label>
-                    <input type="text" id="cfgUserKey" required placeholder="misal: budi_proyek_2026" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1.5">Gunakan kode yang <strong class="text-emerald-400">sama</strong> di semua perangkat agar data tersinkron.</p>
-                </div>
-
-                <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex gap-2">
-                    <i data-lucide="info" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
-                    <p class="text-[10px] text-amber-200/80 leading-relaxed">Konfigurasi ini tersimpan di <strong>localStorage</strong> perangkat ini. Untuk perangkat lain, isi ulang dengan nilai yang sama.</p>
-                </div>
-
-                <div class="pt-2 flex justify-between items-center border-t border-slate-800 mt-4">
-                    <button type="button" onclick="clearDriveConfig()" class="px-3 py-2 text-rose-400 hover:bg-rose-500/10 rounded-xl text-xs font-semibold transition flex items-center gap-1">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                        <span>Hapus Config</span>
-                    </button>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
-                        <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(16,185,129,0.5)] flex items-center gap-1.5">
-                            <i data-lucide="save" class="w-3.5 h-3.5"></i>
-                            <span>Simpan</span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
         <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
         <span id="toastMsg">Pesan Toast</span>
     </div>
 
     <script>
-        // Data Global dan Konfigurasi
-        let projectConfig = {
-            month: 'September',
-            year: 2026,
-            startDay: 1,
-            endDay: 24
+        // ==========================================
+        // KONFIGURASI DRIVE (HARDCODE DI SINI)
+        // ==========================================
+        const SYNC_CONFIG = {
+            DRIVE_SYNC_URL: 'https://script.google.com/macros/s/AKfycbwhcdUzr0sUB83Nfoat9j6VlZKhqHh6iAYX3DACYOlBuSSmA8inyd2L_wMwNANAkxl4/exec',
+            USER_KEY: 'ganti_dengan_kode_unik_anda'
         };
+
+        // Interval auto-sync (dalam milidetik). Default: 60 detik.
+        const AUTO_SYNC_INTERVAL = 60000;
+
+        // ==========================================
+        // DATA GLOBAL
+        // ==========================================
+        let projectConfig = { month: 'September', year: 2026, startDay: 1, endDay: 24 };
 
         const defaultTasks = [
             { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
@@ -622,110 +449,19 @@
         ];
 
         const defaultIssues = [
-            {
-                id: 1,
-                issue: 'Akses jaringan di titik A belum stabil',
-                solution: 'Berkoordinasi dengan tim IT Local untuk re-konfigurasi router',
-                pic: 'IT Local',
-                impact: 'High',
-                raiseDate: '2026-09-08',
-                dueDate: '2026-09-15',
-                status: 'In Progress'
-            }
+            { id: 1, issue: 'Akses jaringan di titik A belum stabil', solution: 'Berkoordinasi dengan tim IT Local untuk re-konfigurasi router', pic: 'IT Local', impact: 'High', raiseDate: '2026-09-08', dueDate: '2026-09-15', status: 'In Progress' }
         ];
 
         let tasks = [];
         let issues = [];
         const yellowDays = [5, 12, 19, 26];
         const redDays = [6, 13, 20, 27];
-        
         let cellClickTimer = null;
-
-        // ==========================================
-        // GOOGLE DRIVE SYNC CONFIG (dari localStorage)
-        // ==========================================
-        const CONFIG_KEYS = {
-            URL: 'timeline_drive_url',
-            USER_KEY: 'timeline_user_key'
-        };
-
-        const SYNC_CONFIG = {
-            DRIVE_SYNC_URL: '',
-            USER_KEY: ''
-        };
-
-        function loadDriveConfig() {
-            SYNC_CONFIG.DRIVE_SYNC_URL = localStorage.getItem(CONFIG_KEYS.URL) || '';
-            SYNC_CONFIG.USER_KEY = localStorage.getItem(CONFIG_KEYS.USER_KEY) || '';
-        }
-
-        function saveDriveConfig(url, key) {
-            localStorage.setItem(CONFIG_KEYS.URL, url);
-            localStorage.setItem(CONFIG_KEYS.USER_KEY, key);
-            SYNC_CONFIG.DRIVE_SYNC_URL = url;
-            SYNC_CONFIG.USER_KEY = key;
-        }
-
-        function isDriveConfigured() {
-            return SYNC_CONFIG.DRIVE_SYNC_URL && 
-                   !SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI') && 
-                   SYNC_CONFIG.USER_KEY;
-        }
-
-        // Panggil saat pertama load
-        loadDriveConfig();
-
         let syncInProgress = false;
-
-        // ===== FUNGSI MODAL DRIVE CONFIG =====
-        function openDriveConfigModal() {
-            document.getElementById('cfgDriveUrl').value = SYNC_CONFIG.DRIVE_SYNC_URL || '';
-            document.getElementById('cfgUserKey').value = SYNC_CONFIG.USER_KEY || '';
-            showModal('driveConfigModal');
-        }
-
-        function closeDriveConfigModal() {
-            hideModal('driveConfigModal', 'driveConfigModalContainer');
-        }
-
-        function handleDriveConfigSubmit(e) {
-            e.preventDefault();
-            const url = document.getElementById('cfgDriveUrl').value.trim();
-            const key = document.getElementById('cfgUserKey').value.trim();
-            
-            if (!url.startsWith('https://script.google.com/')) {
-                showToast('URL harus berupa Google Apps Script Web App', true);
-                return;
-            }
-            if (key.length < 5) {
-                showToast('User Key minimal 5 karakter', true);
-                return;
-            }
-            
-            saveDriveConfig(url, key);
-            closeDriveConfigModal();
-            showToast('Konfigurasi Drive berhasil disimpan!');
-            updateSyncStatusUI('green', 'Terkonfigurasi');
-            
-            // Auto sync setelah konfigurasi
-            setTimeout(() => syncToDrive(false), 500);
-        }
-
-        function clearDriveConfig() {
-            showConfirm('Hapus Konfigurasi', 'Hapus URL dan User Key? Data lokal tetap aman.', () => {
-                localStorage.removeItem(CONFIG_KEYS.URL);
-                localStorage.removeItem(CONFIG_KEYS.USER_KEY);
-                SYNC_CONFIG.DRIVE_SYNC_URL = '';
-                SYNC_CONFIG.USER_KEY = '';
-                document.getElementById('cfgDriveUrl').value = '';
-                document.getElementById('cfgUserKey').value = '';
-                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
-                showToast('Konfigurasi Drive dihapus');
-            });
-        }
+        let autoSyncTimer = null;
 
         // ==========================================
-        // SYNC FUNCTIONS
+        // SYNC STATUS UI
         // ==========================================
         function updateSyncStatusUI(color, text) {
             const el = document.getElementById('syncStatus');
@@ -737,11 +473,20 @@
             el.textContent = text;
         }
 
-        async function syncToDrive(showMsg = true) {
+        function isDriveConfigured() {
+            return SYNC_CONFIG.DRIVE_SYNC_URL && 
+                   !SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI') && 
+                   SYNC_CONFIG.USER_KEY &&
+                   !SYNC_CONFIG.USER_KEY.includes('ganti_dengan');
+        }
+
+        // ==========================================
+        // SYNC TO DRIVE (POST)
+        // ==========================================
+        async function syncToDrive(showMsg = false) {
             if (syncInProgress) return;
             if (!isDriveConfigured()) {
-                if (showMsg) showToast('Klik "Drive Config" untuk mengatur URL dan User Key', true);
-                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
+                updateSyncStatusUI('red', 'Belum dikonfigurasi');
                 return;
             }
             syncInProgress = true;
@@ -770,10 +515,13 @@
             syncInProgress = false;
         }
 
-        async function pullFromDrive(showMsg = true) {
+        // ==========================================
+        // PULL FROM DRIVE (GET)
+        // ==========================================
+        async function pullFromDrive(showMsg = false) {
             if (syncInProgress) return;
             if (!isDriveConfigured()) {
-                if (showMsg) showToast('Klik "Drive Config" untuk mengatur URL dan User Key', true);
+                updateSyncStatusUI('red', 'Belum dikonfigurasi');
                 return;
             }
             syncInProgress = true;
@@ -816,9 +564,20 @@
         }
 
         // ==========================================
-        // END SYNC CONFIG
+        // AUTO SYNC SCHEDULER
         // ==========================================
+        function startAutoSync() {
+            if (autoSyncTimer) clearInterval(autoSyncTimer);
+            autoSyncTimer = setInterval(() => {
+                if (isDriveConfigured()) {
+                    syncToDrive(false);
+                }
+            }, AUTO_SYNC_INTERVAL);
+        }
 
+        // ==========================================
+        // TABLE & UI
+        // ==========================================
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
         const dayDisplay = document.getElementById('dayDisplay');
@@ -828,36 +587,14 @@
             const savedTasks = localStorage.getItem('project_timeline_tasks_v7');
             const savedIssues = localStorage.getItem('project_timeline_issues_v7');
 
-            if (savedConfig) {
-                try { projectConfig = JSON.parse(savedConfig); } catch(e) {}
-            }
+            if (savedConfig) { try { projectConfig = JSON.parse(savedConfig); } catch(e) {} }
             updateConfigUI();
 
-            if (savedTasks) {
-                try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = JSON.parse(JSON.stringify(defaultTasks)); }
-            } else {
-                tasks = JSON.parse(JSON.stringify(defaultTasks));
-            }
+            if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = JSON.parse(JSON.stringify(defaultTasks)); } }
+            else { tasks = JSON.parse(JSON.stringify(defaultTasks)); }
 
-            if (savedIssues) {
-                try { issues = JSON.parse(savedIssues); } catch (e) { issues = JSON.parse(JSON.stringify(defaultIssues)); }
-            } else {
-                issues = JSON.parse(JSON.stringify(defaultIssues));
-            }
-
-            // Cek apakah sudah dikonfigurasi
-            if (!isDriveConfigured()) {
-                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
-                return;
-            }
-
-            // Coba ambil dari Drive jika belum sync > 5 menit
-            const lastSync = parseInt(localStorage.getItem('timeline_last_sync') || '0');
-            if (Date.now() - lastSync > 300000) {
-                setTimeout(() => pullFromDrive(false), 1200);
-            } else {
-                updateSyncStatusUI('green', 'Tersinkron ' + new Date(lastSync).toLocaleTimeString().slice(0,5));
-            }
+            if (savedIssues) { try { issues = JSON.parse(savedIssues); } catch (e) { issues = JSON.parse(JSON.stringify(defaultIssues)); } }
+            else { issues = JSON.parse(JSON.stringify(defaultIssues)); }
         }
 
         function saveData() {
@@ -866,7 +603,7 @@
             localStorage.setItem('project_timeline_issues_v7', JSON.stringify(issues));
             updateStats();
             renderIssues();
-            // Auto-sync ke Google Drive (silent)
+            // Auto-sync ke Drive (silent)
             if (isDriveConfigured()) {
                 syncToDrive(false);
             }
@@ -875,12 +612,10 @@
         function updateConfigUI() {
             document.getElementById('periodDisplay').textContent = `${projectConfig.month} ${projectConfig.year}`;
             document.getElementById('tableTitleBadge').textContent = `Timeline Proyek ${projectConfig.month} ${projectConfig.year} (${projectConfig.startDay} - ${projectConfig.endDay})`;
-            
             slider.min = projectConfig.startDay;
             slider.max = projectConfig.endDay;
             document.getElementById('sliderMinLabel').textContent = `HARI ${projectConfig.startDay}`;
             document.getElementById('sliderMaxLabel').textContent = `HARI ${projectConfig.endDay}`;
-
             let cDay = parseInt(slider.value);
             if (isNaN(cDay) || cDay < projectConfig.startDay || cDay > projectConfig.endDay) {
                 slider.value = projectConfig.startDay;
@@ -890,23 +625,16 @@
         function updateStats() {
             const elCounter = document.getElementById('taskCounterText');
             if (elCounter) elCounter.textContent = `Total Task: ${tasks.length}`;
-
             const openIssuesCount = issues.filter(i => i.status !== 'Resolved').length;
             const elIssueCounter = document.getElementById('issueCounterText');
             if (elIssueCounter) elIssueCounter.textContent = `Kendala: ${openIssuesCount} Open`;
-
             const totalProgress = tasks.reduce((sum, t) => sum + (parseInt(t.progress) || 0), 0);
             const avgProgress = tasks.length > 0 ? Math.round(totalProgress / tasks.length) : 0;
             const completedCount = tasks.filter(t => (parseInt(t.progress) || 0) === 100).length;
-
             const circle = document.getElementById('progressCircle');
             const pctText = document.getElementById('completionPercent');
             const labelText = document.getElementById('completionLabel');
-
-            if (circle) {
-                const offset = 113 - (113 * avgProgress) / 100;
-                circle.style.strokeDashoffset = Math.max(0, offset);
-            }
+            if (circle) circle.style.strokeDashoffset = Math.max(0, 113 - (113 * avgProgress) / 100);
             if (pctText) pctText.textContent = `${avgProgress}%`;
             if (labelText) labelText.textContent = `${completedCount} dari ${tasks.length} Task 100%`;
         }
@@ -915,10 +643,8 @@
             table.innerHTML = '';
             dayDisplay.textContent = `Hari ${activeDay}`;
             updateStats();
-
             const daysCount = projectConfig.endDay - projectConfig.startDay + 1;
             const thead = document.createElement('thead');
-            
             let tr1 = `
                 <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
                     <th rowspan="2" class="sticky-col sc-1 text-center border-b border-slate-700">No</th>
@@ -930,16 +656,13 @@
                     <th rowspan="2" class="sticky-col sc-7 text-center border-b border-slate-700 text-emerald-400">Prog(%)</th>
                     <th rowspan="2" class="sticky-col sc-8 text-center border-b border-slate-700">Aksi</th>
                     <th colspan="${daysCount}" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest z-20">HARI (${projectConfig.month.toUpperCase()} ${projectConfig.year})</th>
-                </tr>
-            `;
+                </tr>`;
             thead.innerHTML += tr1;
-
             let tr2 = '<tr class="text-[11px] font-bold text-slate-400 bg-slate-900/90">';
             for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
                 let bgClass = 'bg-slate-900/60 text-slate-300 z-20';
                 if (yellowDays.includes(i)) bgClass = 'bg-amber-500/20 text-amber-300 border-b border-amber-500/30';
                 else if (redDays.includes(i)) bgClass = 'bg-rose-500/20 text-rose-300 border-b border-rose-500/30';
-
                 let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
                 let badge = (i === activeDay) ? `<div class="we-are-here-badge">HARI ${i}</div>` : '';
                 tr2 += `<th class="text-center ${bgClass} ${currentClass} relative">${badge}${i}</th>`;
@@ -947,7 +670,6 @@
             tr2 += '</tr>';
             thead.innerHTML += tr2;
             table.appendChild(thead);
-
             const tbody = document.createElement('tbody');
             if (tasks.length === 0) {
                 const emptyTr = document.createElement('tr');
@@ -958,19 +680,15 @@
                     let isLastRow = index === tasks.length - 1;
                     let tr = document.createElement('tr');
                     tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60 group";
-                    
                     const duration = (task.end - task.start) + 1;
                     const extend = task.extend || 0;
                     const actualEnd = task.end + extend;
                     const taskProg = parseInt(task.progress) || 0;
-
-                    let statusClass = '';
-                    let statusLabel = '';
+                    let statusClass = '', statusLabel = '';
                     if (taskProg === 100) { statusClass = 'bar-finish'; statusLabel = '100%'; } 
                     else if (activeDay < task.start) { statusClass = 'bar-not-started'; statusLabel = `${taskProg}%`; } 
                     else if (activeDay > actualEnd) { statusClass = 'bar-extended'; statusLabel = `${taskProg}% (Delay)`; } 
                     else { statusClass = 'bar-in-progress'; statusLabel = `${taskProg}%`; }
-
                     tr.innerHTML = `
                         <td class="sticky-col sc-1 text-center font-mono text-slate-500 text-[11px] group-hover:bg-slate-800/80 transition-colors">${index + 1}</td>
                         <td class="sticky-col sc-2 font-semibold text-slate-100 py-2.5 text-xs truncate group-hover:bg-slate-800/80 transition-colors" title="${escapeHtml(task.desc)}">
@@ -981,28 +699,20 @@
                         </td>
                         <td class="sticky-col sc-3 text-slate-400 text-[11px] truncate group-hover:bg-slate-800/80 transition-colors" title="${escapeHtml(task.pic)}">${escapeHtml(task.pic)}</td>
                         <td class="sticky-col sc-4 text-center group-hover:bg-slate-800/80 transition-colors">
-                            <input type="number" min="1" max="31" value="${task.start}" 
-                                onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
-                                class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                            <input type="number" min="1" max="31" value="${task.start}" onchange="inlineUpdateTask(${task.id}, 'start', this.value)" class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
                         <td class="sticky-col sc-5 text-center group-hover:bg-slate-800/80 transition-colors">
                             <div class="flex items-center justify-center gap-0.5">
-                                <input type="number" min="1" max="31" value="${task.end}" 
-                                    onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
-                                    class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                <input type="number" min="1" max="31" value="${task.end}" onchange="inlineUpdateTask(${task.id}, 'end', this.value)" class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                                 ${extend > 0 ? `<span class="text-[9px] text-orange-400 font-bold">+${extend}</span>` : ''}
                             </div>
                         </td>
                         <td class="sticky-col sc-6 text-center group-hover:bg-slate-800/80 transition-colors">
-                            <input type="number" min="1" max="31" value="${duration}" 
-                                onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
-                                class="w-9 text-center py-0.5 px-0 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                            <input type="number" min="1" max="31" value="${duration}" onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" class="w-9 text-center py-0.5 px-0 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
                         <td class="sticky-col sc-7 text-center group-hover:bg-slate-800/80 transition-colors">
                             <div class="flex items-center justify-center gap-0.5">
-                                <input type="number" min="0" max="100" value="${taskProg}" 
-                                    onchange="inlineUpdateTask(${task.id}, 'progress', this.value)" 
-                                    class="w-10 text-center py-0.5 px-0 font-extrabold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 rounded font-mono text-xs focus:border-emerald-400 focus:outline-none">
+                                <input type="number" min="0" max="100" value="${taskProg}" onchange="inlineUpdateTask(${task.id}, 'progress', this.value)" class="w-10 text-center py-0.5 px-0 font-extrabold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 rounded font-mono text-xs focus:border-emerald-400 focus:outline-none">
                                 <span class="text-[9px] text-emerald-400 font-bold">%</span>
                             </div>
                         </td>
@@ -1013,47 +723,33 @@
                                 <button onclick="openEditTaskModal(${task.id})" title="Edit" class="p-1 hover:bg-slate-700 text-slate-400 hover:text-cyan-400 rounded"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
                                 <button onclick="confirmDeleteTask(${task.id})" title="Hapus" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                             </div>
-                        </td>
-                    `;
-
+                        </td>`;
                     for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
                         let isSkipped = task.skippedDays && task.skippedDays.includes(i);
-                        
                         let isNormalBar = i >= task.start && i <= task.end;
                         let isExtendedBar = i > task.end && i <= actualEnd;
-                        
                         let isActive = (isNormalBar || isExtendedBar) && !isSkipped;
-                        
                         let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
-
                         let currentClass = (i === activeDay) ? 'col-current' : '';
                         if (i === activeDay && isLastRow) currentClass += ' col-current-bottom';
-
                         let barRounded = 'rounded-md';
                         if (i === task.start && i === actualEnd) barRounded = 'rounded-lg';
                         else if (i === task.start) barRounded = 'rounded-l-lg';
                         else if (i === actualEnd) barRounded = 'rounded-r-lg';
-
                         let textInBar = (i === task.start) ? `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>` : '';
-                        
                         let actualStartMarker = '';
                         if (task.actualStart === i) {
                             actualStartMarker = `
                                 <div class="absolute -top-[2px] left-1/2 transform -translate-x-1/2 z-30 cursor-pointer hover:scale-110 flex flex-col items-center">
                                      <div class="bg-red-600 text-white font-extrabold text-[8px] tracking-wider px-1.5 py-0.5 rounded-sm shadow-[0_0_10px_rgba(220,38,38,0.9)] leading-none mb-[1px]">ACTUAL</div>
                                      <div class="w-0 h-0 border-l-[4.5px] border-l-transparent border-r-[4.5px] border-r-transparent border-t-[5px] border-t-red-600"></div>
-                                </div>
-                            `;
+                                </div>`;
                         }
-
                         tr.innerHTML += `
-                            <td class="timeline-cell ${currentClass} text-center align-middle relative z-10" 
-                                onclick="handleCellInteraction(${task.id}, ${i})" 
-                                title="Klik 1x: Set Actual Start | Double-Klik: Kosongkan Hari (Libur)">
+                            <td class="timeline-cell ${currentClass} text-center align-middle relative z-10" onclick="handleCellInteraction(${task.id}, ${i})" title="Klik 1x: Set Actual Start | Double-Klik: Kosongkan Hari (Libur)">
                                 ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
                                 ${actualStartMarker}
-                            </td>
-                        `;
+                            </td>`;
                     }
                     tbody.appendChild(tr);
                 });
@@ -1073,19 +769,15 @@
             const summaryBadge = document.getElementById('issueSummaryBadge');
             tbody.innerHTML = '';
             if (summaryBadge) summaryBadge.textContent = `${issues.length} Total Issue`;
-
             if (issues.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-slate-500 text-xs">Belum ada kendala yang dicatat.</td></tr>`;
                 return;
             }
-
             issues.forEach((issue, index) => {
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/40 transition border-b border-slate-800/60";
-                
                 let statusBadgeClass = issue.status === 'Open' ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 
                                      (issue.status === 'In Progress' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
-
                 tr.innerHTML = `
                     <td class="text-center font-mono text-slate-500 text-xs py-3">${index + 1}</td>
                     <td class="font-semibold text-slate-100 text-xs">${escapeHtml(issue.issue)}</td>
@@ -1100,8 +792,7 @@
                             <button onclick="openEditIssueModal(${issue.id})" title="Edit" class="p-1 hover:bg-slate-700 text-slate-400 hover:text-amber-400 rounded"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
                             <button onclick="confirmDeleteIssue(${issue.id})" title="Hapus" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                         </div>
-                    </td>
-                `;
+                    </td>`;
                 tbody.appendChild(tr);
             });
             lucide.createIcons();
@@ -1111,12 +802,9 @@
             if (cellClickTimer) {
                 clearTimeout(cellClickTimer);
                 cellClickTimer = null;
-                
                 const task = tasks.find(t => t.id === taskId);
                 if (!task) return;
-                
                 if (!task.skippedDays) task.skippedDays = [];
-                
                 const index = task.skippedDays.indexOf(day);
                 if (index > -1) {
                     task.skippedDays.splice(index, 1);
@@ -1125,24 +813,15 @@
                     task.skippedDays.push(day);
                     showToast(`Hari ${day} diliburkan / dikosongkan`);
                 }
-                
                 saveData();
                 renderTable(parseInt(slider.value));
             } else {
                 cellClickTimer = setTimeout(() => {
                     cellClickTimer = null;
-
                     const task = tasks.find(t => t.id === taskId);
                     if (!task) return;
-
-                    if (task.actualStart === day) { 
-                        task.actualStart = null; 
-                        showToast('Tanda Actual Start dihapus'); 
-                    } else { 
-                        task.actualStart = day; 
-                        showToast(`Actual Start di-set ke Hari ${day}`); 
-                    }
-                    
+                    if (task.actualStart === day) { task.actualStart = null; showToast('Tanda Actual Start dihapus'); } 
+                    else { task.actualStart = day; showToast(`Actual Start di-set ke Hari ${day}`); }
                     saveData();
                     renderTable(parseInt(slider.value));
                 }, 250);
@@ -1154,12 +833,10 @@
             if (!task) return;
             let val = parseInt(value);
             if (isNaN(val)) return;
-
             if (field === 'start') { val = Math.max(1, Math.min(31, val)); task.start = val; if (task.end < task.start) task.end = task.start; } 
             else if (field === 'end') { val = Math.max(1, Math.min(31, val)); task.end = val; if (task.start > task.end) task.start = task.end; } 
             else if (field === 'duration') { val = Math.max(1, Math.min(31, val)); task.end = Math.min(31, task.start + val - 1); } 
             else if (field === 'progress') { val = Math.max(0, Math.min(100, val)); task.progress = val; }
-
             saveData();
             renderTable(parseInt(slider.value));
             showToast('Task diperbarui!');
@@ -1182,24 +859,16 @@
             document.getElementById('configEndDay').value = projectConfig.endDay;
             showModal('configModal');
         }
-
         function closeConfigModal() { hideModal('configModal', 'configModalContainer'); }
-
         function handleConfigFormSubmit(e) {
             e.preventDefault();
             const startD = parseInt(document.getElementById('configStartDay').value);
             const endD = parseInt(document.getElementById('configEndDay').value);
-            
-            if(startD > endD) {
-                showToast('Start Day tidak boleh lebih besar dari End Day', true);
-                return;
-            }
-
+            if(startD > endD) { showToast('Start Day tidak boleh lebih besar dari End Day', true); return; }
             projectConfig.month = document.getElementById('configMonth').value;
             projectConfig.year = parseInt(document.getElementById('configYear').value);
             projectConfig.startDay = startD;
             projectConfig.endDay = endD;
-            
             saveData();
             updateConfigUI();
             renderTable(parseInt(slider.value));
@@ -1211,15 +880,12 @@
             const startInput = document.getElementById('inputStart');
             const endInput = document.getElementById('inputEnd');
             const durationInput = document.getElementById('inputDuration');
-
             let start = parseInt(startInput.value) || 1;
             let end = parseInt(endInput.value) || 1;
             let duration = parseInt(durationInput.value) || 1;
-
             if (changedField === 'start') { if (end < start) end = start; duration = (end - start) + 1; } 
             else if (changedField === 'end') { if (start > end) start = end; duration = (end - start) + 1; } 
             else if (changedField === 'duration') { end = Math.min(31, start + duration - 1); }
-
             startInput.value = start; endInput.value = end; durationInput.value = duration;
         }
 
@@ -1267,13 +933,9 @@
                 skippedDays: []
             };
             if (!tData.desc || !tData.pic) return;
-
             if (id) {
                 const index = tasks.findIndex(t => t.id === parseInt(id));
-                if (index !== -1) {
-                    tData.skippedDays = tasks[index].skippedDays || [];
-                    tasks[index] = { ...tasks[index], ...tData };
-                }
+                if (index !== -1) { tData.skippedDays = tasks[index].skippedDays || []; tasks[index] = { ...tasks[index], ...tData }; }
             } else {
                 tData.id = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
                 tData.actualStart = null;
@@ -1336,7 +998,6 @@
                 status: document.getElementById('inputIssueStatus').value
             };
             if (!newIssue.issue || !newIssue.solution) return;
-
             if (id) {
                 const index = issues.findIndex(i => i.id === parseInt(id));
                 if (index !== -1) issues[index] = { id: parseInt(id), ...newIssue };
@@ -1391,9 +1052,7 @@
                         projectConfig = imported.config || projectConfig;
                         tasks = imported.tasks || imported;
                         issues = imported.issues || [];
-                        
                         tasks.forEach(t => { if(!t.skippedDays) t.skippedDays = []; });
-                        
                         saveData();
                         updateConfigUI();
                         renderTable(parseInt(slider.value));
@@ -1415,7 +1074,6 @@
             m.classList.add('opacity-0'); if(c) c.classList.add('scale-95');
             setTimeout(() => m.classList.add('hidden'), 200);
         }
-
         function showConfirm(title, message, onOk) {
             document.getElementById('confirmTitle').textContent = title;
             document.getElementById('confirmMessage').textContent = message;
@@ -1423,26 +1081,62 @@
             document.getElementById('confirmCancelBtn').onclick = () => hideModal('confirmModal', '');
             showModal('confirmModal');
         }
-
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMsg'), tIco = document.getElementById('toastIcon');
             tMsg.textContent = msg; tIco.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
             toast.classList.remove('translate-y-20', 'opacity-0');
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
-
         function escapeHtml(str) {
             return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        // Init
-        loadData();
-        let initDay = new Date().getDate();
-        if(initDay > projectConfig.endDay) initDay = projectConfig.endDay;
-        if(initDay < projectConfig.startDay) initDay = projectConfig.startDay;
-        slider.value = initDay;
-        renderTable(initDay);
-        renderIssues();
+        // ==========================================
+        // INIT
+        // ==========================================
+        (async function init() {
+            // 1. Load data lokal dulu
+            loadData();
+            
+            // 2. Set slider ke hari ini
+            let initDay = new Date().getDate();
+            if(initDay > projectConfig.endDay) initDay = projectConfig.endDay;
+            if(initDay < projectConfig.startDay) initDay = projectConfig.startDay;
+            slider.value = initDay;
+            
+            // 3. Render UI
+            renderTable(initDay);
+            renderIssues();
+            
+            // 4. Update status
+            if (isDriveConfigured()) {
+                updateSyncStatusUI('yellow', 'Menghubungkan...');
+                
+                // 5. Auto-pull dari Drive saat halaman dibuka
+                await pullFromDrive(false);
+                
+                // 6. Auto-sync ke Drive setelah pull (untuk merge)
+                setTimeout(() => syncToDrive(false), 1000);
+                
+                // 7. Mulai interval auto-sync berkala
+                startAutoSync();
+            } else {
+                updateSyncStatusUI('red', 'URL/Key belum diisi di script');
+                console.warn('⚠️ Konfigurasi Drive belum diisi. Isi DRIVE_SYNC_URL dan USER_KEY di dalam script.');
+            }
+            
+            // 8. Auto-sync juga saat user menutup halaman
+            window.addEventListener('beforeunload', () => {
+                if (isDriveConfigured()) {
+                    const payload = { config: projectConfig, tasks, issues };
+                    const blob = new Blob([JSON.stringify({
+                        userKey: SYNC_CONFIG.USER_KEY,
+                        content: payload
+                    })], { type: 'text/plain' });
+                    navigator.sendBeacon(SYNC_CONFIG.DRIVE_SYNC_URL, blob);
+                }
+            });
+        })();
 
         slider.addEventListener('input', e => renderTable(parseInt(e.target.value)));
         lucide.createIcons();
