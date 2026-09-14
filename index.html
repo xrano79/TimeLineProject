@@ -166,6 +166,8 @@
                         <span id="taskCounterText" class="text-slate-300 font-medium">Total Task: 11</span>
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
                         <span id="issueCounterText" class="text-amber-400 font-medium">Kendala: 0 Open</span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span id="syncStatus" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-400 border border-slate-600">Belum sync</span>
                     </p>
                 </div>
             </div>
@@ -207,6 +209,14 @@
                     <button onclick="confirmResetData()" class="px-3 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                         <span>Reset</span>
+                    </button>
+                    <button onclick="syncToDrive()" title="Simpan ke Google Drive" class="px-3 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
+                        <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+                        <span>Sync</span>
+                    </button>
+                    <button onclick="pullFromDrive()" title="Ambil dari Google Drive" class="px-3 py-2.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
+                        <i data-lucide="cloud-download" class="w-4 h-4"></i>
+                        <span>Pull</span>
                     </button>
                 </div>
             </div>
@@ -551,7 +561,6 @@
             endDay: 24
         };
 
-        // NEW FEATURE: Menambahkan skippedDays (Hari libur) ke default tasks
         const defaultTasks = [
             { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
             { id: 2, desc: 'Hardware Commisioning', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
@@ -575,11 +584,124 @@
 
         let tasks = [];
         let issues = [];
-        const yellowDays = [5, 12, 19, 26]; // Sabtu (Kuning)
-        const redDays = [6, 13, 20, 27];    // Minggu (Merah)
+        const yellowDays = [5, 12, 19, 26];
+        const redDays = [6, 13, 20, 27];
         
-        // Menangani timer click ganda vs click tunggal (Untuk fitur actual start vs skip day)
-        let cellClickTimer = null; 
+        let cellClickTimer = null;
+
+        // ==========================================
+        // GOOGLE DRIVE SYNC CONFIG
+        // ==========================================
+        const SYNC_CONFIG = {
+            // GANTI DENGAN URL WEB APP ANDA
+            DRIVE_SYNC_URL: 'GANTI_DENGAN_URL_WEB_APP_ANDA',
+            USER_KEY: ''
+        };
+
+        function getOrCreateUserKey() {
+            let key = localStorage.getItem('timeline_user_key');
+            if (!key) {
+                key = 'timeline_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+                localStorage.setItem('timeline_user_key', key);
+            }
+            return key;
+        }
+        // Gunakan key yang persisten untuk sinkron antar perangkat (bisa diganti manual)
+        SYNC_CONFIG.USER_KEY = getOrCreateUserKey();
+
+        let syncInProgress = false;
+
+        function updateSyncStatusUI(color, text) {
+            const el = document.getElementById('syncStatus');
+            if (!el) return;
+            el.className = 'text-[10px] px-2 py-0.5 rounded-full border ' + 
+                (color === 'green' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' :
+                 color === 'red' ? 'bg-rose-500/20 text-rose-400 border-rose-500/40' :
+                 'bg-amber-500/20 text-amber-400 border-amber-500/40');
+            el.textContent = text;
+        }
+
+        async function syncToDrive(showMsg = true) {
+            if (syncInProgress) return;
+            if (!SYNC_CONFIG.DRIVE_SYNC_URL || SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI')) {
+                if (showMsg) showToast('URL Web App belum dikonfigurasi', true);
+                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
+                return;
+            }
+            syncInProgress = true;
+            updateSyncStatusUI('yellow', 'Menyimpan...');
+            
+            const payload = { config: projectConfig, tasks, issues };
+            
+            try {
+                await fetch(SYNC_CONFIG.DRIVE_SYNC_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        userKey: SYNC_CONFIG.USER_KEY,
+                        content: payload
+                    })
+                });
+                if (showMsg) showToast('Data disimpan ke Google Drive');
+                updateSyncStatusUI('green', 'Tersinkron ' + new Date().toLocaleTimeString().slice(0,5));
+                localStorage.setItem('timeline_last_sync', Date.now().toString());
+            } catch (err) {
+                console.error('Sync error:', err);
+                if (showMsg) showToast('Gagal sync ke Drive', true);
+                updateSyncStatusUI('red', 'Gagal sync');
+            }
+            syncInProgress = false;
+        }
+
+        async function pullFromDrive(showMsg = true) {
+            if (syncInProgress) return;
+            if (!SYNC_CONFIG.DRIVE_SYNC_URL || SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI')) {
+                if (showMsg) showToast('URL Web App belum dikonfigurasi', true);
+                return;
+            }
+            syncInProgress = true;
+            updateSyncStatusUI('yellow', 'Mengambil...');
+            
+            try {
+                const url = SYNC_CONFIG.DRIVE_SYNC_URL + '?userKey=' + encodeURIComponent(SYNC_CONFIG.USER_KEY);
+                const res = await fetch(url);
+                const result = await res.json();
+                
+                if (result.success && result.data) {
+                    projectConfig = result.data.config || projectConfig;
+                    tasks = result.data.tasks || [];
+                    issues = result.data.issues || [];
+                    
+                    tasks.forEach(t => { if (!t.skippedDays) t.skippedDays = []; });
+                    
+                    localStorage.setItem('project_timeline_config_v7', JSON.stringify(projectConfig));
+                    localStorage.setItem('project_timeline_tasks_v7', JSON.stringify(tasks));
+                    localStorage.setItem('project_timeline_issues_v7', JSON.stringify(issues));
+                    
+                    updateConfigUI();
+                    renderTable(parseInt(slider.value));
+                    renderIssues();
+                    updateStats();
+                    
+                    if (showMsg) showToast('Data dari Drive berhasil dimuat');
+                    updateSyncStatusUI('green', 'Tersinkron ' + new Date().toLocaleTimeString().slice(0,5));
+                    localStorage.setItem('timeline_last_sync', Date.now().toString());
+                } else {
+                    if (showMsg) showToast('Data di Drive masih kosong', true);
+                    updateSyncStatusUI('yellow', 'Belum ada data');
+                }
+            } catch (err) {
+                console.error('Pull error:', err);
+                if (showMsg) showToast('Gagal mengambil dari Drive', true);
+                updateSyncStatusUI('red', 'Gagal pull');
+            }
+            syncInProgress = false;
+        }
+
+        // ==========================================
+        // END SYNC CONFIG
+        // ==========================================
 
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
@@ -606,6 +728,14 @@
             } else {
                 issues = JSON.parse(JSON.stringify(defaultIssues));
             }
+
+            // Coba ambil dari Drive jika belum sync > 5 menit
+            const lastSync = parseInt(localStorage.getItem('timeline_last_sync') || '0');
+            if (Date.now() - lastSync > 300000) {
+                setTimeout(() => pullFromDrive(false), 1200);
+            } else {
+                updateSyncStatusUI('green', 'Tersinkron ' + new Date(lastSync).toLocaleTimeString().slice(0,5));
+            }
         }
 
         function saveData() {
@@ -614,6 +744,8 @@
             localStorage.setItem('project_timeline_issues_v7', JSON.stringify(issues));
             updateStats();
             renderIssues();
+            // Auto-sync ke Google Drive (silent)
+            syncToDrive(false);
         }
 
         function updateConfigUI() {
@@ -760,15 +892,12 @@
                         </td>
                     `;
 
-                    // Timeline Days Columns 
                     for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
-                        // NEW FEATURE: Cek apakah hari ini diskip/libur pada task ini
                         let isSkipped = task.skippedDays && task.skippedDays.includes(i);
                         
                         let isNormalBar = i >= task.start && i <= task.end;
                         let isExtendedBar = i > task.end && i <= actualEnd;
                         
-                        // Bar hanya digambar jika berada dalam rentang start-end dan TIDAK DISKIP
                         let isActive = (isNormalBar || isExtendedBar) && !isSkipped;
                         
                         let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
@@ -854,28 +983,21 @@
             lucide.createIcons();
         }
 
-        // --- Core Interactions ---
-        // NEW FEATURE: Menangani click vs double-click pada cell timeline
         function handleCellInteraction(taskId, day) {
-            // Jika ada click sebelumnya dan timer masih jalan = Double Click!
             if (cellClickTimer) {
                 clearTimeout(cellClickTimer);
                 cellClickTimer = null;
                 
-                // --- Logic Double Click (Kosongkan Hari) ---
                 const task = tasks.find(t => t.id === taskId);
                 if (!task) return;
                 
-                // Pastikan array exist
                 if (!task.skippedDays) task.skippedDays = [];
                 
                 const index = task.skippedDays.indexOf(day);
                 if (index > -1) {
-                    // Hapus dari daftar skip (Aktifkan kembali)
                     task.skippedDays.splice(index, 1);
                     showToast(`Hari ${day} kembali diaktifkan (Bar muncul)`);
                 } else {
-                    // Tambahkan ke daftar skip (Kosongkan/Libur)
                     task.skippedDays.push(day);
                     showToast(`Hari ${day} diliburkan / dikosongkan`);
                 }
@@ -883,9 +1005,8 @@
                 saveData();
                 renderTable(parseInt(slider.value));
             } else {
-                // --- Logic Single Click (Actual Start) dengan Delay ---
                 cellClickTimer = setTimeout(() => {
-                    cellClickTimer = null; // Reset timer
+                    cellClickTimer = null;
 
                     const task = tasks.find(t => t.id === taskId);
                     if (!task) return;
@@ -900,7 +1021,7 @@
                     
                     saveData();
                     renderTable(parseInt(slider.value));
-                }, 250); // Delay 250ms untuk menanti kemungkinan klik kedua
+                }, 250);
             }
         }
 
@@ -1019,14 +1140,13 @@
                 end: parseInt(document.getElementById('inputEnd').value),
                 extend: parseInt(document.getElementById('inputExtend').value) || 0,
                 progress: parseInt(document.getElementById('inputProgress').value) || 0,
-                skippedDays: [] // Pastikan task baru memiliki properti skippedDays
+                skippedDays: []
             };
             if (!tData.desc || !tData.pic) return;
 
             if (id) {
                 const index = tasks.findIndex(t => t.id === parseInt(id));
                 if (index !== -1) {
-                    // Preserve existing skippedDays when editing
                     tData.skippedDays = tasks[index].skippedDays || [];
                     tasks[index] = { ...tasks[index], ...tData };
                 }
@@ -1148,7 +1268,6 @@
                         tasks = imported.tasks || imported;
                         issues = imported.issues || [];
                         
-                        // Sanitize old tasks missing the array
                         tasks.forEach(t => { if(!t.skippedDays) t.skippedDays = []; });
                         
                         saveData();
