@@ -218,6 +218,10 @@
                         <i data-lucide="cloud-download" class="w-4 h-4"></i>
                         <span>Pull</span>
                     </button>
+                    <button onclick="openDriveConfigModal()" title="Konfigurasi Drive" class="px-3 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
+                        <i data-lucide="settings-2" class="w-4 h-4"></i>
+                        <span>Drive Config</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -546,6 +550,54 @@
         </div>
     </div>
 
+    <!-- Modal Drive Config -->
+    <div id="driveConfigModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-md p-6 m-4 transform scale-95 transition-all duration-300 border border-emerald-500/30 shadow-[0_0_50px_rgba(16,185,129,0.2)]" id="driveConfigModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-emerald-400 rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-100">Konfigurasi Google Drive</h3>
+                </div>
+                <button onclick="closeDriveConfigModal()" class="text-slate-400 hover:text-emerald-400 transition p-1 rounded-lg hover:bg-slate-800">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="driveConfigForm" onsubmit="handleDriveConfigSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1.5">URL Web App (Google Apps Script)</label>
+                    <input type="url" id="cfgDriveUrl" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1.5">URL hasil deploy Web App Google Apps Script.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-1.5">User Key (Kode Unik Anda)</label>
+                    <input type="text" id="cfgUserKey" required placeholder="misal: budi_proyek_2026" class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1.5">Gunakan kode yang <strong class="text-emerald-400">sama</strong> di semua perangkat agar data tersinkron.</p>
+                </div>
+
+                <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                    <p class="text-[10px] text-amber-200/80 leading-relaxed">Konfigurasi ini tersimpan di <strong>localStorage</strong> perangkat ini. Untuk perangkat lain, isi ulang dengan nilai yang sama.</p>
+                </div>
+
+                <div class="pt-2 flex justify-between items-center border-t border-slate-800 mt-4">
+                    <button type="button" onclick="clearDriveConfig()" class="px-3 py-2 text-rose-400 hover:bg-rose-500/10 rounded-xl text-xs font-semibold transition flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <span>Hapus Config</span>
+                    </button>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                        <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-[0_0_15px_rgba(16,185,129,0.5)] flex items-center gap-1.5">
+                            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                            <span>Simpan</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
         <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
@@ -590,27 +642,91 @@
         let cellClickTimer = null;
 
         // ==========================================
-        // GOOGLE DRIVE SYNC CONFIG
+        // GOOGLE DRIVE SYNC CONFIG (dari localStorage)
         // ==========================================
+        const CONFIG_KEYS = {
+            URL: 'timeline_drive_url',
+            USER_KEY: 'timeline_user_key'
+        };
+
         const SYNC_CONFIG = {
-            // GANTI DENGAN URL WEB APP ANDA
-            DRIVE_SYNC_URL: 'https://script.google.com/macros/s/AKfycbwhcdUzr0sUB83Nfoat9j6VlZKhqHh6iAYX3DACYOlBuSSmA8inyd2L_wMwNANAkxl4/exec',
+            DRIVE_SYNC_URL: '',
             USER_KEY: ''
         };
 
-        function getOrCreateUserKey() {
-            let key = localStorage.getItem('timeline_user_key');
-            if (!key) {
-                key = 'timeline_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
-                localStorage.setItem('timeline_user_key', key);
-            }
-            return key;
+        function loadDriveConfig() {
+            SYNC_CONFIG.DRIVE_SYNC_URL = localStorage.getItem(CONFIG_KEYS.URL) || '';
+            SYNC_CONFIG.USER_KEY = localStorage.getItem(CONFIG_KEYS.USER_KEY) || '';
         }
-        // Gunakan key yang persisten untuk sinkron antar perangkat (bisa diganti manual)
-        SYNC_CONFIG.USER_KEY = getOrCreateUserKey();
+
+        function saveDriveConfig(url, key) {
+            localStorage.setItem(CONFIG_KEYS.URL, url);
+            localStorage.setItem(CONFIG_KEYS.USER_KEY, key);
+            SYNC_CONFIG.DRIVE_SYNC_URL = url;
+            SYNC_CONFIG.USER_KEY = key;
+        }
+
+        function isDriveConfigured() {
+            return SYNC_CONFIG.DRIVE_SYNC_URL && 
+                   !SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI') && 
+                   SYNC_CONFIG.USER_KEY;
+        }
+
+        // Panggil saat pertama load
+        loadDriveConfig();
 
         let syncInProgress = false;
 
+        // ===== FUNGSI MODAL DRIVE CONFIG =====
+        function openDriveConfigModal() {
+            document.getElementById('cfgDriveUrl').value = SYNC_CONFIG.DRIVE_SYNC_URL || '';
+            document.getElementById('cfgUserKey').value = SYNC_CONFIG.USER_KEY || '';
+            showModal('driveConfigModal');
+        }
+
+        function closeDriveConfigModal() {
+            hideModal('driveConfigModal', 'driveConfigModalContainer');
+        }
+
+        function handleDriveConfigSubmit(e) {
+            e.preventDefault();
+            const url = document.getElementById('cfgDriveUrl').value.trim();
+            const key = document.getElementById('cfgUserKey').value.trim();
+            
+            if (!url.startsWith('https://script.google.com/')) {
+                showToast('URL harus berupa Google Apps Script Web App', true);
+                return;
+            }
+            if (key.length < 5) {
+                showToast('User Key minimal 5 karakter', true);
+                return;
+            }
+            
+            saveDriveConfig(url, key);
+            closeDriveConfigModal();
+            showToast('Konfigurasi Drive berhasil disimpan!');
+            updateSyncStatusUI('green', 'Terkonfigurasi');
+            
+            // Auto sync setelah konfigurasi
+            setTimeout(() => syncToDrive(false), 500);
+        }
+
+        function clearDriveConfig() {
+            showConfirm('Hapus Konfigurasi', 'Hapus URL dan User Key? Data lokal tetap aman.', () => {
+                localStorage.removeItem(CONFIG_KEYS.URL);
+                localStorage.removeItem(CONFIG_KEYS.USER_KEY);
+                SYNC_CONFIG.DRIVE_SYNC_URL = '';
+                SYNC_CONFIG.USER_KEY = '';
+                document.getElementById('cfgDriveUrl').value = '';
+                document.getElementById('cfgUserKey').value = '';
+                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
+                showToast('Konfigurasi Drive dihapus');
+            });
+        }
+
+        // ==========================================
+        // SYNC FUNCTIONS
+        // ==========================================
         function updateSyncStatusUI(color, text) {
             const el = document.getElementById('syncStatus');
             if (!el) return;
@@ -623,8 +739,8 @@
 
         async function syncToDrive(showMsg = true) {
             if (syncInProgress) return;
-            if (!SYNC_CONFIG.DRIVE_SYNC_URL || SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI')) {
-                if (showMsg) showToast('URL Web App belum dikonfigurasi', true);
+            if (!isDriveConfigured()) {
+                if (showMsg) showToast('Klik "Drive Config" untuk mengatur URL dan User Key', true);
                 updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
                 return;
             }
@@ -656,8 +772,8 @@
 
         async function pullFromDrive(showMsg = true) {
             if (syncInProgress) return;
-            if (!SYNC_CONFIG.DRIVE_SYNC_URL || SYNC_CONFIG.DRIVE_SYNC_URL.includes('GANTI')) {
-                if (showMsg) showToast('URL Web App belum dikonfigurasi', true);
+            if (!isDriveConfigured()) {
+                if (showMsg) showToast('Klik "Drive Config" untuk mengatur URL dan User Key', true);
                 return;
             }
             syncInProgress = true;
@@ -729,6 +845,12 @@
                 issues = JSON.parse(JSON.stringify(defaultIssues));
             }
 
+            // Cek apakah sudah dikonfigurasi
+            if (!isDriveConfigured()) {
+                updateSyncStatusUI('yellow', 'Belum dikonfigurasi');
+                return;
+            }
+
             // Coba ambil dari Drive jika belum sync > 5 menit
             const lastSync = parseInt(localStorage.getItem('timeline_last_sync') || '0');
             if (Date.now() - lastSync > 300000) {
@@ -745,7 +867,9 @@
             updateStats();
             renderIssues();
             // Auto-sync ke Google Drive (silent)
-            syncToDrive(false);
+            if (isDriveConfigured()) {
+                syncToDrive(false);
+            }
         }
 
         function updateConfigUI() {
