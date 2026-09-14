@@ -58,12 +58,33 @@
             font-size: 0.82rem;
         }
 
-        th:first-child, td:first-child {
-            border-left: 1px solid rgba(51, 65, 85, 0.5);
-        }
+        th:first-child, td:first-child { border-left: 1px solid rgba(51, 65, 85, 0.5); }
+        thead tr:first-child th { border-top: 1px solid rgba(51, 65, 85, 0.5); }
 
-        thead tr:first-child th {
-            border-top: 1px solid rgba(51, 65, 85, 0.5);
+        .sticky-col {
+            position: sticky;
+            z-index: 30;
+            background-color: rgb(15, 23, 42); 
+            border-right: 1px solid rgba(51, 65, 85, 0.5) !important;
+        }
+        th.sticky-col {
+            z-index: 40;
+            background-color: rgb(15, 23, 42);
+        }
+        .sc-1 { left: 0px; min-width: 40px; max-width: 40px; padding-left: 6px; padding-right: 6px; }
+        .sc-2 { left: 40px; min-width: 220px; max-width: 220px; }
+        .sc-3 { left: 260px; min-width: 140px; max-width: 140px; }
+        .sc-4 { left: 400px; min-width: 50px; max-width: 50px; padding-left: 4px; padding-right: 4px; }
+        .sc-5 { left: 450px; min-width: 65px; max-width: 65px; padding-left: 4px; padding-right: 4px; }
+        .sc-6 { left: 515px; min-width: 50px; max-width: 50px; padding-left: 4px; padding-right: 4px; }
+        .sc-7 { left: 565px; min-width: 75px; max-width: 75px; padding-left: 4px; padding-right: 4px; }
+        .sc-8 { left: 640px; min-width: 105px; max-width: 105px; padding-left: 4px; padding-right: 4px; }
+        .sc-8::after {
+            content: '';
+            position: absolute;
+            top: 0; right: -6px; bottom: 0; width: 6px;
+            background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
+            pointer-events: none;
         }
 
         .timeline-cell {
@@ -76,118 +97,45 @@
             transition: all 0.2s ease;
         }
 
-        .timeline-cell:hover {
-            background-color: rgba(56, 189, 248, 0.08);
-        }
+        .timeline-cell:hover { background-color: rgba(56, 189, 248, 0.08); }
 
-        .col-current {
-            position: relative;
-        }
-
+        .col-current { position: relative; }
         .col-current::before {
-            content: '';
-            position: absolute;
-            top: 0; 
-            bottom: 0; 
-            left: -1px; 
-            right: -1px;
-            border-left: 2px dashed #06b6d4;
-            border-right: 2px dashed #06b6d4;
-            pointer-events: none;
-            z-index: 20;
-            background-color: rgba(6, 182, 212, 0.12);
+            content: ''; position: absolute; top: 0; bottom: 0; left: -1px; right: -1px;
+            border-left: 2px dashed #06b6d4; border-right: 2px dashed #06b6d4;
+            pointer-events: none; z-index: 20; background-color: rgba(6, 182, 212, 0.12);
             box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
         }
-
-        .col-current-top::before {
-            border-top: 2px dashed #06b6d4;
-            top: 0;
-        }
-
-        .col-current-bottom::before {
-            border-bottom: 2px dashed #06b6d4;
-            bottom: 0;
-        }
+        .col-current-top::before { border-top: 2px dashed #06b6d4; top: 0; }
+        .col-current-bottom::before { border-bottom: 2px dashed #06b6d4; bottom: 0; }
 
         .we-are-here-badge {
-            position: absolute;
-            top: -28px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            color: #0f172a;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            z-index: 30;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
-            letter-spacing: 0.5px;
+            color: #0f172a; font-weight: 800; padding: 2px 8px; border-radius: 6px;
+            font-size: 0.65rem; white-space: nowrap; z-index: 30;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); letter-spacing: 0.5px;
         }
-
         .we-are-here-badge::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 4px 4px 0 4px;
-            border-style: solid;
-            border-color: #3b82f6 transparent transparent transparent;
+            content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+            border-width: 4px 4px 0 4px; border-style: solid; border-color: #3b82f6 transparent transparent transparent;
         }
 
-        .bar-not-started {
-            background: rgba(100, 116, 139, 0.5);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            box-shadow: 0 0 8px rgba(100, 116, 139, 0.3);
-        }
+        .bar-not-started { background: rgba(100, 116, 139, 0.5); border: 1px solid rgba(148, 163, 184, 0.3); box-shadow: 0 0 8px rgba(100, 116, 139, 0.3); }
+        .bar-in-progress { background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%); border: 1px solid rgba(165, 243, 252, 0.6); box-shadow: 0 0 14px rgba(6, 182, 212, 0.6); }
+        .bar-finish { background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%); border: 1px solid rgba(167, 243, 208, 0.6); box-shadow: 0 0 14px rgba(16, 185, 129, 0.6); }
+        .bar-extended { background: linear-gradient(90deg, #f97316 0%, #ea580c 100%); border: 1px solid rgba(253, 186, 116, 0.8); box-shadow: 0 0 14px rgba(249, 115, 22, 0.7); }
 
-        .bar-in-progress {
-            background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
-            border: 1px solid rgba(165, 243, 252, 0.6);
-            box-shadow: 0 0 14px rgba(6, 182, 212, 0.6);
-        }
-
-        .bar-finish {
-            background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%);
-            border: 1px solid rgba(167, 243, 208, 0.6);
-            box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
-        }
-
-        .bar-extended {
-            background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
-            border: 1px solid rgba(253, 186, 116, 0.8);
-            box-shadow: 0 0 14px rgba(249, 115, 22, 0.7);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 10px;
-            width: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(56, 189, 248, 0.3);
-            border-radius: 6px;
-            border: 2px solid rgba(15, 23, 42, 0.8);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(56, 189, 248, 0.6);
-        }
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); border-radius: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 6px; border: 2px solid rgba(15, 23, 42, 0.8); }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
 
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
             50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
         }
-        .glow-active {
-            animation: pulse-glow 2s infinite;
-        }
+        .glow-active { animation: pulse-glow 2s infinite; }
     </style>
 </head>
 <body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
@@ -207,7 +155,13 @@
                         Dashboard Modern - Progress & Timeline Proyek
                     </h1>
                     <p class="text-xs md:text-sm text-slate-400 flex items-center gap-3 mt-1 flex-wrap">
-                        <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> Periode: <strong class="text-slate-200">September</strong></span>
+                        <span class="flex items-center gap-1.5">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> 
+                            Periode: <strong class="text-slate-200" id="periodDisplay">September 2026</strong>
+                            <button onclick="openConfigModal()" title="Edit Periode & Waktu Proyek" class="ml-1 p-1 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded transition border border-slate-700">
+                                <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </span>
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
                         <span id="taskCounterText" class="text-slate-300 font-medium">Total Task: 11</span>
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-600"></span>
@@ -259,19 +213,18 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            
             <div class="lg:col-span-5 glass-panel p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-cyan-400">
                 <div class="flex justify-between items-center mb-3">
                     <label for="daySlider" class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
                         <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
-                        Simulasi Hari Proyek ("We are here"):
+                        Simulasi Hari ("We are here"):
                     </label>
                     <span id="dayDisplay" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-extrabold text-xs glow-active">Hari 4</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs text-slate-500 font-bold">HARI 1</span>
+                    <span id="sliderMinLabel" class="text-xs text-slate-500 font-bold">HARI 1</span>
                     <input type="range" id="daySlider" min="1" max="24" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
-                    <span class="text-xs text-slate-500 font-bold">HARI 24</span>
+                    <span id="sliderMaxLabel" class="text-xs text-slate-500 font-bold">HARI 24</span>
                 </div>
             </div>
 
@@ -311,19 +264,19 @@
                     </div>
                     <div class="text-xs">
                         <p class="font-bold text-red-400">Actual Start</p>
-                        <p class="text-[10px] text-slate-400">Tanda Mulai Aktual</p>
+                        <p class="text-[10px] text-slate-400">Klik 1x di area</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-panel rounded-2xl overflow-hidden">
-            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
-                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang jadwal. <strong>Klik di cell</strong> untuk Actual Start. <strong>Double-klik (Sabtu/Minggu)</strong> untuk set libur.</span>
-                <span class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek September (1 - 24)</span>
+        <div class="glass-panel rounded-2xl overflow-hidden relative">
+            <div class="px-5 py-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2 sticky top-0 left-0 z-50">
+                <span class="flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-cyan-400"></i> Ketik angka untuk ubah rentang. <strong>Double-Click kotak timeline</strong> untuk kosongkan hari (Libur).</span>
+                <span id="tableTitleBadge" class="font-semibold text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">Timeline Proyek</span>
             </div>
             
-            <div class="overflow-x-auto custom-scrollbar">
+            <div class="overflow-x-auto custom-scrollbar relative">
                 <table id="timelineTable" class="w-full text-slate-200 select-none">
                     <!-- Dynamic Table Content -->
                 </table>
@@ -340,7 +293,7 @@
                         <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
                             Issue Log & Action Plan
                         </h2>
-                        <p class="text-xs text-slate-400">Daftar kendala teknis, rencana aksi penanganan, penanggung jawab (PIC), dan batas waktu.</p>
+                        <p class="text-xs text-slate-400">Daftar kendala, tingkat dampak (Impact), tanggal kendala muncul, serta aksi penanganan.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -357,11 +310,13 @@
             <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-900/80 text-slate-300 font-bold text-xs uppercase tracking-wider">
-                            <th class="w-12 text-center py-3">NO</th>
-                            <th class="min-w-[220px]">ISSUE (Kendala)</th>
-                            <th class="min-w-[260px]">SOLUTION (Solusi / Tindakan)</th>
-                            <th class="w-36">PIC</th>
+                        <tr class="bg-slate-900/80 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
+                            <th class="w-10 text-center py-3">NO</th>
+                            <th class="min-w-[200px]">ISSUE (Kendala)</th>
+                            <th class="min-w-[200px]">SOLUTION (Tindakan)</th>
+                            <th class="w-32">PIC</th>
+                            <th class="w-24 text-center">IMPACT</th>
+                            <th class="w-28 text-center">RAISE DATE</th>
                             <th class="w-28 text-center">DUE DATE</th>
                             <th class="w-28 text-center">STATUS</th>
                             <th class="w-20 text-center">AKSI</th>
@@ -374,6 +329,63 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Modal Config Proyek -->
+    <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="glass-panel rounded-2xl w-full max-w-sm p-6 m-4 transform scale-95 transition-all duration-300 border border-slate-500/30 shadow-[0_0_40px_rgba(0,0,0,0.5)]" id="configModalContainer">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-6 bg-slate-400 rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-100">Pengaturan Proyek</h3>
+                </div>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg hover:bg-slate-800">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="configForm" onsubmit="handleConfigFormSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Bulan</label>
+                        <select id="configMonth" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Tahun</label>
+                        <input type="number" id="configYear" min="2000" max="2100" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Mulai (Hari ke)</label>
+                        <input type="number" id="configStartDay" min="1" max="31" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Akhir (Hari ke)</label>
+                        <input type="number" id="configEndDay" min="1" max="31" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-800 mt-6">
+                    <button type="button" onclick="closeConfigModal()" class="px-4 py-2.5 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-slate-200 hover:bg-white text-slate-900 font-extrabold rounded-xl text-xs transition">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Modal Task Detail Editor -->
@@ -405,22 +417,22 @@
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Start Day</label>
-                        <input type="number" id="inputStart" min="1" max="24" required oninput="syncFormValues('start')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
+                        <input type="number" id="inputStart" min="1" max="31" required oninput="syncFormValues('start')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">End Day</label>
-                        <input type="number" id="inputEnd" min="1" max="24" required oninput="syncFormValues('end')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
+                        <input type="number" id="inputEnd" min="1" max="31" required oninput="syncFormValues('end')" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-slate-100 focus:outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Durasi (Hari)</label>
-                        <input type="number" id="inputDuration" min="1" max="24" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
+                        <input type="number" id="inputDuration" min="1" max="31" required oninput="syncFormValues('duration')" class="w-full px-3 py-2 bg-cyan-950/40 border border-cyan-500/40 rounded-xl text-sm text-center font-bold text-cyan-300 focus:outline-none">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-orange-400 uppercase tracking-wider mb-1.5">Extend (Hari Tambahan)</label>
-                        <input type="number" id="inputExtend" min="0" max="23" value="0" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-orange-300 font-bold focus:outline-none focus:border-orange-400">
+                        <input type="number" id="inputExtend" min="0" max="30" value="0" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-center text-orange-300 font-bold focus:outline-none focus:border-orange-400">
                     </div>
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
@@ -471,8 +483,23 @@
                         <input type="text" id="inputIssuePic" required placeholder="Nama / Tim PIC" class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
                     </div>
                     <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Tingkat Dampak (Impact)</label>
+                        <select id="inputIssueImpact" class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Raise Date</label>
+                        <input type="date" id="inputIssueRaiseDate" required class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 [color-scheme:dark]">
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Due Date</label>
-                        <input type="text" id="inputIssueDueDate" required placeholder="DD/MM/YYYY" class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400">
+                        <input type="date" id="inputIssueDueDate" required class="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-amber-400 [color-scheme:dark]">
                     </div>
                 </div>
 
@@ -510,25 +537,27 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold pointer-events-none">
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-4 py-3 glass-panel border border-cyan-500/40 text-slate-100 rounded-2xl shadow-2xl text-xs font-semibold">
         <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i>
         <span id="toastMsg">Pesan Toast</span>
     </div>
 
     <script>
-        // Data Default ditambahkan property excludedDays
+        // Data Global dan Konfigurasi
+        let projectConfig = {
+            month: 'September',
+            year: 2026,
+            startDay: 1,
+            endDay: 24
+        };
+
+        // NEW FEATURE: Menambahkan skippedDays (Hari libur) ke default tasks
         const defaultTasks = [
-            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 2, desc: 'Hardware Commisioning Partial', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 3, desc: 'Activation 1 CCTV for Sample', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8, excludedDays: [] },
-            { id: 6, desc: 'Labeling & Training', pic: 'AI TD', start: 10, end: 12, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 7, desc: 'Build Dashboard & Control Center', pic: 'AI TD', start: 14, end: 16, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 8, desc: 'Integration / Final Testing', pic: 'AI TD, OT & IT Local', start: 16, end: 18, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 9, desc: 'Approval Go Live', pic: 'AI TD, OT & IT Local', start: 19, end: 19, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 10, desc: 'Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 21, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
-            { id: 11, desc: 'Support Go Live', pic: 'AI TD, OT & IT Local', start: 21, end: 23, extend: 0, progress: 0, actualStart: null, excludedDays: [] },
+            { id: 1, desc: 'Installation', pic: 'OT, IT Local dan Vendor', start: 1, end: 13, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 2, desc: 'Hardware Commisioning', pic: 'OT, IT Local dan Vendor', start: 11, end: 15, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 3, desc: 'Activation CCTV', pic: 'OT, IT Local dan Vendor', start: 4, end: 5, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 4, desc: 'Adjust Pointing CCTV', pic: 'AI TD, IT Local dan Vendor', start: 7, end: 10, extend: 0, progress: 0, actualStart: null, skippedDays: [] },
+            { id: 5, desc: 'Collection Data', pic: 'AI TD, OT & IT Local', start: 8, end: 11, extend: 0, progress: 5, actualStart: 8, skippedDays: [] },
         ];
 
         const defaultIssues = [
@@ -537,50 +566,37 @@
                 issue: 'Akses jaringan di titik A belum stabil',
                 solution: 'Berkoordinasi dengan tim IT Local untuk re-konfigurasi router',
                 pic: 'IT Local',
-                dueDate: '15/09/2026',
+                impact: 'High',
+                raiseDate: '2026-09-08',
+                dueDate: '2026-09-15',
                 status: 'In Progress'
             }
         ];
 
         let tasks = [];
         let issues = [];
-
-        const yellowDays = [5, 12, 19]; // Sabtu (Kuning)
-        const redDays = [6, 13, 20];    // Minggu (Merah)
-
-        const today = new Date();
-        let currentDay = today.getDate();
-        if (currentDay > 24) currentDay = 24;
-        if (currentDay < 1) currentDay = 4;
+        const yellowDays = [5, 12, 19, 26]; // Sabtu (Kuning)
+        const redDays = [6, 13, 20, 27];    // Minggu (Merah)
+        
+        // Menangani timer click ganda vs click tunggal (Untuk fitur actual start vs skip day)
+        let cellClickTimer = null; 
 
         const table = document.getElementById('timelineTable');
         const slider = document.getElementById('daySlider');
         const dayDisplay = document.getElementById('dayDisplay');
 
         function loadData() {
-            const savedTasks = localStorage.getItem('project_timeline_tasks_v6');
-            const savedIssues = localStorage.getItem('project_timeline_issues_v6');
+            const savedConfig = localStorage.getItem('project_timeline_config_v7');
+            const savedTasks = localStorage.getItem('project_timeline_tasks_v7');
+            const savedIssues = localStorage.getItem('project_timeline_issues_v7');
+
+            if (savedConfig) {
+                try { projectConfig = JSON.parse(savedConfig); } catch(e) {}
+            }
+            updateConfigUI();
 
             if (savedTasks) {
-                try {
-                    let parsedTasks = JSON.parse(savedTasks);
-                    tasks = parsedTasks.map(t => {
-                        // Migrasi data jika ada struktur lama
-                        let newTask = { ...t };
-                        if (t.originalEnd !== undefined) {
-                            newTask.end = t.originalEnd;
-                            newTask.extend = t.end > t.originalEnd ? (t.end - t.originalEnd) : 0;
-                            delete newTask.originalEnd;
-                        }
-                        if (newTask.extend === undefined) newTask.extend = 0;
-                        if (newTask.progress === undefined) newTask.progress = 0;
-                        if (newTask.actualStart === undefined) newTask.actualStart = null;
-                        if (newTask.excludedDays === undefined) newTask.excludedDays = []; // Default array kosong
-                        return newTask;
-                    });
-                } catch (e) {
-                    tasks = JSON.parse(JSON.stringify(defaultTasks));
-                }
+                try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = JSON.parse(JSON.stringify(defaultTasks)); }
             } else {
                 tasks = JSON.parse(JSON.stringify(defaultTasks));
             }
@@ -593,10 +609,26 @@
         }
 
         function saveData() {
-            localStorage.setItem('project_timeline_tasks_v6', JSON.stringify(tasks));
-            localStorage.setItem('project_timeline_issues_v6', JSON.stringify(issues));
+            localStorage.setItem('project_timeline_config_v7', JSON.stringify(projectConfig));
+            localStorage.setItem('project_timeline_tasks_v7', JSON.stringify(tasks));
+            localStorage.setItem('project_timeline_issues_v7', JSON.stringify(issues));
             updateStats();
             renderIssues();
+        }
+
+        function updateConfigUI() {
+            document.getElementById('periodDisplay').textContent = `${projectConfig.month} ${projectConfig.year}`;
+            document.getElementById('tableTitleBadge').textContent = `Timeline Proyek ${projectConfig.month} ${projectConfig.year} (${projectConfig.startDay} - ${projectConfig.endDay})`;
+            
+            slider.min = projectConfig.startDay;
+            slider.max = projectConfig.endDay;
+            document.getElementById('sliderMinLabel').textContent = `HARI ${projectConfig.startDay}`;
+            document.getElementById('sliderMaxLabel').textContent = `HARI ${projectConfig.endDay}`;
+
+            let cDay = parseInt(slider.value);
+            if (isNaN(cDay) || cDay < projectConfig.startDay || cDay > projectConfig.endDay) {
+                slider.value = projectConfig.startDay;
+            }
         }
 
         function updateStats() {
@@ -625,38 +657,35 @@
 
         function renderTable(activeDay) {
             table.innerHTML = '';
-            dayDisplay.textContent = `HARI ${activeDay}`;
+            dayDisplay.textContent = `Hari ${activeDay}`;
             updateStats();
 
+            const daysCount = projectConfig.endDay - projectConfig.startDay + 1;
             const thead = document.createElement('thead');
+            
             let tr1 = `
                 <tr class="bg-slate-900/90 text-slate-300 font-bold text-[11px] uppercase tracking-wider">
-                    <th rowspan="2" class="w-10 text-center bg-slate-900/95 border-b border-slate-800">No</th>
-                    <th rowspan="2" class="min-w-[210px] text-left bg-slate-900/95 border-b border-slate-800 text-cyan-300">TASK NAME</th>
-                    <th rowspan="2" class="min-w-[150px] text-left bg-slate-900/95 border-b border-slate-800">PIC</th>
-                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800">Start</th>
-                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800">End</th>
-                    <th rowspan="2" class="w-12 text-center bg-slate-900/95 border-b border-slate-800 text-cyan-400">Durasi</th>
-                    <th rowspan="2" class="w-20 text-center bg-slate-900/95 border-b border-slate-800 text-emerald-400">Progress (%)</th>
-                    <th rowspan="2" class="w-24 text-center bg-slate-900/95 border-b border-slate-800">Aksi</th>
-                    <th colspan="24" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest">HARI (SEPTEMBER)</th>
+                    <th rowspan="2" class="sticky-col sc-1 text-center border-b border-slate-700">No</th>
+                    <th rowspan="2" class="sticky-col sc-2 text-left border-b border-slate-700 text-cyan-300">TASK NAME</th>
+                    <th rowspan="2" class="sticky-col sc-3 text-left border-b border-slate-700">PIC</th>
+                    <th rowspan="2" class="sticky-col sc-4 text-center border-b border-slate-700">Start</th>
+                    <th rowspan="2" class="sticky-col sc-5 text-center border-b border-slate-700">End</th>
+                    <th rowspan="2" class="sticky-col sc-6 text-center border-b border-slate-700 text-cyan-400">Durasi</th>
+                    <th rowspan="2" class="sticky-col sc-7 text-center border-b border-slate-700 text-emerald-400">Prog(%)</th>
+                    <th rowspan="2" class="sticky-col sc-8 text-center border-b border-slate-700">Aksi</th>
+                    <th colspan="${daysCount}" class="text-center bg-slate-800/80 text-cyan-300 py-2 border-b border-slate-700 tracking-widest z-20">HARI (${projectConfig.month.toUpperCase()} ${projectConfig.year})</th>
                 </tr>
             `;
             thead.innerHTML += tr1;
 
             let tr2 = '<tr class="text-[11px] font-bold text-slate-400 bg-slate-900/90">';
-            for(let i = 1; i <= 24; i++) {
-                let bgClass = 'bg-slate-900/60 text-slate-300';
-                
-                if (yellowDays.includes(i)) {
-                    bgClass = 'bg-amber-500/20 text-amber-300 border-b border-amber-500/30';
-                } else if (redDays.includes(i)) {
-                    bgClass = 'bg-rose-500/20 text-rose-300 border-b border-rose-500/30';
-                }
+            for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
+                let bgClass = 'bg-slate-900/60 text-slate-300 z-20';
+                if (yellowDays.includes(i)) bgClass = 'bg-amber-500/20 text-amber-300 border-b border-amber-500/30';
+                else if (redDays.includes(i)) bgClass = 'bg-rose-500/20 text-rose-300 border-b border-rose-500/30';
 
                 let currentClass = (i === activeDay) ? 'col-current col-current-top' : '';
                 let badge = (i === activeDay) ? `<div class="we-are-here-badge">HARI ${i}</div>` : '';
-
                 tr2 += `<th class="text-center ${bgClass} ${currentClass} relative">${badge}${i}</th>`;
             }
             tr2 += '</tr>';
@@ -664,20 +693,15 @@
             table.appendChild(thead);
 
             const tbody = document.createElement('tbody');
-            
             if (tasks.length === 0) {
                 const emptyTr = document.createElement('tr');
-                emptyTr.innerHTML = `
-                    <td colspan="32" class="text-center py-10 text-slate-500 text-xs">
-                        Belum ada task. Klik tombol <strong>+ Tambah Task</strong> di atas.
-                    </td>
-                `;
+                emptyTr.innerHTML = `<td colspan="${8 + daysCount}" class="text-center py-10 text-slate-500 text-xs">Belum ada task. Tambah Task baru.</td>`;
                 tbody.appendChild(emptyTr);
             } else {
                 tasks.forEach((task, index) => {
                     let isLastRow = index === tasks.length - 1;
                     let tr = document.createElement('tr');
-                    tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60";
+                    tr.className = "hover:bg-cyan-500/5 transition-colors border-b border-slate-800/60 group";
                     
                     const duration = (task.end - task.start) + 1;
                     const extend = task.extend || 0;
@@ -686,128 +710,93 @@
 
                     let statusClass = '';
                     let statusLabel = '';
-                    if (taskProg === 100) {
-                        statusClass = 'bar-finish';
-                        statusLabel = '100%';
-                    } else if (activeDay < task.start) {
-                        statusClass = 'bar-not-started';
-                        statusLabel = `${taskProg}%`;
-                    } else if (activeDay > actualEnd) {
-                        statusClass = 'bar-extended';
-                        statusLabel = `${taskProg}% (Delay)`;
-                    } else {
-                        statusClass = 'bar-in-progress';
-                        statusLabel = `${taskProg}%`;
-                    }
+                    if (taskProg === 100) { statusClass = 'bar-finish'; statusLabel = '100%'; } 
+                    else if (activeDay < task.start) { statusClass = 'bar-not-started'; statusLabel = `${taskProg}%`; } 
+                    else if (activeDay > actualEnd) { statusClass = 'bar-extended'; statusLabel = `${taskProg}% (Delay)`; } 
+                    else { statusClass = 'bar-in-progress'; statusLabel = `${taskProg}%`; }
 
                     tr.innerHTML = `
-                        <td class="text-center font-mono text-slate-500 text-xs">${index + 1}</td>
-                        <td class="font-semibold text-slate-100 py-2.5">
-                            <div>${escapeHtml(task.desc)}</div>
-                            <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                        <td class="sticky-col sc-1 text-center font-mono text-slate-500 text-[11px] group-hover:bg-slate-800/80 transition-colors">${index + 1}</td>
+                        <td class="sticky-col sc-2 font-semibold text-slate-100 py-2.5 text-xs truncate group-hover:bg-slate-800/80 transition-colors" title="${escapeHtml(task.desc)}">
+                            <div class="truncate w-[200px]">${escapeHtml(task.desc)}</div>
+                            <div class="w-full bg-slate-800 h-1 rounded-full mt-1.5 overflow-hidden">
                                 <div class="bg-gradient-to-r from-teal-400 to-cyan-400 h-full rounded-full" style="width: ${taskProg}%"></div>
                             </div>
                         </td>
-                        <td class="text-slate-400 text-xs">${escapeHtml(task.pic)}</td>
-                        <td class="text-center">
-                            <input type="number" min="1" max="24" value="${task.start}" 
+                        <td class="sticky-col sc-3 text-slate-400 text-[11px] truncate group-hover:bg-slate-800/80 transition-colors" title="${escapeHtml(task.pic)}">${escapeHtml(task.pic)}</td>
+                        <td class="sticky-col sc-4 text-center group-hover:bg-slate-800/80 transition-colors">
+                            <input type="number" min="1" max="31" value="${task.start}" 
                                 onchange="inlineUpdateTask(${task.id}, 'start', this.value)" 
-                                class="w-10 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
-                        <td class="text-center">
+                        <td class="sticky-col sc-5 text-center group-hover:bg-slate-800/80 transition-colors">
                             <div class="flex items-center justify-center gap-0.5">
-                                <input type="number" min="1" max="24" value="${task.end}" 
+                                <input type="number" min="1" max="31" value="${task.end}" 
                                     onchange="inlineUpdateTask(${task.id}, 'end', this.value)" 
-                                    class="w-10 text-center py-0.5 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
-                                ${extend > 0 ? `<span class="text-[10px] text-orange-400 font-bold" title="Extended sampai hari ${actualEnd}">+${extend}</span>` : ''}
+                                    class="w-9 text-center py-0.5 px-0 bg-slate-900 border border-slate-700 rounded text-cyan-300 font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                ${extend > 0 ? `<span class="text-[9px] text-orange-400 font-bold">+${extend}</span>` : ''}
                             </div>
                         </td>
-                        <td class="text-center">
-                            <input type="number" min="1" max="24" value="${duration}" 
+                        <td class="sticky-col sc-6 text-center group-hover:bg-slate-800/80 transition-colors">
+                            <input type="number" min="1" max="31" value="${duration}" 
                                 onchange="inlineUpdateTask(${task.id}, 'duration', this.value)" 
-                                class="w-10 text-center py-0.5 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
+                                class="w-9 text-center py-0.5 px-0 font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-500/40 rounded font-mono text-xs focus:border-cyan-400 focus:outline-none">
                         </td>
-                        <td class="text-center">
-                            <div class="flex items-center justify-center gap-1">
+                        <td class="sticky-col sc-7 text-center group-hover:bg-slate-800/80 transition-colors">
+                            <div class="flex items-center justify-center gap-0.5">
                                 <input type="number" min="0" max="100" value="${taskProg}" 
                                     onchange="inlineUpdateTask(${task.id}, 'progress', this.value)" 
-                                    class="w-11 text-center py-0.5 font-extrabold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 rounded font-mono text-xs focus:border-emerald-400 focus:outline-none">
-                                <span class="text-[10px] text-emerald-400 font-bold">%</span>
+                                    class="w-10 text-center py-0.5 px-0 font-extrabold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 rounded font-mono text-xs focus:border-emerald-400 focus:outline-none">
+                                <span class="text-[9px] text-emerald-400 font-bold">%</span>
                             </div>
                         </td>
-                        <td class="text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-1">
-                                <button onclick="extendTask(${task.id}, 1)" title="Waktu Tambahan (+1 Hari)" class="p-1 hover:bg-orange-500/20 text-slate-400 hover:text-orange-400 rounded transition">
-                                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                                </button>
-                                ${extend > 0 ? `
-                                <button onclick="extendTask(${task.id}, -1)" title="Kurangi Waktu Tambahan (-1 Hari)" class="p-1 hover:bg-rose-500/20 text-orange-400 hover:text-rose-400 rounded transition">
-                                    <i data-lucide="minus-circle" class="w-3.5 h-3.5"></i>
-                                </button>` : ''}
-                                <button onclick="openEditTaskModal(${task.id})" title="Edit Task" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 rounded transition">
-                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                                </button>
-                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus Task" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded transition">
-                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                </button>
+                        <td class="sticky-col sc-8 text-center whitespace-nowrap group-hover:bg-slate-800/80 transition-colors">
+                            <div class="flex items-center justify-center gap-0.5">
+                                <button onclick="extendTask(${task.id}, 1)" title="+1 Hari" class="p-1 hover:bg-orange-500/20 text-slate-400 hover:text-orange-400 rounded"><i data-lucide="plus-circle" class="w-3.5 h-3.5"></i></button>
+                                ${extend > 0 ? `<button onclick="extendTask(${task.id}, -1)" title="-1 Hari" class="p-1 hover:bg-rose-500/20 text-orange-400 hover:text-rose-400 rounded"><i data-lucide="minus-circle" class="w-3.5 h-3.5"></i></button>` : ''}
+                                <button onclick="openEditTaskModal(${task.id})" title="Edit" class="p-1 hover:bg-slate-700 text-slate-400 hover:text-cyan-400 rounded"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="confirmDeleteTask(${task.id})" title="Hapus" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </td>
                     `;
 
-                    // Menemukan hari aktif pertama yang tidak dikecualikan (libur)
-                    let firstActiveDay = task.start;
-                    while(task.excludedDays && task.excludedDays.includes(firstActiveDay) && firstActiveDay <= actualEnd) {
-                        firstActiveDay++;
-                    }
-
-                    for(let i = 1; i <= 24; i++) {
-                        // Periksa apakah hari ini libur
-                        let isExcluded = task.excludedDays && task.excludedDays.includes(i);
+                    // Timeline Days Columns 
+                    for(let i = projectConfig.startDay; i <= projectConfig.endDay; i++) {
+                        // NEW FEATURE: Cek apakah hari ini diskip/libur pada task ini
+                        let isSkipped = task.skippedDays && task.skippedDays.includes(i);
+                        
                         let isNormalBar = i >= task.start && i <= task.end;
                         let isExtendedBar = i > task.end && i <= actualEnd;
                         
-                        // Aktif jika masuk range dan tidak dikecualikan
-                        let isActive = (isNormalBar || isExtendedBar) && !isExcluded;
+                        // Bar hanya digambar jika berada dalam rentang start-end dan TIDAK DISKIP
+                        let isActive = (isNormalBar || isExtendedBar) && !isSkipped;
+                        
                         let cellStatusClass = isExtendedBar ? 'bar-extended' : statusClass;
 
                         let currentClass = (i === activeDay) ? 'col-current' : '';
                         if (i === activeDay && isLastRow) currentClass += ' col-current-bottom';
 
                         let barRounded = 'rounded-md';
-                        if (i === firstActiveDay && i === actualEnd) {
-                            barRounded = 'rounded-lg';
-                        } else if (i === firstActiveDay) {
-                            barRounded = 'rounded-l-lg';
-                        } else if (i === actualEnd) {
-                            barRounded = 'rounded-r-lg';
-                        }
+                        if (i === task.start && i === actualEnd) barRounded = 'rounded-lg';
+                        else if (i === task.start) barRounded = 'rounded-l-lg';
+                        else if (i === actualEnd) barRounded = 'rounded-r-lg';
 
-                        let textInBar = '';
-                        if (i === firstActiveDay && isActive) {
-                            textInBar = `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate pointer-events-none">${statusLabel}</span>`;
-                        }
-
+                        let textInBar = (i === task.start) ? `<span class="text-[9px] font-extrabold px-1 tracking-tight truncate">${statusLabel}</span>` : '';
+                        
                         let actualStartMarker = '';
                         if (task.actualStart === i) {
                             actualStartMarker = `
-                                <div class="absolute -top-[2px] left-1/2 transform -translate-x-1/2 z-30 cursor-grab hover:scale-110 transition-transform flex flex-col items-center group"
-                                     draggable="true"
-                                     ondragstart="event.dataTransfer.setData('text/plain', ${task.id})"
-                                     title="Actual Start (Drag & Drop untuk geser, Klik untuk hapus)">
-                                     <div class="bg-red-600 text-white font-extrabold text-[8px] tracking-wider px-1.5 py-0.5 rounded-sm shadow-[0_0_10px_rgba(220,38,38,0.9)] border border-red-400/50 leading-none whitespace-nowrap mb-[1px] pointer-events-none">
-                                         ACTUAL
-                                     </div>
-                                     <div class="w-0 h-0 border-l-[4.5px] border-l-transparent border-r-[4.5px] border-r-transparent border-t-[5px] border-t-red-600 drop-shadow-md pointer-events-none"></div>
+                                <div class="absolute -top-[2px] left-1/2 transform -translate-x-1/2 z-30 cursor-pointer hover:scale-110 flex flex-col items-center">
+                                     <div class="bg-red-600 text-white font-extrabold text-[8px] tracking-wider px-1.5 py-0.5 rounded-sm shadow-[0_0_10px_rgba(220,38,38,0.9)] leading-none mb-[1px]">ACTUAL</div>
+                                     <div class="w-0 h-0 border-l-[4.5px] border-l-transparent border-r-[4.5px] border-r-transparent border-t-[5px] border-t-red-600"></div>
                                 </div>
                             `;
                         }
 
                         tr.innerHTML += `
-                            <td class="timeline-cell ${currentClass} text-center align-middle relative" 
-                                onclick="handleCellInteraction(${task.id}, ${i})"
-                                ondragover="event.preventDefault()"
-                                ondrop="handleDrop(event, ${task.id}, ${i})"
-                                title="Klik: Set Actual Start | Dbl-Klik (Warna/Weekend): Set Libur/Kosong">
+                            <td class="timeline-cell ${currentClass} text-center align-middle relative z-10" 
+                                onclick="handleCellInteraction(${task.id}, ${i})" 
+                                title="Klik 1x: Set Actual Start | Double-Klik: Kosongkan Hari (Libur)">
                                 ${isActive ? `<div class="w-full h-7 ${cellStatusClass} ${barRounded} flex items-center justify-center text-slate-950 font-bold overflow-hidden transition-all">${textInBar}</div>` : ''}
                                 ${actualStartMarker}
                             </td>
@@ -816,241 +805,161 @@
                     tbody.appendChild(tr);
                 });
             }
-            
             table.appendChild(tbody);
             lucide.createIcons();
         }
 
-        let clickTimer = null;
-
-        // Unified Click Handler untuk membedakan single dan double click
-        function handleCellInteraction(taskId, day) {
-            if (clickTimer) {
-                // Double Click Detected
-                clearTimeout(clickTimer);
-                clickTimer = null;
-                processDoubleClick(taskId, day);
-            } else {
-                // Single Click Detected (menunggu delay 250ms)
-                clickTimer = setTimeout(() => {
-                    processSingleClick(taskId, day);
-                    clickTimer = null;
-                }, 250);
-            }
-        }
-
-        function processSingleClick(taskId, day) {
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            if (task.actualStart === day) {
-                task.actualStart = null; 
-                showToast('Actual Start dihapus');
-            } else {
-                task.actualStart = day; 
-                showToast(`Actual Start diatur ke Hari ${day}`);
-            }
-
-            saveData();
-            renderTable(parseInt(slider.value));
-        }
-
-        function processDoubleClick(taskId, day) {
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            // Validasi: hanya diperbolehkan toggle pada area weekend (Sabtu / Minggu)
-            if (!yellowDays.includes(day) && !redDays.includes(day)) {
-                showToast('Hanya area Sabtu & Minggu yang bisa diset libur', true);
-                return;
-            }
-
-            if (!task.excludedDays) task.excludedDays = [];
-            
-            const index = task.excludedDays.indexOf(day);
-            if (index > -1) {
-                task.excludedDays.splice(index, 1);
-                showToast(`Hari ${day} diaktifkan kembali`);
-            } else {
-                task.excludedDays.push(day);
-                showToast(`Hari ${day} diset sebagai libur (kosong)`);
-            }
-
-            saveData();
-            renderTable(parseInt(slider.value));
-        }
-
-        function handleDrop(e, taskId, day) {
-            e.preventDefault();
-            const draggedTaskId = e.dataTransfer.getData('text/plain');
-            
-            if (draggedTaskId && parseInt(draggedTaskId) === taskId) {
-                const task = tasks.find(t => t.id === taskId);
-                if (task) {
-                    task.actualStart = day;
-                    saveData();
-                    renderTable(parseInt(slider.value));
-                    showToast(`Actual Start digeser ke Hari ${day}`);
-                }
-            }
+        function getImpactBadgeClass(impact) {
+            if(impact === 'High') return 'bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded px-2 py-0.5 shadow-[0_0_8px_rgba(225,29,72,0.4)]';
+            if(impact === 'Medium') return 'bg-amber-500/20 text-amber-400 border border-amber-500/40 rounded px-2 py-0.5';
+            return 'bg-slate-700/50 text-slate-300 border border-slate-600 rounded px-2 py-0.5';
         }
 
         function renderIssues() {
             const tbody = document.getElementById('issueTableBody');
             const summaryBadge = document.getElementById('issueSummaryBadge');
             tbody.innerHTML = '';
-
             if (summaryBadge) summaryBadge.textContent = `${issues.length} Total Issue`;
 
             if (issues.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center py-8 text-slate-500 text-xs">
-                            Belum ada kendala yang dicatat. Klik <strong>+ Tambah Issue</strong> untuk mencatat.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-slate-500 text-xs">Belum ada kendala yang dicatat.</td></tr>`;
                 return;
             }
 
             issues.forEach((issue, index) => {
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/40 transition border-b border-slate-800/60";
-
-                let statusBadgeClass = '';
-                if (issue.status === 'Open') statusBadgeClass = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
-                else if (issue.status === 'In Progress') statusBadgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-                else statusBadgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+                
+                let statusBadgeClass = issue.status === 'Open' ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 
+                                     (issue.status === 'In Progress' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40');
 
                 tr.innerHTML = `
                     <td class="text-center font-mono text-slate-500 text-xs py-3">${index + 1}</td>
                     <td class="font-semibold text-slate-100 text-xs">${escapeHtml(issue.issue)}</td>
                     <td class="text-slate-300 text-xs">${escapeHtml(issue.solution)}</td>
-                    <td class="text-cyan-300 text-xs font-medium">${escapeHtml(issue.pic)}</td>
-                    <td class="text-center font-mono text-xs text-slate-400">${escapeHtml(issue.dueDate)}</td>
-                    <td class="text-center">
-                        <span class="inline-block px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${statusBadgeClass}">
-                            ${escapeHtml(issue.status)}
-                        </span>
-                    </td>
+                    <td class="text-cyan-300 text-[11px] font-medium">${escapeHtml(issue.pic)}</td>
+                    <td class="text-center text-[10px] font-bold tracking-wider"><span class="${getImpactBadgeClass(issue.impact)}">${escapeHtml(issue.impact || 'Low')}</span></td>
+                    <td class="text-center font-mono text-xs text-slate-400">${escapeHtml(issue.raiseDate || '-')}</td>
+                    <td class="text-center font-mono text-xs text-slate-400">${escapeHtml(issue.dueDate || '-')}</td>
+                    <td class="text-center"><span class="inline-block px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${statusBadgeClass}">${escapeHtml(issue.status)}</span></td>
                     <td class="text-center">
                         <div class="flex items-center justify-center gap-1">
-                            <button onclick="openEditIssueModal(${issue.id})" title="Edit Issue" class="p-1 hover:bg-slate-800 text-slate-400 hover:text-amber-400 rounded transition">
-                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                            </button>
-                            <button onclick="confirmDeleteIssue(${issue.id})" title="Hapus Issue" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded transition">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                            </button>
+                            <button onclick="openEditIssueModal(${issue.id})" title="Edit" class="p-1 hover:bg-slate-700 text-slate-400 hover:text-amber-400 rounded"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="confirmDeleteIssue(${issue.id})" title="Hapus" class="p-1 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                         </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-
             lucide.createIcons();
         }
 
-        function openAddIssueModal() {
-            document.getElementById('issueModalTitle').textContent = 'Tambah Issue Baru';
-            document.getElementById('issueId').value = '';
-            document.getElementById('inputIssueText').value = '';
-            document.getElementById('inputIssueSolution').value = '';
-            document.getElementById('inputIssuePic').value = '';
-            document.getElementById('inputIssueDueDate').value = '';
-            document.getElementById('inputIssueStatus').value = 'Open';
-            showModal('issueModal');
-        }
-
-        function openEditIssueModal(id) {
-            const item = issues.find(i => i.id === id);
-            if (!item) return;
-
-            document.getElementById('issueModalTitle').textContent = 'Edit Issue & Action Plan';
-            document.getElementById('issueId').value = item.id;
-            document.getElementById('inputIssueText').value = item.issue;
-            document.getElementById('inputIssueSolution').value = item.solution;
-            document.getElementById('inputIssuePic').value = item.pic;
-            document.getElementById('inputIssueDueDate').value = item.dueDate;
-            document.getElementById('inputIssueStatus').value = item.status;
-            showModal('issueModal');
-        }
-
-        function handleIssueFormSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('issueId').value;
-            const issueText = document.getElementById('inputIssueText').value.trim();
-            const solution = document.getElementById('inputIssueSolution').value.trim();
-            const pic = document.getElementById('inputIssuePic').value.trim();
-            const dueDate = document.getElementById('inputIssueDueDate').value.trim();
-            const status = document.getElementById('inputIssueStatus').value;
-
-            if (!issueText || !solution) return;
-
-            if (id) {
-                const item = issues.find(i => i.id === parseInt(id));
-                if (item) {
-                    item.issue = issueText; item.solution = solution; item.pic = pic; item.dueDate = dueDate; item.status = status;
+        // --- Core Interactions ---
+        // NEW FEATURE: Menangani click vs double-click pada cell timeline
+        function handleCellInteraction(taskId, day) {
+            // Jika ada click sebelumnya dan timer masih jalan = Double Click!
+            if (cellClickTimer) {
+                clearTimeout(cellClickTimer);
+                cellClickTimer = null;
+                
+                // --- Logic Double Click (Kosongkan Hari) ---
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+                
+                // Pastikan array exist
+                if (!task.skippedDays) task.skippedDays = [];
+                
+                const index = task.skippedDays.indexOf(day);
+                if (index > -1) {
+                    // Hapus dari daftar skip (Aktifkan kembali)
+                    task.skippedDays.splice(index, 1);
+                    showToast(`Hari ${day} kembali diaktifkan (Bar muncul)`);
+                } else {
+                    // Tambahkan ke daftar skip (Kosongkan/Libur)
+                    task.skippedDays.push(day);
+                    showToast(`Hari ${day} diliburkan / dikosongkan`);
                 }
+                
+                saveData();
+                renderTable(parseInt(slider.value));
             } else {
-                const newId = issues.length > 0 ? Math.max(...issues.map(i => i.id)) + 1 : 1;
-                issues.push({ id: newId, issue: issueText, solution, pic, dueDate, status });
+                // --- Logic Single Click (Actual Start) dengan Delay ---
+                cellClickTimer = setTimeout(() => {
+                    cellClickTimer = null; // Reset timer
+
+                    const task = tasks.find(t => t.id === taskId);
+                    if (!task) return;
+
+                    if (task.actualStart === day) { 
+                        task.actualStart = null; 
+                        showToast('Tanda Actual Start dihapus'); 
+                    } else { 
+                        task.actualStart = day; 
+                        showToast(`Actual Start di-set ke Hari ${day}`); 
+                    }
+                    
+                    saveData();
+                    renderTable(parseInt(slider.value));
+                }, 250); // Delay 250ms untuk menanti kemungkinan klik kedua
             }
-
-            saveData(); closeIssueModal(); showToast(id ? 'Issue berhasil diperbarui!' : 'Issue baru ditambahkan!');
-        }
-
-        function confirmDeleteIssue(id) {
-            const item = issues.find(i => i.id === id);
-            if (!item) return;
-            showConfirm('Hapus Issue', `Yakin ingin menghapus kendala "${item.issue}"?`, () => {
-                issues = issues.filter(i => i.id !== id);
-                saveData(); showToast('Issue dihapus');
-            });
-        }
-
-        function closeIssueModal() {
-            const modal = document.getElementById('issueModal');
-            const container = document.getElementById('issueModalContainer');
-            modal.classList.add('opacity-0');
-            if (container) container.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
         function inlineUpdateTask(id, field, value) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
-
             let val = parseInt(value);
             if (isNaN(val)) return;
 
-            if (field === 'start') {
-                val = Math.max(1, Math.min(24, val)); task.start = val;
-                if (task.end < task.start) task.end = task.start;
-            } else if (field === 'end') {
-                val = Math.max(1, Math.min(24, val)); task.end = val;
-                if (task.start > task.end) task.start = task.end;
-            } else if (field === 'duration') {
-                val = Math.max(1, Math.min(24, val));
-                task.end = Math.min(24, task.start + val - 1);
-            } else if (field === 'progress') {
-                val = Math.max(0, Math.min(100, val)); task.progress = val;
-            }
+            if (field === 'start') { val = Math.max(1, Math.min(31, val)); task.start = val; if (task.end < task.start) task.end = task.start; } 
+            else if (field === 'end') { val = Math.max(1, Math.min(31, val)); task.end = val; if (task.start > task.end) task.start = task.end; } 
+            else if (field === 'duration') { val = Math.max(1, Math.min(31, val)); task.end = Math.min(31, task.start + val - 1); } 
+            else if (field === 'progress') { val = Math.max(0, Math.min(100, val)); task.progress = val; }
 
-            saveData(); renderTable(parseInt(slider.value)); showToast('Task diperbarui!');
+            saveData();
+            renderTable(parseInt(slider.value));
+            showToast('Task diperbarui!');
         }
 
         function extendTask(id, delta = 1) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
+            const newExtend = (task.extend || 0) + delta;
+            if (newExtend < 0 || task.end + newExtend > 31) return;
+            task.extend = newExtend;
+            saveData();
+            renderTable(parseInt(slider.value));
+        }
 
-            if (task.extend === undefined) task.extend = 0;
-            const newExtend = task.extend + delta;
+        function openConfigModal() {
+            document.getElementById('configMonth').value = projectConfig.month;
+            document.getElementById('configYear').value = projectConfig.year;
+            document.getElementById('configStartDay').value = projectConfig.startDay;
+            document.getElementById('configEndDay').value = projectConfig.endDay;
+            showModal('configModal');
+        }
 
-            if (newExtend < 0) return;
-            if (task.end + newExtend > 24) { showToast('Maksimal Hari 24.', true); return; }
+        function closeConfigModal() { hideModal('configModal', 'configModalContainer'); }
 
-            task.extend = newExtend; saveData(); renderTable(parseInt(slider.value));
-            showToast(delta > 0 ? `Extended (+${task.extend})` : 'Extended dikurangi!');
+        function handleConfigFormSubmit(e) {
+            e.preventDefault();
+            const startD = parseInt(document.getElementById('configStartDay').value);
+            const endD = parseInt(document.getElementById('configEndDay').value);
+            
+            if(startD > endD) {
+                showToast('Start Day tidak boleh lebih besar dari End Day', true);
+                return;
+            }
+
+            projectConfig.month = document.getElementById('configMonth').value;
+            projectConfig.year = parseInt(document.getElementById('configYear').value);
+            projectConfig.startDay = startD;
+            projectConfig.endDay = endD;
+            
+            saveData();
+            updateConfigUI();
+            renderTable(parseInt(slider.value));
+            closeConfigModal();
+            showToast('Pengaturan Proyek berhasil diperbarui');
         }
 
         function syncFormValues(changedField) {
@@ -1062,140 +971,221 @@
             let end = parseInt(endInput.value) || 1;
             let duration = parseInt(durationInput.value) || 1;
 
-            if (changedField === 'start') {
-                if (end < start) end = start; duration = (end - start) + 1;
-            } else if (changedField === 'end') {
-                if (start > end) start = end; duration = (end - start) + 1;
-            } else if (changedField === 'duration') {
-                end = Math.min(24, start + duration - 1);
-            }
+            if (changedField === 'start') { if (end < start) end = start; duration = (end - start) + 1; } 
+            else if (changedField === 'end') { if (start > end) start = end; duration = (end - start) + 1; } 
+            else if (changedField === 'duration') { end = Math.min(31, start + duration - 1); }
 
-            startInput.value = Math.max(1, Math.min(24, start));
-            endInput.value = Math.max(1, Math.min(24, end));
-            durationInput.value = Math.max(1, Math.min(24, duration));
+            startInput.value = start; endInput.value = end; durationInput.value = duration;
         }
 
         function openAddTaskModal() {
             document.getElementById('modalTitle').textContent = 'Tambah Task Baru';
             document.getElementById('taskId').value = '';
-            document.getElementById('inputDesc').value = ''; document.getElementById('inputPic').value = '';
-            document.getElementById('inputStart').value = 1; document.getElementById('inputEnd').value = 5;
-            document.getElementById('inputDuration').value = 5; document.getElementById('inputExtend').value = 0;
-            document.getElementById('inputProgress').value = 0; document.getElementById('inputProgressVal').textContent = '0%';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPic').value = '';
+            document.getElementById('inputStart').value = projectConfig.startDay;
+            document.getElementById('inputEnd').value = projectConfig.startDay + 2;
+            document.getElementById('inputDuration').value = 3;
+            document.getElementById('inputExtend').value = 0;
+            document.getElementById('inputProgress').value = 0;
+            document.getElementById('inputProgressVal').textContent = '0%';
             showModal('taskModal');
         }
 
         function openEditTaskModal(id) {
             const task = tasks.find(t => t.id === id);
             if (!task) return;
-
-            document.getElementById('modalTitle').textContent = 'Edit Task Detail';
+            document.getElementById('modalTitle').textContent = 'Edit Task';
             document.getElementById('taskId').value = task.id;
-            document.getElementById('inputDesc').value = task.desc; document.getElementById('inputPic').value = task.pic;
-            document.getElementById('inputStart').value = task.start; document.getElementById('inputEnd').value = task.end;
+            document.getElementById('inputDesc').value = task.desc;
+            document.getElementById('inputPic').value = task.pic;
+            document.getElementById('inputStart').value = task.start;
+            document.getElementById('inputEnd').value = task.end;
             document.getElementById('inputDuration').value = (task.end - task.start) + 1;
             document.getElementById('inputExtend').value = task.extend || 0;
-            
             const prog = parseInt(task.progress) || 0;
-            document.getElementById('inputProgress').value = prog; document.getElementById('inputProgressVal').textContent = `${prog}%`;
+            document.getElementById('inputProgress').value = prog;
+            document.getElementById('inputProgressVal').textContent = `${prog}%`;
             showModal('taskModal');
         }
 
         function handleTaskFormSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('taskId').value;
-            const desc = document.getElementById('inputDesc').value.trim(); const pic = document.getElementById('inputPic').value.trim();
-            const start = parseInt(document.getElementById('inputStart').value); const end = parseInt(document.getElementById('inputEnd').value);
-            const extend = parseInt(document.getElementById('inputExtend').value) || 0;
-            const progress = parseInt(document.getElementById('inputProgress').value) || 0;
-
-            if (!desc || !pic) return;
+            const tData = {
+                desc: document.getElementById('inputDesc').value.trim(),
+                pic: document.getElementById('inputPic').value.trim(),
+                start: parseInt(document.getElementById('inputStart').value),
+                end: parseInt(document.getElementById('inputEnd').value),
+                extend: parseInt(document.getElementById('inputExtend').value) || 0,
+                progress: parseInt(document.getElementById('inputProgress').value) || 0,
+                skippedDays: [] // Pastikan task baru memiliki properti skippedDays
+            };
+            if (!tData.desc || !tData.pic) return;
 
             if (id) {
-                const task = tasks.find(t => t.id === parseInt(id));
-                if (task) { task.desc = desc; task.pic = pic; task.start = start; task.end = end; task.extend = extend; task.progress = progress; }
+                const index = tasks.findIndex(t => t.id === parseInt(id));
+                if (index !== -1) {
+                    // Preserve existing skippedDays when editing
+                    tData.skippedDays = tasks[index].skippedDays || [];
+                    tasks[index] = { ...tasks[index], ...tData };
+                }
             } else {
-                const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-                tasks.push({ id: newId, desc, pic, start, end, extend, progress, actualStart: null, excludedDays: [] });
+                tData.id = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                tData.actualStart = null;
+                tasks.push(tData);
             }
-
-            saveData(); renderTable(parseInt(slider.value)); closeTaskModal();
-            showToast(id ? 'Task disimpan!' : 'Task ditambahkan!');
+            saveData();
+            renderTable(parseInt(slider.value));
+            closeTaskModal();
+            showToast('Task berhasil disimpan!');
         }
 
+        function closeTaskModal() { hideModal('taskModal', 'taskModalContainer'); }
         function confirmDeleteTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-            showConfirm('Hapus Task', `Yakin ingin menghapus "${task.desc}"?`, () => {
+            showConfirm('Hapus Task', 'Yakin ingin menghapus task ini?', () => {
                 tasks = tasks.filter(t => t.id !== id);
-                saveData(); renderTable(parseInt(slider.value)); showToast('Task dihapus');
+                saveData();
+                renderTable(parseInt(slider.value));
+                showToast('Task dihapus');
+            });
+        }
+
+        function openAddIssueModal() {
+            document.getElementById('issueModalTitle').textContent = 'Tambah Issue Baru';
+            document.getElementById('issueId').value = '';
+            document.getElementById('inputIssueText').value = '';
+            document.getElementById('inputIssueSolution').value = '';
+            document.getElementById('inputIssuePic').value = '';
+            document.getElementById('inputIssueImpact').value = 'Medium';
+            document.getElementById('inputIssueRaiseDate').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('inputIssueDueDate').value = '';
+            document.getElementById('inputIssueStatus').value = 'Open';
+            showModal('issueModal');
+        }
+
+        function openEditIssueModal(id) {
+            const item = issues.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('issueModalTitle').textContent = 'Edit Issue & Action Plan';
+            document.getElementById('issueId').value = item.id;
+            document.getElementById('inputIssueText').value = item.issue;
+            document.getElementById('inputIssueSolution').value = item.solution;
+            document.getElementById('inputIssuePic').value = item.pic;
+            document.getElementById('inputIssueImpact').value = item.impact || 'Medium';
+            document.getElementById('inputIssueRaiseDate').value = item.raiseDate || '';
+            document.getElementById('inputIssueDueDate').value = item.dueDate || '';
+            document.getElementById('inputIssueStatus').value = item.status;
+            showModal('issueModal');
+        }
+
+        function handleIssueFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('issueId').value;
+            const newIssue = {
+                issue: document.getElementById('inputIssueText').value.trim(),
+                solution: document.getElementById('inputIssueSolution').value.trim(),
+                pic: document.getElementById('inputIssuePic').value.trim(),
+                impact: document.getElementById('inputIssueImpact').value,
+                raiseDate: document.getElementById('inputIssueRaiseDate').value,
+                dueDate: document.getElementById('inputIssueDueDate').value,
+                status: document.getElementById('inputIssueStatus').value
+            };
+            if (!newIssue.issue || !newIssue.solution) return;
+
+            if (id) {
+                const index = issues.findIndex(i => i.id === parseInt(id));
+                if (index !== -1) issues[index] = { id: parseInt(id), ...newIssue };
+            } else {
+                newIssue.id = issues.length > 0 ? Math.max(...issues.map(i => i.id)) + 1 : 1;
+                issues.push(newIssue);
+            }
+            saveData();
+            closeIssueModal();
+            showToast(id ? 'Issue diperbarui!' : 'Issue ditambahkan!');
+        }
+
+        function closeIssueModal() { hideModal('issueModal', 'issueModalContainer'); }
+        function confirmDeleteIssue(id) {
+            showConfirm('Hapus Issue', 'Yakin ingin menghapus kendala ini?', () => {
+                issues = issues.filter(i => i.id !== id);
+                saveData();
+                showToast('Issue dihapus');
             });
         }
 
         function confirmResetData() {
-            showConfirm('Reset Data Default', 'Semua perubahan akan dikembalikan ke kondisi awal. Lanjutkan?', () => {
-                tasks = JSON.parse(JSON.stringify(defaultTasks)); issues = JSON.parse(JSON.stringify(defaultIssues));
-                saveData(); renderTable(parseInt(slider.value)); showToast('Data di-reset');
+            showConfirm('Reset Data', 'Semua perubahan akan kembali ke kondisi awal. Lanjutkan?', () => {
+                tasks = JSON.parse(JSON.stringify(defaultTasks));
+                issues = JSON.parse(JSON.stringify(defaultIssues));
+                projectConfig = { month: 'September', year: 2026, startDay: 1, endDay: 24 };
+                saveData();
+                updateConfigUI();
+                renderTable(parseInt(slider.value));
+                showToast('Data di-reset');
             });
         }
 
         function exportJSON() {
-            const payload = { tasks, issues };
+            const payload = { config: projectConfig, tasks, issues };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `Laporan_Proyek_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
-            showToast('JSON diekspor');
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `Proyek_${projectConfig.month}_${projectConfig.year}.json`);
+            document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+            showToast('Berhasil diekspor');
         }
 
         function importJSON(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (imported && (imported.tasks || Array.isArray(imported))) {
-                        tasks = imported.tasks || imported; issues = imported.issues || [];
-                        saveData(); renderTable(parseInt(slider.value)); showToast('Data diimpor!');
+                        projectConfig = imported.config || projectConfig;
+                        tasks = imported.tasks || imported;
+                        issues = imported.issues || [];
+                        
+                        // Sanitize old tasks missing the array
+                        tasks.forEach(t => { if(!t.skippedDays) t.skippedDays = []; });
+                        
+                        saveData();
+                        updateConfigUI();
+                        renderTable(parseInt(slider.value));
+                        showToast('Berhasil diimpor!');
                     } else { showToast('Format tidak valid!', true); }
                 } catch (err) { showToast('Gagal membaca JSON!', true); }
             };
-            reader.readAsText(file); event.target.value = '';
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
-        function showModal(modalId) {
-            const modal = document.getElementById(modalId);
+        function showModal(id) {
+            const modal = document.getElementById(id);
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                const container = modal.querySelector('div');
-                if (container) container.classList.remove('scale-95');
-            }, 10);
+            setTimeout(() => { modal.classList.remove('opacity-0'); const c = modal.querySelector('div'); if (c) c.classList.remove('scale-95'); }, 10);
         }
-
-        function closeTaskModal() {
-            const modal = document.getElementById('taskModal'); const container = document.getElementById('taskModalContainer');
-            modal.classList.add('opacity-0'); if (container) container.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 200);
+        function hideModal(modalId, containerId) {
+            const m = document.getElementById(modalId), c = document.getElementById(containerId);
+            m.classList.add('opacity-0'); if(c) c.classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 200);
         }
 
         function showConfirm(title, message, onOk) {
-            const modal = document.getElementById('confirmModal');
-            document.getElementById('confirmTitle').textContent = title; document.getElementById('confirmMessage').textContent = message;
-            const okBtn = document.getElementById('confirmOkBtn'); const cancelBtn = document.getElementById('confirmCancelBtn');
-
-            const closeConfirm = () => { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 200); };
-            okBtn.onclick = () => { closeConfirm(); onOk(); }; cancelBtn.onclick = closeConfirm; showModal('confirmModal');
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmOkBtn').onclick = () => { hideModal('confirmModal', ''); onOk(); };
+            document.getElementById('confirmCancelBtn').onclick = () => hideModal('confirmModal', '');
+            showModal('confirmModal');
         }
 
         function showToast(msg, isError = false) {
-            const toast = document.getElementById('toast'); const toastMsg = document.getElementById('toastMsg'); const toastIcon = document.getElementById('toastIcon');
-            toastMsg.textContent = msg; toastIcon.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
+            const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMsg'), tIco = document.getElementById('toastIcon');
+            tMsg.textContent = msg; tIco.className = isError ? 'w-5 h-5 text-rose-400' : 'w-5 h-5 text-cyan-400';
             toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
         function escapeHtml(str) {
@@ -1204,12 +1194,14 @@
 
         // Init
         loadData();
-        slider.value = currentDay;
-        renderTable(currentDay);
+        let initDay = new Date().getDate();
+        if(initDay > projectConfig.endDay) initDay = projectConfig.endDay;
+        if(initDay < projectConfig.startDay) initDay = projectConfig.startDay;
+        slider.value = initDay;
+        renderTable(initDay);
         renderIssues();
 
-        slider.addEventListener('input', function(e) { renderTable(parseInt(e.target.value)); });
-
+        slider.addEventListener('input', e => renderTable(parseInt(e.target.value)));
         lucide.createIcons();
     </script>
 </body>
