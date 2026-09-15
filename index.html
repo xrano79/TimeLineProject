@@ -55,6 +55,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
         @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); } 50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); } }
         .glow-active { animation: pulse-glow 2s infinite; }
+        @keyframes pulse-amber { 0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); } 50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.9); } }
+        .pulse-amber { animation: pulse-amber 1.5s infinite; }
     </style>
 </head>
 <body class="min-h-screen text-slate-100 p-3 md:p-6 font-sans antialiased relative">
@@ -108,6 +110,15 @@
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap">
+                    <!-- TOMBOL UPDATE DRIVE (BARU) -->
+                    <button id="updateDriveBtn" onclick="manualUpdateToDrive()" title="Simpan perubahan ke Google Drive" class="px-3 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
+                        <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+                        <span>Update Drive</span>
+                    </button>
+                    <button onclick="pullFromDrive(true)" title="Ambil data terbaru dari Drive" class="px-3 py-2.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1">
+                        <i data-lucide="cloud-download" class="w-4 h-4"></i>
+                        <span>Refresh</span>
+                    </button>
                     <button onclick="openAddTaskModal()" class="px-3.5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs md:text-sm transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                         <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i>
                         <span>Tambah Task</span>
@@ -428,12 +439,9 @@
         // KONFIGURASI DRIVE (HARDCODE DI SINI)
         // ==========================================
         const SYNC_CONFIG = {
-            DRIVE_SYNC_URL: 'https://script.google.com/macros/s/AKfycbxTFdQA8sFbbN0TkGEl_5SPUZQA6QBcXzzm5YdMfAr-8_1xcVnrDyynzxKdLRciKunxXg/exec',
+            DRIVE_SYNC_URL: 'https://script.google.com/macros/s/AKfycbz8fx47PSLX0ixLSynwui1hoRRW4SgnMn-ZQIen1412UhXxFMvukl4ghnSbC7njuUoP/exec',
             USER_KEY: 'IoTBodyHarness'
         };
-
-        // Interval auto-sync (dalam milidetik). Default: 60 detik.
-        const AUTO_SYNC_INTERVAL = 60000;
 
         // ==========================================
         // DATA GLOBAL
@@ -458,7 +466,34 @@
         const redDays = [6, 13, 20, 27];
         let cellClickTimer = null;
         let syncInProgress = false;
-        let autoSyncTimer = null;
+        let isDirty = false;  // <-- flag perubahan belum disimpan
+
+        // ==========================================
+        // DIRTY STATE MANAGEMENT (BARU)
+        // ==========================================
+        function markDirty() {
+            isDirty = true;
+            updateUpdateButtonUI();
+            updateSyncStatusUI('yellow', '⚠️ Ada perubahan belum disimpan');
+        }
+
+        function markClean() {
+            isDirty = false;
+            updateUpdateButtonUI();
+        }
+
+        function updateUpdateButtonUI() {
+            const btn = document.getElementById('updateDriveBtn');
+            if (!btn) return;
+            if (isDirty) {
+                btn.className = 'px-3 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/60 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 pulse-amber';
+                btn.innerHTML = '<i data-lucide="cloud-upload" class="w-4 h-4"></i><span>Update Drive</span><span class="ml-1 inline-flex items-center justify-center w-2 h-2 rounded-full bg-amber-400"></span>';
+            } else {
+                btn.className = 'px-3 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-1';
+                btn.innerHTML = '<i data-lucide="cloud-upload" class="w-4 h-4"></i><span>Update Drive</span>';
+            }
+            if (window.lucide) lucide.createIcons();
+        }
 
         // ==========================================
         // SYNC STATUS UI
@@ -481,13 +516,13 @@
         }
 
         // ==========================================
-        // SYNC TO DRIVE (POST)
+        // SYNC TO DRIVE (POST) - return true/false
         // ==========================================
         async function syncToDrive(showMsg = false) {
-            if (syncInProgress) return;
+            if (syncInProgress) return false;
             if (!isDriveConfigured()) {
                 updateSyncStatusUI('red', 'Belum dikonfigurasi');
-                return;
+                return false;
             }
             syncInProgress = true;
             updateSyncStatusUI('yellow', 'Menyimpan...');
@@ -504,15 +539,39 @@
                         content: payload
                     })
                 });
-                if (showMsg) showToast('Data disimpan ke Google Drive');
-                updateSyncStatusUI('green', 'Tersinkron ' + new Date().toLocaleTimeString().slice(0,5));
+                if (showMsg) showToast('Data berhasil disimpan ke Google Drive ✅');
                 localStorage.setItem('timeline_last_sync', Date.now().toString());
+                syncInProgress = false;
+                return true;
             } catch (err) {
                 console.error('Sync error:', err);
                 if (showMsg) showToast('Gagal sync ke Drive', true);
                 updateSyncStatusUI('red', 'Gagal sync');
+                syncInProgress = false;
+                return false;
             }
-            syncInProgress = false;
+        }
+
+        // ==========================================
+        // TOMBOL MANUAL UPDATE (BARU)
+        // ==========================================
+        async function manualUpdateToDrive() {
+            if (!isDriveConfigured()) {
+                showToast('Konfigurasi Drive belum diisi di script', true);
+                return;
+            }
+            if (syncInProgress) {
+                showToast('Sedang proses, tunggu sebentar...', true);
+                return;
+            }
+            
+            updateSyncStatusUI('yellow', 'Menyimpan...');
+            const ok = await syncToDrive(true);
+            
+            if (ok) {
+                markClean();
+                updateSyncStatusUI('green', 'Tersimpan ' + new Date().toLocaleTimeString().slice(0,5));
+            }
         }
 
         // ==========================================
@@ -521,6 +580,7 @@
         async function pullFromDrive(showMsg = false) {
             if (syncInProgress) return;
             if (!isDriveConfigured()) {
+                if (showMsg) showToast('Konfigurasi Drive belum diisi', true);
                 updateSyncStatusUI('red', 'Belum dikonfigurasi');
                 return;
             }
@@ -548,12 +608,15 @@
                     renderIssues();
                     updateStats();
                     
-                    if (showMsg) showToast('Data dari Drive berhasil dimuat');
+                    if (showMsg) showToast('Data dari Drive berhasil dimuat ✅');
                     updateSyncStatusUI('green', 'Tersinkron ' + new Date().toLocaleTimeString().slice(0,5));
                     localStorage.setItem('timeline_last_sync', Date.now().toString());
+                    markClean(); // Data sudah dari server
                 } else {
                     if (showMsg) showToast('Data di Drive masih kosong', true);
-                    updateSyncStatusUI('yellow', 'Belum ada data');
+                    updateSyncStatusUI('yellow', 'Belum ada data di Drive');
+                    // Drive kosong, data lokal kita belum tersimpan → tandai dirty
+                    markDirty();
                 }
             } catch (err) {
                 console.error('Pull error:', err);
@@ -561,18 +624,6 @@
                 updateSyncStatusUI('red', 'Gagal pull');
             }
             syncInProgress = false;
-        }
-
-        // ==========================================
-        // AUTO SYNC SCHEDULER
-        // ==========================================
-        function startAutoSync() {
-            if (autoSyncTimer) clearInterval(autoSyncTimer);
-            autoSyncTimer = setInterval(() => {
-                if (isDriveConfigured()) {
-                    syncToDrive(false);
-                }
-            }, AUTO_SYNC_INTERVAL);
         }
 
         // ==========================================
@@ -597,16 +648,17 @@
             else { issues = JSON.parse(JSON.stringify(defaultIssues)); }
         }
 
+        // ==========================================
+        // SAVE DATA - hanya ke localStorage + tandai dirty
+        // TIDAK auto-sync ke Drive
+        // ==========================================
         function saveData() {
             localStorage.setItem('project_timeline_config_v7', JSON.stringify(projectConfig));
             localStorage.setItem('project_timeline_tasks_v7', JSON.stringify(tasks));
             localStorage.setItem('project_timeline_issues_v7', JSON.stringify(issues));
             updateStats();
             renderIssues();
-            // Auto-sync ke Drive (silent)
-            if (isDriveConfigured()) {
-                syncToDrive(false);
-            }
+            markDirty();  // <-- hanya tandai, tidak auto-sync
         }
 
         function updateConfigUI() {
@@ -1108,32 +1160,23 @@
             renderTable(initDay);
             renderIssues();
             
-            // 4. Update status
+            // 4. Update tombol Update UI
+            updateUpdateButtonUI();
+            
+            // 5. Auto-pull dari Drive (hanya tarik, tidak simpan)
             if (isDriveConfigured()) {
                 updateSyncStatusUI('yellow', 'Menghubungkan...');
-                
-                // 5. Auto-pull dari Drive saat halaman dibuka
                 await pullFromDrive(false);
-                
-                // 6. Auto-sync ke Drive setelah pull (untuk merge)
-                setTimeout(() => syncToDrive(false), 1000);
-                
-                // 7. Mulai interval auto-sync berkala
-                startAutoSync();
             } else {
-                updateSyncStatusUI('red', 'URL/Key belum diisi di script');
-                console.warn('⚠️ Konfigurasi Drive belum diisi. Isi DRIVE_SYNC_URL dan USER_KEY di dalam script.');
+                updateSyncStatusUI('red', 'URL/Key belum diisi');
             }
             
-            // 8. Auto-sync juga saat user menutup halaman
-            window.addEventListener('beforeunload', () => {
-                if (isDriveConfigured()) {
-                    const payload = { config: projectConfig, tasks, issues };
-                    const blob = new Blob([JSON.stringify({
-                        userKey: SYNC_CONFIG.USER_KEY,
-                        content: payload
-                    })], { type: 'text/plain' });
-                    navigator.sendBeacon(SYNC_CONFIG.DRIVE_SYNC_URL, blob);
+            // 6. Peringatkan jika tutup halaman tapi ada perubahan belum disimpan
+            window.addEventListener('beforeunload', (e) => {
+                if (isDirty) {
+                    e.preventDefault();
+                    e.returnValue = 'Ada perubahan yang belum disimpan ke Drive. Yakin keluar?';
+                    return e.returnValue;
                 }
             });
         })();
